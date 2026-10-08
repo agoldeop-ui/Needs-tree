@@ -78,22 +78,26 @@ p{max-width:72ch}
 .diag-scale button:hover{border-color:var(--moss)}
 .diag-scale button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .diag-scale .lab{display:block;font-size:.68rem;margin-top:2px;opacity:.7}
-.results-container{max-width:680px;margin:0 auto}
+.results-container{max-width:720px;margin:0 auto}
 .results-header{text-align:center;margin-bottom:32px}
 .results-header h1{font-size:2rem;margin-bottom:8px}
 .results-header p{color:var(--mute);margin:0 auto}
 .layer-bars{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
-.layer-bar-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:14px}
+.layer-bar-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all var(--transition);position:relative}
+.layer-bar-item:hover{border-color:var(--moss);transform:translateX(2px)}
+.layer-bar-item.focused{border-color:var(--moss);border-width:2px;padding:13px 15px;background:rgba(79,107,74,.06)}
 .layer-bar-item .lbi-info{flex:1;min-width:0}
-.layer-bar-item .lbi-name{font-family:var(--font-display);font-weight:700;font-size:.98rem;margin-bottom:2px}
+.layer-bar-item .lbi-name{font-family:var(--font-display);font-weight:700;font-size:.98rem;margin-bottom:2px;display:flex;align-items:center;gap:8px}
 .layer-bar-item .lbi-score{font-size:.78rem;color:var(--mute)}
-.layer-bar-item .lbi-track{width:110px;height:8px;background:var(--line);border-radius:4px;overflow:hidden;flex-shrink:0}
+.layer-bar-item .lbi-track{width:120px;height:8px;background:var(--line);border-radius:4px;overflow:hidden;flex-shrink:0}
 .layer-bar-item .lbi-fill{height:100%;border-radius:4px;transition:width 1s ease}
 .layer-bar-item.strained .lbi-fill{background:var(--c-strained);animation:pulse-red 1.6s infinite}
 .layer-bar-item.moderate .lbi-fill{background:var(--c-moderate)}
 .layer-bar-item.healthy .lbi-fill{background:var(--c-healthy)}
-.layer-bar-item.strained{border-color:rgba(192,57,43,.5)}
+.layer-bar-item.strained{border-color:rgba(192,57,43,.4)}
+.layer-bar-item.strained.focused{border-color:var(--c-strained);background:rgba(192,57,43,.05)}
 @keyframes pulse-red{0%{opacity:1;box-shadow:0 0 0 0 rgba(192,57,43,.5)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(192,57,43,0)}100%{opacity:1;box-shadow:0 0 0 0 rgba(192,57,43,0)}}
+.layer-emergency-count{font-size:.7rem;font-weight:600;color:var(--c-strained);background:rgba(192,57,43,.1);padding:2px 8px;border-radius:10px;white-space:nowrap}
 .results-detail{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .results-detail .rd-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;color:#fff}
 .results-detail h2{font-size:1.35rem;margin-bottom:12px}
@@ -101,6 +105,7 @@ p{max-width:72ch}
 .results-detail .rd-section h3{font-size:.95rem;margin-bottom:6px;font-family:var(--font-body);font-weight:600}
 .results-detail .rd-section p{font-size:.92rem;color:var(--mute);line-height:1.6}
 .results-detail .rd-question{font-style:italic;border-left:3px solid var(--moss);padding-left:14px;margin:16px 0;color:var(--ink);font-size:.95rem}
+.results-detail .rd-context{font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
 .sort-section{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .sort-section h2{font-size:1.3rem;margin-bottom:8px}
 .sort-section p{font-size:.9rem;color:var(--mute);margin-bottom:16px}
@@ -114,6 +119,7 @@ p{max-width:72ch}
 .sort-card .sc-desc{font-size:.72rem;color:var(--mute);font-weight:400}
 .sort-counter{text-align:center;font-size:.9rem;color:var(--mute);margin-bottom:12px}
 .sort-counter strong{color:var(--ink)}
+.sort-complete{text-align:center;padding:12px;background:rgba(79,107,74,.08);border-radius:var(--radius-sm);font-size:.9rem;color:var(--moss);font-weight:600}
 .reframe-section{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .reframe-section h2{font-size:1.3rem;margin-bottom:8px}
 .reframe-section > p{font-size:.9rem;color:var(--mute);margin-bottom:16px}
@@ -135,24 +141,43 @@ p{max-width:72ch}
 .btn-outline:hover{background:var(--card)}
 .btn-ghost{color:var(--mute)}
 .btn-ghost:hover{color:var(--ink)}
+.btn-small{padding:8px 14px;font-size:.82rem;min-height:36px}
 .btn:disabled{opacity:.4;pointer-events:none}
 .action-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 .action-row.left{justify-content:flex-start}
 .tree-map-page{max-width:680px;margin:0 auto}
 .tree-map-instructions{text-align:center;margin-bottom:28px}
 .tree-map-instructions h2{font-size:1.6rem;margin-bottom:8px}
-.tree-map-instructions p{color:var(--mute);max-width:440px;margin:0 auto}
-.tree-map-container{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
-.tm-layer{border:2px solid var(--lk,var(--line));border-radius:var(--radius);padding:18px;background:var(--card);min-height:80px}
-.tm-layer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
+.tree-map-instructions p{color:var(--mute);max-width:480px;margin:0 auto}
+.tree-map-container{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
+.tm-layer{border:2px solid var(--lk,var(--line));border-radius:var(--radius);padding:18px;background:var(--card);min-height:80px;transition:all var(--transition)}
+.tm-layer.tm-strained{box-shadow:0 0 0 1px rgba(192,57,43,.3) inset}
+.tm-layer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+.tm-layer-head .tm-name-wrap{display:flex;align-items:center;gap:10px}
 .tm-layer-head .tm-name{font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:var(--lk)}
+.tm-layer-head .tm-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tm-layer-head .tm-status-dot.healthy{background:var(--c-healthy)}
+.tm-layer-head .tm-status-dot.moderate{background:var(--c-moderate)}
+.tm-layer-head .tm-status-dot.strained{background:var(--c-strained);animation:pulse-red 1.6s infinite}
+.tm-layer-head .tm-status-dot.unknown{background:var(--line)}
 .tm-layer-head .tm-desc{font-size:.78rem;color:var(--lk);opacity:.85}
 .tm-layer-head .tm-count{font-family:var(--font-display);font-weight:700;font-size:1.2rem;color:var(--lk)}
 .tm-needs{display:flex;flex-wrap:wrap;gap:8px;min-height:32px}
-.tm-need{padding:6px 14px;border-radius:20px;font-size:.85rem;font-weight:500;background:var(--lk);color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all var(--transition)}
+.tm-need{padding:6px 14px;border-radius:20px;font-size:.85rem;font-weight:500;background:var(--lk);color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all var(--transition);border:2px solid transparent;position:relative}
 .tm-need:hover{opacity:.85;transform:scale(1.03)}
+.tm-need.emergency{border-color:var(--c-strained);box-shadow:0 0 0 2px rgba(192,57,43,.25);background:var(--lk)}
+.tm-need.emergency::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c-strained);flex-shrink:0}
 .tm-need .remove{opacity:.7;font-size:1rem;line-height:1}
 .tm-empty{color:var(--mute);font-size:.85rem;font-style:italic;padding:4px 0;opacity:.7}
+.tm-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tm-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:16px 0;font-size:.78rem;color:var(--mute)}
+.tm-legend-item{display:flex;align-items:center;gap:6px}
+.tm-legend-item .dot{width:10px;height:10px;border-radius:50%}
+.tm-legend-item .dot.healthy{background:var(--c-healthy)}
+.tm-legend-item .dot.moderate{background:var(--c-moderate)}
+.tm-legend-item .dot.strained{background:var(--c-strained)}
+.tm-legend-item .dot.emergency{background:transparent;border:2px solid var(--c-strained);width:10px;height:10px}
+.tm-legend-item .dot.plain{background:var(--mute)}
 .deck-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;justify-content:center}
 .deck-tab{padding:10px 16px;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;border:1.5px solid var(--line);transition:all var(--transition);min-height:40px}
 .deck-tab:hover{border-color:var(--moss)}
@@ -200,20 +225,50 @@ p{max-width:72ch}
 .empty-state p{font-size:.9rem;margin:0 auto;max-width:320px}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
-.modal{background:var(--bg);border-radius:var(--radius);max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:28px;box-shadow:var(--shadow-lg)}
+.modal{background:var(--bg);border-radius:var(--radius);max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:28px;box-shadow:var(--shadow-lg)}
 .modal h3{font-size:1.2rem;margin-bottom:4px}
-.modal p{font-size:.88rem;color:var(--mute);margin-bottom:16px}
+.modal > p{font-size:.88rem;color:var(--mute);margin-bottom:16px}
 .modal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
 @media(max-width:500px){.modal-grid{grid-template-columns:repeat(2,1fr)}}
 .modal-need{padding:10px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--line);font-size:.85rem;font-weight:500;cursor:pointer;transition:all var(--transition);text-align:center}
 .modal-need:hover{border-color:var(--moss);background:var(--card)}
 .modal-need.added{opacity:.4;pointer-events:none}
 .modal-close{position:sticky;top:0;float:right;font-size:1.4rem;padding:4px 8px;color:var(--mute)}
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:210;display:none}
+.drawer-overlay.show{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);background:var(--bg);z-index:220;box-shadow:var(--shadow-lg);transform:translateX(100%);transition:transform .3s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;padding:28px}
+.drawer.show{transform:translateX(0)}
+.drawer-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px}
+.drawer-title{font-family:var(--font-display);font-weight:700;font-size:1.4rem}
+.drawer-tag{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.drawer-close{font-size:1.6rem;padding:4px 8px;color:var(--mute);line-height:1}
+.drawer-desc{font-size:.9rem;color:var(--mute);margin-bottom:20px}
+.drawer-section{margin-bottom:20px}
+.drawer-section .ds-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px}
+.drawer-section .ds-text{font-size:.92rem;line-height:1.6;padding:12px 14px;border-radius:var(--radius-sm);border-left:3px solid var(--line);background:var(--card)}
+.drawer-section .ds-text.excuse{border-left-color:var(--hot);font-style:italic}
+.drawer-section .ds-text.strategy{border-left-color:var(--c-moderate)}
+.drawer-actions{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.drawer-action{padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:all var(--transition);font-size:.9rem;line-height:1.5;text-align:left}
+.drawer-action:hover{border-color:var(--moss)}
+.drawer-action.selected{border-color:var(--moss);border-width:2px;background:rgba(79,107,74,.08);padding:11px 13px}
+.drawer-action.selected::before{content:"\2713  ";color:var(--moss);font-weight:700}
+.drawer-shuffle{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.drawer-custom{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--card);font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:70px;color:var(--ink);margin-top:8px}
+.drawer-custom:focus{outline:none;border-color:var(--moss)}
+.drawer-actions-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.em-toggle{display:flex;align-items:center;gap:10px;padding:14px;border-radius:var(--radius-sm);border:1.5px solid var(--line);cursor:pointer;transition:all var(--transition);background:var(--card)}
+.em-toggle:hover{border-color:var(--c-strained)}
+.em-toggle.on{border-color:var(--c-strained);background:rgba(192,57,43,.06)}
+.em-toggle .toggle-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;transition:all var(--transition)}
+.em-toggle.on .toggle-dot{background:var(--c-strained);border-color:var(--c-strained)}
+.em-toggle .toggle-label{flex:1;font-size:.9rem;font-weight:500}
+.em-toggle .toggle-hint{font-size:.75rem;color:var(--mute)}
+@media(max-width:600px){.drawer{width:100%}}
+.overview-summary{text-align:center;font-size:.92rem;color:var(--mute);margin-bottom:24px;padding:12px;background:var(--card);border-radius:var(--radius-sm);border:1px solid var(--line)}
+.overview-summary strong{color:var(--ink)}
+.tm-focus-note{text-align:center;font-size:.82rem;color:var(--mute);margin-bottom:20px;font-style:italic}
 </style>
-</head>
 <body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -298,7 +353,13 @@ p{max-width:72ch}
     <div class="page" id="page-tree">
       <div class="tree-map-instructions">
         <h2>Your Personal Tree</h2>
-        <p>Place only the needs that feel true this season. Which row is thin? Which is crowded? Burnout shows up as a crowded Leaves row over thin Roots.</p>
+        <p>Your needs, mapped by layer. Emergencies ringed in red. Tap any need to open strategies, and to mark it as an emergency.</p>
+      </div>
+      <div class="tm-legend">
+        <div class="tm-legend-item"><span class="dot healthy"></span>Layer is healthy</div>
+        <div class="tm-legend-item"><span class="dot moderate"></span>Layer under strain</div>
+        <div class="tm-legend-item"><span class="dot strained"></span>Layer strained</div>
+        <div class="tm-legend-item"><span class="dot emergency"></span>Emergency need</div>
       </div>
       <div class="tree-map-container" id="treeMapContainer"></div>
       <div class="action-row">
@@ -328,7 +389,7 @@ p{max-width:72ch}
           <li>The 15-statement diagnostic</li>
           <li>Guided card sort exercise</li>
           <li>Your personal Tree Map</li>
-          <li>Three reframed action plans</li>
+          <li>Reframed action plans</li>
           <li>One question to take home</li>
         </ul>
         <p style="font-size:.88rem;color:var(--mute);margin-top:12px">After this, you'll relate to your needs differently — you'll have language for what you've been calling "being too much."</p>
@@ -349,9 +410,12 @@ p{max-width:72ch}
     <div class="modal-grid" id="modalGrid"></div>
   </div>
 </div>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer"></div>
 <script>
 /* ============================================================
    NEEDS TREE
+   Multi-layer results, per-layer emergency sort, strategy drawer.
    ============================================================ */
 
 var L = {roots:"Roots", trunk:"Trunk", branches:"Branches", leaves:"Leaves", fruits:"Fruits"};
@@ -368,7 +432,7 @@ var Lcolor = {
   leaves:"var(--c-leaves)", fruits:"var(--c-fruits)"
 };
 
-/* ===== CORE NEEDS DECK ===== */
+/* ===== CORE NEEDS ===== */
 var C = [
   ["roots","Clean air and water","What the body takes in"],
   ["roots","Nutritious food","Fuel you can rely on"],
@@ -607,128 +671,95 @@ var PRIORITY_BY_CONTEXT = {
   }
 };
 
+/* ===== REFRAME — excuse + strategy + array of actions ===== */
 var REFRAME_BASE = {
-  "Rest and sleep":{excuse:"I'll rest when the work is done.",strategy:"Scrolling until 2am to 'unwind', then waking up exhausted.",action:"Set a hard-stop alarm for work. Create a 20-minute wind-down with no screens."},
-  "Nutritious food":{excuse:"I don't have time to cook — I'll eat properly when things calm down.",strategy:"Skipping meals, then bingeing on whatever's fastest.",action:"Batch-cook one thing on Sunday. Keep one no-decision meal ready."},
-  "Physical safety":{excuse:"It's not that bad — I'm probably overreacting.",strategy:"Staying in environments that keep you on edge, calling it strength.",action:"Name one thing that would make your space feel safer. Do it this week."},
-  "Stability and consistency":{excuse:"Life is chaotic — that's just how it is.",strategy:"Overplanning one area to compensate for chaos everywhere else.",action:"Anchor three fixed points in your week. Protect them like appointments."},
-  "Autonomy":{excuse:"I have to do this — there's no other way.",strategy:"Procrastination, passive resistance, or asking permission for things you don't need permission for.",action:"Make one small decision today without consulting anyone. Notice what it feels like."},
-  "Authenticity":{excuse:"If I show them the real me, they'll leave.",strategy:"Code-switching until you don't know which version is real.",action:"Share one true opinion with one safe person this week. Just one."},
-  "Identity":{excuse:"I don't know who I am anymore — I've been everyone's everything.",strategy:"Filling every hour with roles so there's no space to notice the gap.",action:"Write down three things you liked before you started performing. Pick one to revisit."},
-  "Boundaries":{excuse:"If I say no, they'll be upset with me.",strategy:"Saying yes, then resenting them silently.",action:"Practice one small no this week — something low-stakes. Notice the world doesn't end."},
-  "Emotional safety":{excuse:"If I show how I really feel, I'll be too much.",strategy:"Shutting down, people-pleasing, or exploding after months of silence.",action:"Write the feeling down first. Then share one small piece with someone safe."},
-  "Validation":{excuse:"I shouldn't need validation — that's needy.",strategy:"Achieving more, hoping someone will finally notice.",action:"Ask one person directly: 'I need to hear that this mattered.' Let them respond."},
-  "Belonging":{excuse:"I don't fit anywhere — I've tried.",strategy:"Staying in groups that don't fit rather than risking the search for ones that do.",action:"Find one space tied to something you actually care about. Go once."},
-  "Connection":{excuse:"Everyone's busy — I don't want to bother them.",strategy:"Waiting to be invited, then feeling forgotten.",action:"Text one person you miss. No agenda. Just 'I thought of you.'"},
-  "Support":{excuse:"I should be able to handle this alone.",strategy:"Carrying everything until you collapse, then calling it a crisis.",action:"Ask for one specific thing from one specific person this week."},
-  "Trust":{excuse:"People always let me down eventually.",strategy:"Testing people, then confirming the story when they fail.",action:"Notice one small moment where someone kept their word. Let it count."},
-  "Play":{excuse:"I'll play when I've earned it.",strategy:"Scrolling, numbing, or calling rest 'play' when it isn't.",action:"Schedule 30 minutes of something with no purpose. Defend it like work."},
-  "Relaxation":{excuse:"I can't relax — there's too much to do.",strategy:"Staying busy as a way to avoid the feelings underneath.",action:"Sit still for 10 minutes with nothing. Notice what comes up."},
-  "Beauty":{excuse:"Beauty is a luxury — I don't have time.",strategy:"Living in environments that are purely functional, then feeling flat.",action:"Put one beautiful thing where you'll see it every day."},
-  "Purpose":{excuse:"I'll find my purpose when I have more time/energy/money.",strategy:"Chasing productivity as a substitute for meaning.",action:"Write down one moment in the last month that felt meaningful. What was present?"},
-  "Contribution":{excuse:"What I do doesn't matter in the grand scheme.",strategy:"Withdrawing effort because it won't be seen.",action:"Do one small thing for someone this week. Notice how it lands."},
-  "Impact":{excuse:"I'm just one person — it won't make a difference.",strategy:"Waiting for a big opportunity instead of acting on a small one.",action:"Name one thing you wish were different. Do one tiny thing about it today."},
-  "Meaning-making":{excuse:"There's no point trying to make sense of it.",strategy:"Numbing, avoiding, or intellectualizing instead of feeling.",action:"Write the story of the last hard thing as if telling it to a friend. What's the meaning?"},
-  "Gratitude":{excuse:"I'll be grateful when things are better.",strategy:"Focusing on what's missing, then feeling empty despite having a lot.",action:"Name three specific things from today. Not 'family' — the actual moment."},
-  "Freedom from pain":{excuse:"It's not that bad — I can push through.",strategy:"Ignoring the body until it forces you to stop.",action:"Book one appointment or take one rest day you've been postponing."},
-  "Movement and exercise":{excuse:"I'll start exercising when I have more energy.",strategy:"Sitting all day, then wondering why you feel heavy.",action:"Walk for 10 minutes today. No goal. Just movement."},
-  "Sunlight":{excuse:"I'll go outside when the weather's better.",strategy:"Living under artificial light, then feeling low without knowing why.",action:"Step outside for 5 minutes within an hour of waking."},
-  "Companionship":{excuse:"Everyone's busy — I don't want to impose.",strategy:"Waiting to be included, then feeling excluded.",action:"Reach out to one person today. Suggest a specific time."},
-  "Intimacy":{excuse:"We're too tired / busy / distant for that.",strategy:"Avoiding vulnerability because it feels risky, then feeling lonely.",action:"Share one small vulnerable thing with your partner this week."},
-  "Self-knowledge":{excuse:"I know myself well enough.",strategy:"Staying busy so there's no space to actually check.",action:"Spend 10 minutes with a journal this week. What do I actually want right now?"},
-  "Structure":{excuse:"I work better under pressure.",strategy:"Living in reactive mode, then calling it flexibility.",action:"Build one small routine this week — same time, same place, every day."},
-  "Creativity":{excuse:"I'm not creative — that's for other people.",strategy:"Consuming other people's creativity instead of making your own.",action:"Make something badly this week. A drawing, a paragraph, a meal. Bad is fine."},
-  "Learning and growth":{excuse:"I'll learn that when I have more time.",strategy:"Consuming content without applying it, then feeling stuck.",action:"Pick one thing you want to learn. Spend 15 minutes on it today."},
-  "Recognition":{excuse:"I shouldn't need praise — that's ego.",strategy:"Working harder, hoping it will be noticed silently.",action:"Ask for specific feedback on one thing you did this week."},
-  "Self-advocacy":{excuse:"If I speak up, I'll be seen as difficult.",strategy:"Swallowing it, then complaining to someone else.",action:"Name one thing you need at work this week. Say it once, plainly."},
-  "Integrity":{excuse:"I have to compromise my values — that's just how it works here.",strategy:"Going along with things you don't believe in, then resenting it.",action:"Name one value you won't compromise. Hold it in one small decision this week."},
-  "Clarity":{excuse:"It's complicated — I'll figure it out eventually.",strategy:"Keeping everything vague so no decision has to be made.",action:"Write down the three things you're actually deciding between."},
-  "Freedom":{excuse:"I can't leave — it's not that simple.",strategy:"Staying in situations that make you smaller, calling it loyalty.",action:"Name one small freedom you could reclaim this week, even briefly."},
-  "Privacy":{excuse:"I don't need privacy — I'm an open book.",strategy:"Being constantly available, then wondering why you're exhausted.",action:"Block 30 minutes with no availability. Defend it."},
-  "Affection":{excuse:"We're not really physical people.",strategy:"Going months without touch, then feeling distant.",action:"Ask for one form of touch this week — a hug, a hand on the shoulder."},
-  "Compassion":{excuse:"I'm fine — I don't need softness.",strategy:"Harsh self-talk, then wondering why you're tired.",action:"Say one kind thing to yourself tonight. Actually say it."},
-  "Peer community":{excuse:"Nobody else gets it.",strategy:"Isolating, then confirming no one understands.",action:"Find one group where you don't have to explain yourself."},
-  "Fun":{excuse:"Fun is for kids.",strategy:"Filling all time with productive activity.",action:"Do one thing this week purely because it's fun."},
-  "Leisure":{excuse:"I'll have leisure when I've earned it.",strategy:"Filling every hour with something useful.",action:"Block two hours this week with nothing scheduled."},
-  "Celebration":{excuse:"It's not a big deal.",strategy:"Not marking anything, then feeling like nothing matters.",action:"Mark one small win this week. Out loud, with someone."},
-  "Growth":{excuse:"I'm too old / busy / set in my ways.",strategy:"Staying in the same patterns, then feeling stagnant.",action:"Pick one skill. Spend 15 minutes this week on it."},
-  "Fulfillment":{excuse:"This is just what life is.",strategy:"Achieving things that don't actually matter to you.",action:"Write down three moments recently when you felt most alive. What was common?"},
-  "Service":{excuse:"What could I possibly give?",strategy:"Waiting until you have more to give.",action:"Do one small act of service this week. Anonymous is fine."},
-  "Spirituality":{excuse:"I'm not spiritual.",strategy:"Avoiding stillness, then feeling disconnected.",action:"Spend 10 minutes in silence, outside, or in a space that matters."},
-  "Transcendence":{excuse:"I don't have time for awe.",strategy:"Screens, tasks, filling every gap.",action:"Watch a sunset. Listen to a piece of music with full attention."},
-  "Sexual needs / intimacy":{excuse:"It's not important — there are bigger things.",strategy:"Ignoring the need, then feeling disconnected from your body.",action:"Name what you want. To yourself first, then to a partner if you have one."},
-  "Sensory comfort":{excuse:"I should be able to tolerate it.",strategy:"Staying in environments that overwhelm you, then crashing.",action:"Change one thing about your environment this week."},
-  "Health":{excuse:"I'll deal with it when it's serious.",strategy:"Ignoring the body until it forces a stop.",action:"Book one check-up or appointment you've been putting off."},
-  "Access to healthcare":{excuse:"It's not urgent.",strategy:"Avoiding the system because it's exhausting.",action:"Make one call or one booking. Just one."},
-  "Access to shelter":{excuse:"I'll figure it out.",strategy:"Staying in situations that aren't sustainable.",action:"Identify one resource or one person who could help. Reach out."},
-  "Shelter":{excuse:"It's fine for now.",strategy:"Staying somewhere that doesn't feel like yours.",action:"Name one thing that would make your space feel more like home. Do it."},
-  "Freedom from ableism":{excuse:"I should just try harder.",strategy:"Masking until you collapse.",action:"Name one accommodation you need. Ask for it once."},
-  "Acceptance":{excuse:"If I change, they'll accept me.",strategy:"Becoming a version of yourself that fits.",action:"Show one small unedited piece of yourself this week. See what happens."},
-  "Empathy":{excuse:"Nobody really gets it.",strategy:"Explaining less, resenting more.",action:"Tell one person what you're actually going through. Not the summary."},
-  "Mutuality":{excuse:"I'll keep giving — it's fine.",strategy:"Keeping score silently, then feeling used.",action:"In one relationship, ask for one thing this week. Notice what happens."},
-  "Love":{excuse:"I don't need love — I need to get things done.",strategy:"Working, producing, avoiding softness.",action:"Let yourself receive one kind gesture this week without deflecting."},
-  "Challenge":{excuse:"I'll take on more when I'm ready.",strategy:"Avoiding difficulty, then feeling understimulated.",action:"Pick one thing that's slightly too hard. Try it for 20 minutes."},
-  "Stimulation":{excuse:"I'm bored — that's just life.",strategy:"Doomscrolling for stimulation instead of real input.",action:"Read, watch, or listen to something that actually interests you today."},
-  "Inspiration":{excuse:"I don't have time to be inspired.",strategy:"Consuming content passively, never being moved.",action:"Return to one thing that once moved you. Sit with it for 10 minutes."},
-  "Curiosity":{excuse:"I don't have room for rabbit holes.",strategy:"Staying in known territory, then feeling flat.",action:"Follow one curiosity for 15 minutes this week. No purpose."},
-  "Mastery":{excuse:"I'm already good enough at this.",strategy:"Staying at the same level, then feeling stagnant.",action:"Pick one thing you want to get better at. Practice it 20 minutes this week."},
-  "Independence":{excuse:"I can't do it alone.",strategy:"Waiting for someone else to make it possible.",action:"Do one thing this week entirely on your own. Even small."},
-  "Freedom from Responsibility":{excuse:"I can't take a break — everything falls apart.",strategy:"Pushing through, then burning out and dropping everything.",action:"Take one afternoon off this week. Nothing productive allowed."},
-  "Consent":{excuse:"It's not worth the awkwardness to say no.",strategy:"Going along with things, then feeling violated later.",action:"Practice 'Let me think about it' as a response this week. Use it once."},
-  "Identity affirmation":{excuse:"It doesn't matter if they get it right.",strategy:"Letting it slide, then feeling invisible.",action:"Correct one person gently this week about how you want to be named."}
+  "Rest and sleep":{excuse:"I'll rest when the work is done.",strategy:"Scrolling until 2am to 'unwind', then waking up exhausted.",actions:["Set a hard-stop alarm for work. Create a 20-minute wind-down with no screens.","Move bedtime 30 minutes earlier for one week. Just one week.","Leave your phone outside the bedroom tonight.","Take one nap this week, without apologising.","Block 9 hours in bed for three nights. No exceptions."]},
+  "Nutritious food":{excuse:"I don't have time to cook — I'll eat properly when things calm down.",strategy:"Skipping meals, then bingeing on whatever's fastest.",actions:["Batch-cook one thing on Sunday. Keep one no-decision meal ready.","Eat one meal this week without a screen. Sit down.","Buy one fruit you actually like. Put it where you'll see it.","Keep one emergency snack in your bag at all times.","Cook one meal this week where the only goal is that you enjoy it."]},
+  "Physical safety":{excuse:"It's not that bad — I'm probably overreacting.",strategy:"Staying in environments that keep you on edge, calling it strength.",actions:["Name one thing that would make your space feel safer. Do it this week.","Tell one person where you'll be when you go out.","Lock the door you always leave unlocked. Just once, notice the difference.","Walk a different route home. See if your shoulders drop.","Write down three times this month you felt unsafe. Look for a pattern."]},
+  "Stability and consistency":{excuse:"Life is chaotic — that's just how it is.",strategy:"Overplanning one area to compensate for chaos everywhere else.",actions:["Anchor three fixed points in your week. Protect them like appointments.","Same breakfast for a week. Notice how much mental space it frees.","Pick one day a week that looks the same each time.","Say no to one thing this week purely to protect your rhythm.","Take one thing off your plate this week — not replace it. Remove it."]},
+  "Autonomy":{excuse:"I have to do this — there's no other way.",strategy:"Procrastination, passive resistance, or asking permission for things you don't need permission for.",actions:["Make one small decision today without consulting anyone. Notice what it feels like.","Change one thing about your routine that you've been doing 'because'.","Say 'I'll decide this myself' about one low-stakes thing today.","Do one thing this week your way, even if it's slower.","Ask yourself: whose voice is this rule in?"]},
+  "Authenticity":{excuse:"If I show them the real me, they'll leave.",strategy:"Code-switching until you don't know which version is real.",actions:["Share one true opinion with one safe person this week. Just one.","Wear something that feels like you, not like the role.","Write down one thing you believe that you never say out loud.","Say 'I actually think...' once this week. See what happens.","Stop apologising for one thing you're not sorry about."]},
+  "Identity":{excuse:"I don't know who I am anymore — I've been everyone's everything.",strategy:"Filling every hour with roles so there's no space to notice the gap.",actions:["Write down three things you liked before you started performing. Pick one to revisit.","Spend 20 minutes alone this week with no task. See what surfaces.","List five things that are true about you that have nothing to do with your roles.","Do one thing this week that no one in your life knows about.","Write a sentence starting with 'I am someone who...' and finish it three ways."]},
+  "Boundaries":{excuse:"If I say no, they'll be upset with me.",strategy:"Saying yes, then resenting them silently.",actions:["Practice one small no this week — something low-stakes. Notice the world doesn't end.","Use 'Let me think about it' as your default response to requests.","Say no to one thing today, and give no explanation. Just no.","Block 30 minutes this week that nobody can book. Defend it.","Write down the last time you said yes and wished you hadn't. What was the cost?"]},
+  "Emotional safety":{excuse:"If I show how I really feel, I'll be too much.",strategy:"Shutting down, people-pleasing, or exploding after months of silence.",actions:["Write the feeling down first. Then share one small piece with someone safe.","Name one feeling out loud today. Just one word.","Tell someone 'I need a minute' before you shut down.","Share one vulnerable thing with a person you trust. No big reveal.","Leave one conversation this week without pretending to be fine."]},
+  "Validation":{excuse:"I shouldn't need validation — that's needy.",strategy:"Achieving more, hoping someone will finally notice.",actions:["Ask one person directly: 'I need to hear that this mattered.' Let them respond.","Tell someone about something you did this week. Let them respond.","Write down three things you're proud of. Read them out loud.","Ask for feedback on one specific thing you made or did.","Let a compliment land without deflecting. Just say thank you."]},
+  "Belonging":{excuse:"I don't fit anywhere — I've tried.",strategy:"Staying in groups that don't fit rather than risking the search for ones that do.",actions:["Find one space tied to something you actually care about. Go once.","Reach out to one person who shares something specific with you.","Search for one local or online group around a real interest. Don't join — just look.","Reconnect with one person who knew you before this season.","Go somewhere you'd feel like a regular by the third visit."]},
+  "Connection":{excuse:"Everyone's busy — I don't want to bother them.",strategy:"Waiting to be invited, then feeling forgotten.",actions:["Text one person you miss. No agenda. Just 'I thought of you.'","Invite one person to something specific this week.","Call someone instead of texting. Five minutes is enough.","Send a voice note to someone. It's more human than text.","Ask someone a real question. Not 'how are you'. Something specific."]},
+  "Support":{excuse:"I should be able to handle this alone.",strategy:"Carrying everything until you collapse, then calling it a crisis.",actions:["Ask for one specific thing from one specific person this week.","Tell someone 'I'm not okay' before it becomes a crisis.","Accept help when it's offered. Don't say 'no, you don't have to'.","Name one thing you're carrying alone. Ask one person to help with a piece.","Ask someone to sit with you. They don't have to fix anything."]},
+  "Trust":{excuse:"People always let me down eventually.",strategy:"Testing people, then confirming the story when they fail.",actions:["Notice one small moment where someone kept their word. Let it count.","Share one small thing with someone and watch what they do.","Write down one person who has been reliable. Tell them you noticed.","Risk one small vulnerability. Just one.","Stop testing. Ask directly for what you want instead."]},
+  "Play":{excuse:"I'll play when I've earned it.",strategy:"Scrolling, numbing, or calling rest 'play' when it isn't.",actions:["Schedule 30 minutes of something with no purpose. Defend it like work.","Do one thing this week that has no productive outcome.","Play a game. A real one. Cards, board, video.","Colour, draw, or make something ugly for fun.","Go somewhere just to look at it. No photos needed."]},
+  "Relaxation":{excuse:"I can't relax — there's too much to do.",strategy:"Staying busy as a way to avoid the feelings underneath.",actions:["Sit still for 10 minutes with nothing. Notice what comes up.","Do one non-productive thing for 30 minutes today.","Take a bath, a walk, or a nap — pick one, do it without guilt.","Put your phone in another room for an hour.","Lie down without a reason. Just for ten minutes."]},
+  "Beauty":{excuse:"Beauty is a luxury — I don't have time.",strategy:"Living in environments that are purely functional, then feeling flat.",actions:["Put one beautiful thing where you'll see it every day.","Look at something beautiful for two minutes. Deliberately.","Buy one flower. One. It counts.","Notice one beautiful thing today and name it out loud.","Visit a place that makes you feel small and calm. A park, a museum, a view."]},
+  "Purpose":{excuse:"I'll find my purpose when I have more time/energy/money.",strategy:"Chasing productivity as a substitute for meaning.",actions:["Write down one moment in the last month that felt meaningful. What was present?","Ask yourself: if nothing changed in my life, what would I still want to do?","Write one sentence about what you want your life to be about. Not perfect. Just honest.","Notice one thing this week that made you feel like you mattered.","Read about someone who did something that inspired you. What was their 'why'?"]},
+  "Contribution":{excuse:"What I do doesn't matter in the grand scheme.",strategy:"Withdrawing effort because it won't be seen.",actions:["Do one small thing for someone this week. Notice how it lands.","Give one thing away — time, money, attention.","Help someone with something specific, once.","Say thank you to someone who doesn't expect it.","Pick one thing you care about. Do one small thing about it."]},
+  "Impact":{excuse:"I'm just one person — it won't make a difference.",strategy:"Waiting for a big opportunity instead of acting on a small one.",actions:["Name one thing you wish were different. Do one tiny thing about it today.","Write to one person in power about something you care about.","Sign one petition, donate to one cause, show up to one thing.","Tell one person about something you believe in.","Ask yourself: what's the smallest action that would still count?"]},
+  "Meaning-making":{excuse:"There's no point trying to make sense of it.",strategy:"Numbing, avoiding, or intellectualizing instead of feeling.",actions:["Write the story of the last hard thing as if telling it to a friend. What's the meaning?","Ask yourself: what did this teach me about what I need?","Tell someone the story of a hard thing you went through.","Write down what you'd tell your younger self about this season.","Notice one thing that has changed for the better since the hardest part."]},
+  "Gratitude":{excuse:"I'll be grateful when things are better.",strategy:"Focusing on what's missing, then feeling empty despite having a lot.",actions:["Name three specific things from today. Not 'family' — the actual moment.","Tell someone what they've given you. Be specific.","Write down one thing you'd miss if it disappeared.","Notice one small good thing today. Say it out loud.","Thank someone for something small they did months ago."]},
+  "Freedom from pain":{excuse:"It's not that bad — I can push through.",strategy:"Ignoring the body until it forces you to stop.",actions:["Book one appointment or take one rest day you've been postponing.","Tell your body 'I hear you' and mean it. Then act on it.","Take the painkiller. You don't have to be a hero.","Rest today even if you feel you don't deserve to.","Name the pain. Sometimes naming it releases some of it."]},
+  "Movement and exercise":{excuse:"I'll start exercising when I have more energy.",strategy:"Sitting all day, then wondering why you feel heavy.",actions:["Walk for 10 minutes today. No goal. Just movement.","Stretch for 5 minutes when you wake up.","Take the stairs once today. Once is enough.","Dance to one song in your kitchen.","Move your body for 10 minutes without calling it exercise."]},
+  "Sunlight":{excuse:"I'll go outside when the weather's better.",strategy:"Living under artificial light, then feeling low without knowing why.",actions:["Step outside for 5 minutes within an hour of waking.","Eat lunch outside, or near a window.","Open all the curtains in one room.","Take one walk in daylight this week. Even short.","Sit by a window for 10 minutes with no screen."]},
+  "Companionship":{excuse:"Everyone's busy — I don't want to impose.",strategy:"Waiting to be included, then feeling excluded.",actions:["Reach out to one person today. Suggest a specific time.","Do something with someone this week. Anything.","Sit in a café with other people around you for 30 minutes.","Invite someone over for tea or a walk.","Join one regular thing where the same people show up."]},
+  "Intimacy":{excuse:"We're too tired / busy / distant for that.",strategy:"Avoiding vulnerability because it feels risky, then feeling lonely.",actions:["Share one small vulnerable thing with your partner this week.","Ask your partner one real question about their inner world.","Reach for their hand. Just that.","Tell your partner one thing you appreciate about them.","Ask them what they need this week."]},
+  "Self-knowledge":{excuse:"I know myself well enough.",strategy:"Staying busy so there's no space to actually check.",actions:["Spend 10 minutes with a journal this week. What do I actually want right now?","Notice one moment this week where you felt most like yourself. What was happening?","Write down three things you need right now that you haven't said out loud.","Ask yourself: what am I actually feeling right now?","Notice one thing you do that isn't really you."]},
+  "Structure":{excuse:"I work better under pressure.",strategy:"Living in reactive mode, then calling it flexibility.",actions:["Build one small routine this week — same time, same place, every day.","Write down your day tomorrow before it starts.","Block one non-negotiable hour in your calendar this week.","Take one recurring task and give it a fixed time.","Simplify one system that's gotten complicated."]},
+  "Creativity":{excuse:"I'm not creative — that's for other people.",strategy:"Consuming other people's creativity instead of making your own.",actions:["Make something badly this week. A drawing, a paragraph, a meal. Bad is fine.","Write 200 words of anything. No editing.","Take one photo that means something to you.","Cook something without a recipe.","Draw for ten minutes. Badly. That's the point."]},
+  "Learning and growth":{excuse:"I'll learn that when I have more time.",strategy:"Consuming content without applying it, then feeling stuck.",actions:["Pick one thing you want to learn. Spend 15 minutes on it today.","Sign up for one thing this week. Just sign up.","Read one article or chapter that has nothing to do with your job.","Ask one person about something they know and you don't.","Try one small new thing this week."]},
+  "Recognition":{excuse:"I shouldn't need praise — that's ego.",strategy:"Working harder, hoping it will be noticed silently.",actions:["Ask for specific feedback on one thing you did this week.","Tell someone what you did. Let them respond.","Write down three things you did well this week.","Ask your manager: 'What's landing? What's not?'","Name one thing you're proud of. Out loud."]},
+  "Self-advocacy":{excuse:"If I speak up, I'll be seen as difficult.",strategy:"Swallowing it, then complaining to someone else.",actions:["Name one thing you need at work this week. Say it once, plainly.","Ask for what you want instead of hinting.","Say 'I need' instead of 'I was wondering if maybe'.","Practice the sentence out loud before you say it.","Write down what you'd say if you weren't afraid. Then say one sentence of it."]},
+  "Integrity":{excuse:"I have to compromise my values — that's just how it works here.",strategy:"Going along with things you don't believe in, then resenting it.",actions:["Name one value you won't compromise. Hold it in one small decision this week.","Write down your top three values. Check your calendar — do they match?","Say no to one thing that violates a value. Just one.","Tell someone about one thing you believe in.","Notice one moment this week where you felt off. What value was being crossed?"]},
+  "Clarity":{excuse:"It's complicated — I'll figure it out eventually.",strategy:"Keeping everything vague so no decision has to be made.",actions:["Write down the three things you're actually deciding between.","Say the thing you're avoiding out loud.","Tell one person the truth about where you are.","Write the messy version. Don't edit it.","Ask: what's the actual question here?"]},
+  "Freedom":{excuse:"I can't leave — it's not that simple.",strategy:"Staying in situations that make you smaller, calling it loyalty.",actions:["Name one small freedom you could reclaim this week, even briefly.","Do one thing today that you'd do if no one were watching.","Take one afternoon and make no plans.","Say yes to one thing you'd usually say no to.","Say no to one thing you'd usually say yes to."]},
+  "Privacy":{excuse:"I don't need privacy — I'm an open book.",strategy:"Being constantly available, then wondering why you're exhausted.",actions:["Block 30 minutes with no availability. Defend it.","Go somewhere alone this week for an hour.","Turn off notifications for one hour today.","Keep one thing private this week. Just one.","Close the door, literally or metaphorically, for ten minutes."]},
+  "Affection":{excuse:"We're not really physical people.",strategy:"Going months without touch, then feeling distant.",actions:["Ask for one form of touch this week — a hug, a hand on the shoulder.","Hug someone for a full five seconds.","Sit close to someone. Actually close.","Hold someone's hand this week.","Tell one person you love them. Not 'love you' — love them."]},
+  "Compassion":{excuse:"I'm fine — I don't need softness.",strategy:"Harsh self-talk, then wondering why you're tired.",actions:["Say one kind thing to yourself tonight. Actually say it.","Notice one harsh thought. Rewrite it as you'd say it to a friend.","Do one gentle thing for yourself today.","Forgive yourself for one small thing.","Write down one thing you did today that was enough."]},
+  "Peer community":{excuse:"Nobody else gets it.",strategy:"Isolating, then confirming no one understands.",actions:["Find one group where you don't have to explain yourself.","Look for one online community around what you're going through.","Reach out to one person who gets it.","Join one thing where everyone's there for the same reason.","Ask one person: 'Do you feel this too?'"]},
+  "Fun":{excuse:"Fun is for kids.",strategy:"Filling all time with productive activity.",actions:["Do one thing this week purely because it's fun.","Laugh at something today. On purpose.","Say yes to something silly.","Watch something that makes you laugh.","Do one thing you loved as a kid."]},
+  "Leisure":{excuse:"I'll have leisure when I've earned it.",strategy:"Filling every hour with something useful.",actions:["Block two hours this week with nothing scheduled.","Do one thing slowly today. On purpose.","Take an hour and don't produce anything.","Read for pleasure. Not for learning.","Take a walk with no destination."]},
+  "Celebration":{excuse:"It's not a big deal.",strategy:"Not marking anything, then feeling like nothing matters.",actions:["Mark one small win this week. Out loud, with someone.","Tell someone about something you're proud of.","Do something to acknowledge a milestone, even small.","Have a small treat. On purpose. Not as a reward. As a marker.","Say 'I did that' about one thing today."]},
+  "Growth":{excuse:"I'm too old / busy / set in my ways.",strategy:"Staying in the same patterns, then feeling stagnant.",actions:["Pick one skill. Spend 15 minutes this week on it.","Read one thing that challenges you.","Try one small new thing this week.","Ask someone to teach you something.","Notice one thing you got slightly better at recently."]},
+  "Fulfillment":{excuse:"This is just what life is.",strategy:"Achieving things that don't actually matter to you.",actions:["Write down three moments recently when you felt most alive. What was common?","Ask yourself: what would I do if no one would judge me?","Notice one thing that made you feel full this week.","Write down one thing you'd like more of in your life.","Compare your calendar to your values. What's missing?"]},
+  "Service":{excuse:"What could I possibly give?",strategy:"Waiting until you have more to give.",actions:["Do one small act of service this week. Anonymous is fine.","Give someone your full attention for ten minutes.","Help one person with something specific.","Volunteer for something small. One time.","Donate one thing you don't need."]},
+  "Spirituality":{excuse:"I'm not spiritual.",strategy:"Avoiding stillness, then feeling disconnected.",actions:["Spend 10 minutes in silence, outside, or in a space that matters.","Sit with something bigger than you this week. A tree, a sky, a river.","Notice one moment of awe. Write it down.","Ask one question you can't answer. Sit with it.","Light a candle, or do one small ritual. Meaning is in the doing."]},
+  "Transcendence":{excuse:"I don't have time for awe.",strategy:"Screens, tasks, filling every gap.",actions:["Watch a sunset. Listen to a piece of music with full attention.","Sit outside at night and look up.","Listen to a whole song with your eyes closed.","Notice something that makes you feel small and calm.","Spend 10 minutes in a place that moves you."]},
+  "Sexual needs / intimacy":{excuse:"It's not important — there are bigger things.",strategy:"Ignoring the need, then feeling disconnected from your body.",actions:["Name what you want. To yourself first, then to a partner if you have one.","Ask for one thing this week, gently.","Notice what your body wants and say it out loud.","Spend time in your body without a goal.","Talk about desire without making it about the other person's response."]},
+  "Sensory comfort":{excuse:"I should be able to tolerate it.",strategy:"Staying in environments that overwhelm you, then crashing.",actions:["Change one thing about your environment this week.","Wear the fabric that feels good today.","Find one quiet corner and sit in it for ten minutes.","Turn off one source of noise.","Adjust the light to how you actually feel."]},
+  "Health":{excuse:"I'll deal with it when it's serious.",strategy:"Ignoring the body until it forces a stop.",actions:["Book one check-up or appointment you've been putting off.","Notice one signal your body is giving you. Respond to it.","Drink water today. Actually.","Take your medication. Right now if you haven't.","Rest when your body says rest. Not when it collapses."]},
+  "Access to healthcare":{excuse:"It's not urgent.",strategy:"Avoiding the system because it's exhausting.",actions:["Make one call or one booking. Just one.","Ask someone to help you navigate one step.","Write down the one thing you've been avoiding. Do it.","Look up one clinic or provider. Just look.","Ask a friend to come with you to one appointment."]},
+  "Access to shelter":{excuse:"I'll figure it out.",strategy:"Staying in situations that aren't sustainable.",actions:["Identify one resource or one person who could help. Reach out.","Tell one person your actual situation.","Look up one service or organisation. Just look.","Ask one person for a temporary hand.","Write down what you actually need. Then pick one thing to ask for."]},
+  "Shelter":{excuse:"It's fine for now.",strategy:"Staying somewhere that doesn't feel like yours.",actions:["Name one thing that would make your space feel more like home. Do it.","Clean one corner. Just one.","Put something on the wall that means something to you.","Arrange your space so it fits your body.","Change one thing about your space so it feels like yours."]},
+  "Freedom from ableism":{excuse:"I should just try harder.",strategy:"Masking until you collapse.",actions:["Name one accommodation you need. Ask for it once.","Tell one person what's actually hard.","Stop apologising for something you can't help.","Ask for one adjustment. Frame it as a need, not a favour.","Find one community where you don't have to mask."]},
+  "Acceptance":{excuse:"If I change, they'll accept me.",strategy:"Becoming a version of yourself that fits.",actions:["Show one small unedited piece of yourself this week. See what happens.","Say one thing you usually hide.","Notice one thing about you that you've been treating as wrong.","Tell one person one thing about you that you usually soften.","Wear or say one thing that feels more like you."]},
+  "Empathy":{excuse:"Nobody really gets it.",strategy:"Explaining less, resenting more.",actions:["Tell one person what you're actually going through. Not the summary.","Ask someone to just listen, not fix.","Say the real thing. Even the messy version.","Tell one person the version you usually edit out.","Ask someone: 'Can I tell you something hard?'"]},
+  "Mutuality":{excuse:"I'll keep giving — it's fine.",strategy:"Keeping score silently, then feeling used.",actions:["In one relationship, ask for one thing this week. Notice what happens.","Say yes to receiving something.","Let someone do something for you.","Name one thing you'd like them to take over.","Say 'I need help with this' once this week."]},
+  "Love":{excuse:"I don't need love — I need to get things done.",strategy:"Working, producing, avoiding softness.",actions:["Let yourself receive one kind gesture this week without deflecting.","Tell one person you love them. Mean it.","Let someone hug you without pulling away.","Say 'thank you' instead of 'you didn't have to'.","Notice one moment of love today."]},
+  "Challenge":{excuse:"I'll take on more when I'm ready.",strategy:"Avoiding difficulty, then feeling understimulated.",actions:["Pick one thing that's slightly too hard. Try it for 20 minutes.","Sign up for one thing you're not sure you can do.","Do one hard thing badly. Finish it.","Ask for one project that stretches you.","Try something you're not good at yet."]},
+  "Stimulation":{excuse:"I'm bored — that's just life.",strategy:"Doomscrolling for stimulation instead of real input.",actions:["Read, watch, or listen to something that actually interests you today.","Go somewhere new this week.","Ask someone about something they're passionate about.","Read something outside your usual interests.","Go see live music, a lecture, or a play."]},
+  "Inspiration":{excuse:"I don't have time to be inspired.",strategy:"Consuming content passively, never being moved.",actions:["Return to one thing that once moved you. Sit with it for 10 minutes.","Listen to a piece of music that means something to you.","Read something that reminds you what matters.","Watch or listen to someone doing something they love.","Ask: what used to move me? Go back to that."]},
+  "Curiosity":{excuse:"I don't have room for rabbit holes.",strategy:"Staying in known territory, then feeling flat.",actions:["Follow one curiosity for 15 minutes this week. No purpose.","Google something you've wondered about. Just to know.","Ask one question out loud that you don't know the answer to.","Read about one thing that fascinates you.","Take a different route home. Notice something new."]},
+  "Mastery":{excuse:"I'm already good enough at this.",strategy:"Staying at the same level, then feeling stagnant.",actions:["Pick one thing you want to get better at. Practice it 20 minutes this week.","Ask someone who's better at it what they do differently.","Do one thing badly on purpose, to learn.","Track one thing you're improving at.","Do one rep of something. Just one."]},
+  "Independence":{excuse:"I can't do it alone.",strategy:"Waiting for someone else to make it possible.",actions:["Do one thing this week entirely on your own. Even small.","Take one small action without asking for input.","Go somewhere alone. Just once.","Make one decision without consulting anyone.","Do one thing you usually outsource. Just once."]},
+  "Freedom from Responsibility":{excuse:"I can't take a break — everything falls apart.",strategy:"Pushing through, then burning out and dropping everything.",actions:["Take one afternoon off this week. Nothing productive allowed.","Say 'not today' to one thing.","Let something small go undone. Notice what happens.","Hand one task over. Don't take it back.","Tell someone you need a break."]},
+  "Consent":{excuse:"It's not worth the awkwardness to say no.",strategy:"Going along with things, then feeling violated later.",actions:["Practice 'Let me think about it' as a response this week. Use it once.","Say no to one thing without apology.","Notice one moment where you went along with something. What did you want?","Ask for something, and notice how they respond.","Say 'I don't want to' instead of 'I can't'."]},
+  "Identity affirmation":{excuse:"It doesn't matter if they get it right.",strategy:"Letting it slide, then feeling invisible.",actions:["Correct one person gently this week about how you want to be named.","Say your pronouns out loud. Once.","Tell one person how you'd like to be referred to.","Write down the words that feel like you.","Notice when someone gets it right. Let it matter."]},
+  "Understanding":{excuse:"I don't really need to understand — I just need to cope.",strategy:"Staying confused, then feeling powerless.",actions:["Ask one clarifying question this week.","Write down what you do understand and what you don't.","Look up one thing you've been guessing about.","Ask someone to explain. It's not weakness.","Write the messy version of what you think is happening."]},
+  "Inspiration and meaning":{excuse:"Meaning is for people with time.",strategy:"Numbing the emptiness.",actions:["Name one thing that matters to you. Say it out loud.","Do one thing this week that lines up with what you care about.","Write a sentence about why you do what you do.","Notice one moment today that felt meaningful."]}
 };
 
-var REFRAME_BY_CONTEXT = {
-  self: REFRAME_BASE,
-  professional: Object.assign({}, REFRAME_BASE, {
-    "Rest and sleep":{excuse:"I'll rest after this project.",strategy:"Treating sleep as optional during crunch, then crashing.",action:"Set a hard stop at a specific time three nights this week."},
-    "Identity":{excuse:"My work is who I am — that's not a problem.",strategy:"Letting the job define you, then losing yourself when it changes.",action:"List three things about you that would still be true if you lost this job."},
-    "Self-advocacy":{excuse:"If I ask for more, I'll be seen as difficult.",strategy:"Waiting to be recognised, then resenting the people who weren't told.",action:"Bring one clear request to one person this week. Once."},
-    "Recognition":{excuse:"Good work speaks for itself.",strategy:"Hoping quietly, then feeling invisible.",action:"Ask your manager for feedback on one specific thing you shipped."},
-    "Boundaries":{excuse:"I can't say no — it's not how this place works.",strategy:"Saying yes, then dropping quality everywhere.",action:"Decline one low-value request this week. With a reason, not an apology."},
-    "Production":{excuse:"I'll feel better when I've cleared my list.",strategy:"Working through exhaustion, then calling the crash 'rest'.",action:"Take one full day off. Zero work notifications."},
-    "Purpose":{excuse:"The money is the point right now.",strategy:"Staying for the salary, then feeling dead inside.",action:"Write one sentence: what you'd want your work to contribute to. Compare."},
-    "Stability and consistency":{excuse:"That's just how this industry is.",strategy:"Living project to project, never building a rhythm.",action:"Protect one recurring hour a week that nothing can move."},
-    "Clarity":{excuse:"There's too much noise to think clearly.",strategy:"Keeping everything in your head, then dropping balls.",action:"Write the three decisions that are actually open. Close one this week."},
-    "Sensory comfort":{excuse:"I should just be able to focus anywhere.",strategy:"Working in environments that drain you, then blaming yourself.",action:"Change one thing about your workspace — light, noise, chair, temperature."}
-  }),
-  couple: Object.assign({}, REFRAME_BASE, {
-    "Intimacy":{excuse:"We're too tired / busy for that.",strategy:"Avoiding vulnerability, then feeling alone in the same bed.",action:"Share one small vulnerable thing with your partner this week."},
-    "Connection":{excuse:"We talk about logistics all day — that counts.",strategy:"Running a household instead of a relationship.",action:"One 20-minute conversation this week with no logistics allowed."},
-    "Emotional safety":{excuse:"If I bring it up, it'll become a fight.",strategy:"Swallowing it, then exploding months later.",action:"Name one small feeling this week without accusation."},
-    "Boundaries":{excuse:"I can't ask for space — they'll take it personally.",strategy:"Giving up all alone time, then resenting them for it.",action:"Ask for one hour alone this week. Frame it as a need, not a rejection."},
-    "Mutuality":{excuse:"I'll keep carrying it — it's what partners do.",strategy:"Keeping score silently, then detonating.",action:"Name one thing you want them to take over. Ask once, plainly."},
-    "Affection":{excuse:"We're not really physical anymore — that's normal.",strategy:"Going months without touch, then feeling distant.",action:"Initiate one form of physical affection this week. Simple is enough."},
-    "Companionship":{excuse:"We're too busy for date nights.",strategy:"Co-existing in the same space, separately.",action:"Schedule one 90-minute block this week that isn't errands."},
-    "Play":{excuse:"We'll have fun again when things calm down.",strategy:"Running a logistics operation, then wondering why it feels flat.",action:"Do one thing together that has no purpose. This week."},
-    "Trust":{excuse:"We've been together long enough — trust should be automatic.",strategy:"Not repairing small breaches, then being surprised when they add up.",action:"Name one small moment this week where you felt let down. Say it gently."},
-    "Autonomy":{excuse:"We do everything together — that's what a couple does.",strategy:"Losing your own life inside the shared one.",action:"Do one thing this week that's yours alone. Not a secret — just yours."}
-  }),
-  parent: Object.assign({}, REFRAME_BASE, {
-    "Rest and sleep":{excuse:"There's no time — the child comes first.",strategy:"Running on empty, then snapping at the people you love.",action:"Identify one window this week where someone else covers. Use it to sleep."},
-    "Boundaries":{excuse:"I can't say no to my child — that's not love.",strategy:"Giving endlessly, then feeling invisible and used.",action:"Set one gentle, firm boundary this week. Hold it without explaining."},
-    "Identity":{excuse:"This is just the season — I'll be me again later.",strategy:"Losing yourself entirely to the role.",action:"Do one thing this week that has nothing to do with your child."},
-    "Support":{excuse:"I shouldn't need help — I chose this.",strategy:"Doing everything alone, then collapsing.",action:"Ask one specific person for one specific thing this week."},
-    "Belonging":{excuse:"Other parents don't seem to struggle like I do.",strategy:"Isolating because you feel like the only one.",action:"Find one parent you can be honest with. Message them."},
-    "Peer community":{excuse:"The other parents at school are not my people.",strategy:"Staying isolated, then feeling like the only one.",action:"Find one online or local group of parents in your situation."},
-    "Relaxation":{excuse:"I'll relax when they're older.",strategy:"Holding tension 24/7, calling it being 'on'.",action:"Ten minutes a day this week that is yours. Defend it."},
-    "Self-knowledge":{excuse:"I don't have time to think about myself.",strategy:"Never pausing, then wondering who you are now.",action:"Five minutes of journaling tonight. One question: what do I want?"},
-    "Purpose":{excuse:"My purpose is them — that should be enough.",strategy:"Losing your own direction entirely in theirs.",action:"Write down one thing you want for yourself in the next year. Just one."},
-    "Freedom":{excuse:"I can't do what I want — I have a child.",strategy:"Waiting for the season to end, then resenting the years.",action:"Reclaim one small freedom this week. One hour. One thing."}
-  }),
-  team: Object.assign({}, REFRAME_BASE, {
-    "Trust":{excuse:"We're professional — trust isn't necessary.",strategy:"Politeness, then passive sabotage.",action:"In one meeting this week, say what you actually think. Once."},
-    "Consent":{excuse:"We can't say no to this — it's how the org works.",strategy:"Complying, then disengaging.",action:"Raise one concern about a decision this week. Once, plainly."},
-    "Recognition":{excuse:"We don't need to celebrate — we need to ship.",strategy:"Only noticing failure, never success.",action:"Name one specific thing one teammate did well this week. To them."},
-    "Rest and sleep":{excuse:"We'll rest after the launch.",strategy:"Running hot indefinitely, calling it culture.",action:"Declare one no-meetings afternoon this week. Protect it for the whole team."},
-    "Boundaries":{excuse:"Nobody here says no.",strategy:"Accepting everything, delivering nothing well.",action:"Decline one request this week. Name the trade-off."},
-    "Purpose":{excuse:"We don't have time to talk about mission.",strategy:"Doing tasks without a why, then losing energy.",action:"At the next team meeting, ask: what are we actually building toward?"},
-    "Emotional safety":{excuse:"We're fine — nobody's complaining.",strategy:"Silence, then quiet disengagement.",action:"Ask one person privately: what would make this safer for you?"},
-    "Play":{excuse:"We're too busy for that.",strategy:"Working flat out, then losing creativity.",action:"One 30-minute unstructured block this week. No agenda."},
-    "Structure":{excuse:"We're agile — structure would slow us down.",strategy:"Reacting to every input, then wondering why nothing lands.",action:"Protect one recurring meeting this week with a clear purpose. Kill one that doesn't have one."},
-    "Clarity":{excuse:"Everyone knows what they're doing.",strategy:"Assuming alignment, then discovering drift months later.",action:"Write down what you think the team is building. Compare with one teammate."}
-  })
-};
+/* Add a fallback for any need not explicitly listed */
+function reframeFor(name){
+  if(REFRAME_BASE[name]) return REFRAME_BASE[name];
+  return {
+    excuse:"I'll deal with this when things calm down.",
+    strategy:"Pushing through and hoping it resolves itself.",
+    actions:[
+      "Name one small thing you could do this week. Just one.",
+      "Ask one person what they do when they need this.",
+      "Write down what this need actually looks like when it's met.",
+      "Take one tiny action today. Small is enough.",
+      "Notice one moment this week where this need was partially met. What made that possible?"
+    ]
+  };
+}
 
 var CONTEXTS = [
   {id:"self", icon:"O", title:"Just me", desc:"A full, personal map"},
@@ -741,7 +772,7 @@ var CONTEXTS = [
 var ONBOARD = [
   {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><path d="M60 20 C40 20 25 35 25 55 C25 65 30 74 40 79 C32 84 28 94 28 105 L92 105 C92 94 88 84 80 79 C90 74 95 65 95 55 C95 35 80 20 60 20 Z" fill="none" stroke="#4F6B4A" stroke-width="2"/><path d="M60 40 L60 90" stroke="#6B4A32" stroke-width="3"/></svg>', title:"You understand yourself. Nothing changes.", body:"Because you might be feeding the wrong layer. This is not another productivity hack, not therapy, and not motivation. It is a way to find words for what you actually need — before it turns into behavior you regret."},
   {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><path d="M60 105 L60 60" stroke="#6B4A32" stroke-width="4"/><path d="M60 60 C60 40 40 35 35 25" stroke="#4F6B4A" stroke-width="2" fill="none"/><path d="M60 60 C60 40 80 35 85 25" stroke="#4F6B4A" stroke-width="2" fill="none"/><path d="M60 80 C60 70 50 68 45 62" stroke="#2F6F7A" stroke-width="2" fill="none"/><path d="M60 80 C60 70 70 68 75 62" stroke="#2F6F7A" stroke-width="2" fill="none"/><circle cx="35" cy="22" r="6" fill="#9A7B1E"/><circle cx="85" cy="22" r="6" fill="#9A7B1E"/></svg>', title:"Your needs are a tree, not a list.", body:"Roots feed everything. The trunk holds you upright. Branches reach outward. Leaves are seasonal output. Fruits appear when the tree is healthy. When you know which layer is starving, the fix becomes obvious."},
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#4F6B4A">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#55635A">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layer of your tree is under the most strain, pick three emergency needs, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
+  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#4F6B4A">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#55635A">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layers are under strain, pick up to three emergencies per strained layer, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
 ];
 
 var LAYER_INFO = {
@@ -759,17 +790,16 @@ var state = {
   diagCurrent:0,
   diagScores:null,
   diagStrained:null,
-  emergencyPicks:[],
-  reframeNotes:{},
+  focusLayer:null,
+  emergencyPicks:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
+  chosenActions:{}, // keyed by need name -> action string
+  customActions:{}, // keyed by need name -> user text
+  actionIndex:{}, // keyed by need name -> rotation index
   treeNeeds:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
   journal:[]
 };
 
 function currentQuestions(){return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF}
-function currentReframe(name){
-  var set = REFRAME_BY_CONTEXT[state.context] || REFRAME_BASE;
-  return set[name] || REFRAME_BASE[name] || {excuse:"I'll deal with this when things calm down.",strategy:"Pushing through and hoping it resolves itself.",action:"Name one small thing you could do this week. Just one."};
-}
 function sortByContextPriority(rows, layer){
   var priority = PRIORITY_BY_CONTEXT[state.context] && PRIORITY_BY_CONTEXT[state.context][layer];
   if(!priority || priority.length===0) return rows.slice();
@@ -788,6 +818,8 @@ function allCoreNeedsOrdered(){
   LORDER.forEach(function(layer){needsForLayer(layer).forEach(function(n){out.push(n)})});
   return out;
 }
+function scoreStatus(s){if(s<=3)return "healthy";if(s<=7)return "moderate";return "strained"}
+function isEmergency(layer, name){return state.emergencyPicks[layer] && state.emergencyPicks[layer].indexOf(name)>=0}
 
 function navigateTo(page){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
@@ -806,6 +838,7 @@ window.navigateTo=navigateTo;
 document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){navigateTo(n.dataset.page)})});
 document.getElementById('menuBtn').addEventListener('click',function(){document.getElementById('sidebar').classList.toggle('open')});
 
+/* ===== ONBOARDING ===== */
 function renderOnboarding(){
   var s=ONBOARD[state.onboardStep];
   var c=document.getElementById('onboardingContent');
@@ -818,6 +851,7 @@ function renderOnboarding(){
   if(back)back.onclick=function(){state.onboardStep--;renderOnboarding()};
 }
 
+/* ===== CONTEXT ===== */
 function renderContext(){
   var g=document.getElementById('contextGrid');
   g.innerHTML=CONTEXTS.map(function(c){return '<div class="context-card" data-id="'+c.id+'"><div class="cc-icon">'+c.icon+'</div><div class="cc-title">'+c.title+'</div><div class="cc-desc">'+c.desc+'</div></div>'}).join("");
@@ -828,13 +862,17 @@ function renderContext(){
       state.diagAnswers=new Array(15).fill(null);
       state.diagScores=null;
       state.diagStrained=null;
-      state.emergencyPicks=[];
-      state.reframeNotes={};
+      state.focusLayer=null;
+      state.emergencyPicks={roots:[],trunk:[],branches:[],leaves:[],fruits:[]};
+      state.chosenActions={};
+      state.customActions={};
+      state.actionIndex={};
       navigateTo('diagnostic');
     };
   });
 }
 
+/* ===== DIAGNOSTIC ===== */
 function renderDiagnostic(){
   if(state.diagScores){renderResults();return}
   renderDiagQuestion();
@@ -845,7 +883,7 @@ function renderDiagQuestion(){
   if(state.diagCurrent>=qs.length){computeDiagResult();renderResults();return}
   var q=qs[state.diagCurrent];
   var pct=(state.diagCurrent/qs.length)*100;
-  c.innerHTML='<div class="today-hero"><h1>Which layer is starving?</h1><p>'+qs.length+' statements. Two minutes. You will see which layer of your Needs Tree is under the most strain.</p></div><div class="diag-progress"><div class="diag-bar" style="width:'+pct+'%"></div></div><div class="diag-q"><div class="q-layer">'+L[q.layer]+'</div><div class="q-num">Statement '+(state.diagCurrent+1)+' of '+qs.length+'</div><div class="q-text">'+q.text+'</div><div class="diag-scale">'+[0,1,2,3,4].map(function(v){var labs=["Not me","","Sometimes","","That's me"];return '<button data-val="'+v+'" class="'+(state.diagAnswers[state.diagCurrent]===v?'sel':'')+'">'+v+'<span class="lab">'+labs[v]+'</span></button>'}).join("")+'</div></div><div class="action-row">'+(state.diagCurrent>0?'<button class="btn btn-ghost" id="diagBack">&larr; Back</button>':'')+(state.diagAnswers[state.diagCurrent]!==null?'<button class="btn btn-primary" id="diagNext">Next &rarr;</button>':'')+'</div>';
+  c.innerHTML='<div class="today-hero"><h1>Which layer is starving?</h1><p>'+qs.length+' statements. Two minutes. You will see which layers of your Needs Tree are under strain.</p></div><div class="diag-progress"><div class="diag-bar" style="width:'+pct+'%"></div></div><div class="diag-q"><div class="q-layer">'+L[q.layer]+'</div><div class="q-num">Statement '+(state.diagCurrent+1)+' of '+qs.length+'</div><div class="q-text">'+q.text+'</div><div class="diag-scale">'+[0,1,2,3,4].map(function(v){var labs=["Not me","","Sometimes","","That's me"];return '<button data-val="'+v+'" class="'+(state.diagAnswers[state.diagCurrent]===v?'sel':'')+'">'+v+'<span class="lab">'+labs[v]+'</span></button>'}).join("")+'</div></div><div class="action-row">'+(state.diagCurrent>0?'<button class="btn btn-ghost" id="diagBack">&larr; Back</button>':'')+(state.diagAnswers[state.diagCurrent]!==null?'<button class="btn btn-primary" id="diagNext">Next &rarr;</button>':'')+'</div>';
   c.querySelectorAll('.diag-scale button').forEach(function(b){
     b.onclick=function(){
       state.diagAnswers[state.diagCurrent]=parseInt(b.dataset.val);
@@ -870,92 +908,128 @@ function computeDiagResult(){
   var max=-1,win="roots";
   LORDER.forEach(function(l){if(scores[l]>max){max=scores[l];win=l}});
   state.diagStrained=win;
+  var strained = LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
+  strained.sort(function(a,b){return scores[b]-scores[a]});
+  state.focusLayer = strained.length > 0 ? strained[0] : win;
 }
-function scoreStatus(s){if(s<=3)return "healthy";if(s<=7)return "moderate";return "strained"}
 
+/* ===== RESULTS ===== */
 function renderResults(){
   var c=document.getElementById('diagContent');
   var scores=state.diagScores;
-  var win=state.diagStrained;
-  var info=LAYER_INFO[win];
-  // FIXED: rank strained layers by score, not by fixed tree order
-  var strainedLayers = LORDER.filter(function(l){ return scoreStatus(scores[l]) === "strained"; });
-  strainedLayers.sort(function(a,b){ return scores[b] - scores[a]; });
-  var sortLayer = strainedLayers.length > 0 ? strainedLayers[0] : win;
   var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(x){return x.id===state.context})[0].title : null;
+  var strained = LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
 
   c.innerHTML='<div class="results-container">'+
-    '<div class="results-header"><h1>Your most strained layer is '+L[win]+'.</h1><p>Read from the roots up. If roots and trunk are both strained, start with roots — leaves and fruits cannot fix them.</p>'+(ctxLabel?'<p style="font-size:.82rem;color:var(--mute);margin-top:6px">Context: '+ctxLabel+'</p>':'')+'</div>'+
-    '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
+    '<div class="results-header"><h1>Your Needs Tree, this season.</h1><p>Tap any layer to see what it is, why it matters, and pick your emergencies there.'+(ctxLabel?' <span style="font-size:.85rem;color:var(--mute)">Context: '+ctxLabel+'</span>':'')+'</p></div>'+
+    '<div class="layer-bars" id="layerBars">'+LORDER.slice().reverse().map(function(l){
       var st=scoreStatus(scores[l]);
       var pct=Math.min(100,(scores[l]/12)*100);
-      return '<div class="layer-bar-item '+st+'"><div class="lbi-info"><div class="lbi-name">'+L[l]+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
+      var emCount=state.emergencyPicks[l]?state.emergencyPicks[l].length:0;
+      return '<div class="layer-bar-item '+st+'" data-layer="'+l+'"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
     }).join("")+'</div>'+
-    '<div class="results-detail" style="border-color:'+Lcolor[win]+'"><span class="rd-tag" style="background:'+Lcolor[win]+'">'+L[win]+'</span><h2>What this layer is, and what it solves</h2><div class="rd-section"><h3>What it is</h3><p>'+info.what+'</p></div><div class="rd-section"><h3>What it solves when satisfied</h3><p>'+info.solves+'</p></div><div class="rd-section"><h3>Why this layer comes first</h3><p>'+info.priority+'</p></div><div class="rd-question">What is one condition in this layer you have been calling a preference, that is actually a necessity?</div></div>'+
-    '<div id="sortSlot"></div>'+
-    '<div class="action-row"><button class="btn btn-outline" id="retakeBtn">Retake diagnostic</button><button class="btn btn-primary" id="buildTreeBtn" disabled>Build my tree</button></div>'+
+    '<div id="layerFocus"></div>'+
+    '<div class="action-row"><button class="btn btn-outline" id="retakeBtn">Retake diagnostic</button><button class="btn btn-primary" id="goTreeBtn">Go to my tree</button></div>'+
     '<div class="safety-note">Reflection tool, not therapy or diagnosis. If something comes up, talk to someone you trust or a professional.</div>'+
   '</div>';
 
-  renderSortSection(sortLayer);
-
+  document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){
+    el.onclick=function(){state.focusLayer=el.dataset.layer;renderResults()};
+  });
   document.getElementById('retakeBtn').onclick=function(){
-    state.diagAnswers=new Array(15).fill(null);state.diagCurrent=0;state.diagScores=null;state.diagStrained=null;state.emergencyPicks=[];state.reframeNotes={};renderDiagnostic();
+    state.diagAnswers=new Array(15).fill(null);state.diagCurrent=0;state.diagScores=null;state.diagStrained=null;state.focusLayer=null;
+    state.emergencyPicks={roots:[],trunk:[],branches:[],leaves:[],fruits:[]};
+    state.chosenActions={};state.customActions={};state.actionIndex={};
+    renderDiagnostic();
   };
-  document.getElementById('buildTreeBtn').onclick=function(){
-    if(state.emergencyPicks.length===3){
-      state.emergencyPicks.forEach(function(n){if(state.treeNeeds[sortLayer].indexOf(n)<0)state.treeNeeds[sortLayer].push(n)});
-      navigateTo('tree');
-    }
-  };
+  document.getElementById('goTreeBtn').onclick=function(){navigateTo('tree')};
+
+  // Apply focus
+  var fl = state.focusLayer || state.diagStrained;
+  document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){
+    el.classList.toggle('focused', el.dataset.layer === fl);
+  });
+  renderLayerFocus(fl, scores);
 }
 
-function renderSortSection(layer){
-  var slot=document.getElementById('sortSlot');
-  if(!slot)return;
-  var needs=needsForLayer(layer);
-  var ctxLabel = state.context && state.context!=="self" ? " tailored to "+CONTEXTS.filter(function(x){return x.id===state.context})[0].title.toLowerCase() : "";
-  slot.innerHTML='<div class="sort-section"><h2>Choose your three emergencies</h2><p>From your most strained layer ('+L[layer]+'), pick exactly three needs that feel like emergencies right now'+ctxLabel+'. Not preferences. The ones you have been apologizing for.</p><div class="sort-counter" id="sortCounter"><strong>0</strong> of 3 selected</div><div class="sort-grid" id="sortGrid">'+needs.map(function(n){
-    var sel=state.emergencyPicks.indexOf(n[1])>=0;
-    return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
-  }).join("")+'</div><div id="reframeSlot"></div></div>';
-  bindSortCards();
+function renderLayerFocus(layer, scores){
+  var slot=document.getElementById('layerFocus');
+  var info=LAYER_INFO[layer];
+  var st=scoreStatus(scores[layer]);
+  var color=Lcolor[layer];
+  var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(x){return x.id===state.context})[0].title.toLowerCase() : "";
+  var needs = needsForLayer(layer);
+  var picks = state.emergencyPicks[layer] || [];
+  var cap = st === "strained" ? 3 : 0;
+
+  var sortable = st === "strained";
+  var sortHtml = sortable
+    ? '<div class="sort-section"><h2>Pick up to three emergencies in '+L[layer]+'</h2><p>From this layer, pick the needs that feel like emergencies right now'+(ctxLabel?' for a '+ctxLabel:'')+'. Not preferences. The ones you have been apologizing for.</p><div class="sort-counter" id="sortCounter"><strong>'+picks.length+'</strong> of 3 selected</div><div class="sort-grid" id="sortGrid">'+needs.map(function(n){
+        var sel=picks.indexOf(n[1])>=0;
+        return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
+      }).join("")+'</div>'+(picks.length===3?'<div class="sort-complete">Three emergencies picked. Tap another layer above, or head to My Tree.</div>':'<div id="reframeSlot"></div>')+'</div>'
+    : '<div class="sort-section"><h2>'+L[layer]+' is '+st+' right now</h2><p>'+(st==="healthy"?'This layer is doing okay. Nothing to mark as emergency here. If you want to see what lives in this layer, tap a need on My Tree.':'This layer is under strain but not in the red. Keep an eye on it. If it drifts further, you can pick emergencies here.')+'</p></div>';
+
+  slot.innerHTML=
+    '<div class="results-detail" style="border-color:'+color+'">'+
+      '<div class="rd-context">'+L[layer]+' &middot; '+st+' &middot; '+scores[layer]+'/12</div>'+
+      '<h2>What this layer is, and what it solves</h2>'+
+      '<div class="rd-section"><h3>What it is</h3><p>'+info.what+'</p></div>'+
+      '<div class="rd-section"><h3>What it solves when satisfied</h3><p>'+info.solves+'</p></div>'+
+      '<div class="rd-section"><h3>Why this layer comes first</h3><p>'+info.priority+'</p></div>'+
+      '<div class="rd-question">What is one condition in this layer you have been calling a preference, that is actually a necessity?</div>'+
+    '</div>'+
+    sortHtml;
+
+  if(sortable){
+    document.querySelectorAll('#sortGrid .sort-card').forEach(function(el){
+      el.onclick=function(){
+        var name=el.dataset.need;
+        var arr = state.emergencyPicks[layer];
+        var i=arr.indexOf(name);
+        if(i>=0){arr.splice(i,1)}
+        else{if(arr.length>=3)return;arr.push(name)}
+        renderLayerFocus(layer, scores);
+      };
+    });
+    renderReframesFor(layer);
+  }
 }
-function bindSortCards(){
-  document.querySelectorAll('#sortGrid .sort-card').forEach(function(el){
-    el.onclick=function(){
-      var name=el.dataset.need;
-      var i=state.emergencyPicks.indexOf(name);
-      if(i>=0){state.emergencyPicks.splice(i,1)}
-      else{if(state.emergencyPicks.length>=3)return;state.emergencyPicks.push(name)}
-      updateSortUI();
-    };
-  });
-}
-function updateSortUI(){
-  document.querySelectorAll('#sortGrid .sort-card').forEach(function(el){
-    var sel=state.emergencyPicks.indexOf(el.dataset.need)>=0;
-    el.classList.toggle('selected',sel);
-    if(!sel && state.emergencyPicks.length>=3)el.classList.add('disabled');else el.classList.remove('disabled');
-  });
-  var counter=document.getElementById('sortCounter');
-  if(counter)counter.innerHTML='<strong>'+state.emergencyPicks.length+'</strong> of 3 selected';
-  var buildBtn=document.getElementById('buildTreeBtn');
-  if(buildBtn)buildBtn.disabled=state.emergencyPicks.length!==3;
-  renderReframes();
-}
-function renderReframes(){
+
+function renderReframesFor(layer){
   var slot=document.getElementById('reframeSlot');
   if(!slot)return;
-  if(state.emergencyPicks.length===0){slot.innerHTML="";return}
-  slot.innerHTML='<div class="reframe-section" style="margin-top:24px"><h2>Flip the strategy</h2><p>For each emergency, here is the intellectualization you may be using, the strategy that follows, and a starting action plan. Edit the plan in your own words — that version is the one that works.</p>'+state.emergencyPicks.map(function(name){
-    var r=currentReframe(name);
-    var note=state.reframeNotes[name]||"";
-    return '<div class="reframe-item"><div class="ri-need"><span class="ri-dot" style="background:var(--c-strained)"></span>'+name+'</div><div class="ri-block"><div class="ri-label">Intellectualization</div><div class="ri-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div><div class="ri-block"><div class="ri-label">Maladaptive strategy</div><div class="ri-text strategy">'+r.strategy+'</div></div><div class="ri-block"><div class="ri-label">Flip it — suggested action</div><div class="ri-text action">'+r.action+'</div></div><div class="ri-block"><div class="ri-label">Your version</div><textarea class="ri-input" data-need="'+name+'" placeholder="Write your own action plan for this need. What will you actually do this week?">'+note+'</textarea></div></div>';
+  var picks = state.emergencyPicks[layer] || [];
+  if(picks.length===0){slot.innerHTML="";return}
+  slot.innerHTML='<div class="reframe-section" style="margin-top:24px"><h2>Flip the strategy</h2><p>For each emergency, here is the intellectualization you may be using, the strategy that follows, and a starting action plan. Shuffle for other options, or write your own — that version is the one that works.</p>'+picks.map(function(name){
+    var r=reframeFor(name);
+    var idx = state.actionIndex[name] || 0;
+    var action = state.chosenActions[name] || r.actions[idx % r.actions.length];
+    var note = state.customActions[name] || "";
+    return '<div class="reframe-item"><div class="ri-need"><span class="ri-dot" style="background:var(--c-strained)"></span>'+name+'</div>'+
+      '<div class="ri-block"><div class="ri-label">Intellectualization</div><div class="ri-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div>'+
+      '<div class="ri-block"><div class="ri-label">Maladaptive strategy</div><div class="ri-text strategy">'+r.strategy+'</div></div>'+
+      '<div class="ri-block"><div class="ri-label">Flip it — suggested action</div><div class="ri-text action">'+action+'</div>'+
+        '<div class="action-row left" style="margin-top:8px"><button class="btn btn-outline btn-small" data-shuffle="'+name+'">Shuffle option</button></div>'+
+      '</div>'+
+      '<div class="ri-block"><div class="ri-label">Your version</div><textarea class="ri-input" data-need="'+name+'" placeholder="Write your own action plan for this need. What will you actually do this week?">'+note+'</textarea></div>'+
+    '</div>';
   }).join("")+'</div>';
-  slot.querySelectorAll('.ri-input').forEach(function(t){t.oninput=function(){state.reframeNotes[t.dataset.need]=t.value}});
+  slot.querySelectorAll('[data-shuffle]').forEach(function(b){
+    b.onclick=function(){
+      var name=b.dataset.shuffle;
+      var r=reframeFor(name);
+      state.actionIndex[name]=((state.actionIndex[name]||0)+1) % r.actions.length;
+      delete state.chosenActions[name];
+      renderReframesFor(layer);
+    };
+  });
+  slot.querySelectorAll('.ri-input').forEach(function(t){
+    t.oninput=function(){state.customActions[t.dataset.need]=t.value};
+  });
 }
 
+/* ===== TODAY ===== */
 function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -964,18 +1038,25 @@ function renderToday(){
   var body=document.getElementById('todayBody');
   if(!body)return;
   if(!state.diagScores){
-    body.innerHTML='<div class="empty-state"><div class="es-icon">O</div><h3>Start with the diagnostic</h3><p>Fifteen statements. Two minutes. It will tell you which layer of your tree is under the most strain — and where to begin.</p><div class="action-row"><button class="btn btn-primary" onclick="navigateTo(\'diagnostic\')">Take the diagnostic</button></div></div>';
+    body.innerHTML='<div class="empty-state"><div class="es-icon">O</div><h3>Start with the diagnostic</h3><p>Fifteen statements. Two minutes. It will tell you which layers of your tree are under strain — and where to begin.</p><div class="action-row"><button class="btn btn-primary" onclick="navigateTo(\'diagnostic\')">Take the diagnostic</button></div></div>';
     return;
   }
   var scores=state.diagScores;
   var win=state.diagStrained;
-  body.innerHTML='<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
+  var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
+  var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
+  body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
+    '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
     var st=scoreStatus(scores[l]);
     var pct=Math.min(100,(scores[l]/12)*100);
-    return '<div class="layer-bar-item '+st+'" onclick="navigateTo(\'tree\')" style="cursor:pointer"><div class="lbi-info"><div class="lbi-name">'+L[l]+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
-  }).join("")+'</div><div class="results-detail" style="border-color:'+Lcolor[win]+'"><span class="rd-tag" style="background:'+Lcolor[win]+'">Today</span><h2>'+L[win]+' is your most strained layer.</h2><p style="font-size:.92rem;color:var(--mute)">'+LAYER_INFO[win].priority+'</p></div><div class="action-row"><button class="btn btn-outline" onclick="navigateTo(\'diagnostic\')">Retake diagnostic</button><button class="btn btn-primary" onclick="navigateTo(\'tree\')">View my tree</button></div><div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
+    var emCount=state.emergencyPicks[l]?state.emergencyPicks[l].length:0;
+    return '<div class="layer-bar-item '+st+'" onclick="navigateTo(\'tree\')" style="cursor:pointer"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
+  }).join("")+'</div>'+
+  '<div class="action-row"><button class="btn btn-outline" onclick="navigateTo(\'diagnostic\')">See results</button><button class="btn btn-primary" onclick="navigateTo(\'tree\')">View my tree</button></div>'+
+  '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
 }
 
+/* ===== DECK ===== */
 var deckFilter="core";
 function svgFor(layer){
   var colors={roots:"#6B4A32",trunk:"#4F6B4A",branches:"#2F6F7A",leaves:"#9A7B1E",fruits:"#8A3B5C",dark:"#17211A"};
@@ -1006,13 +1087,38 @@ function renderDeck(filter){
 }
 document.getElementById('deckTabs').addEventListener('click',function(e){if(e.target.dataset.filter)renderDeck(e.target.dataset.filter)});
 
+/* ===== MY TREE ===== */
 function renderTreeMap(){
   var container=document.getElementById('treeMapContainer');
+  var scores = state.diagScores || null;
   container.innerHTML=LORDER.slice().reverse().map(function(l){
     var needs=state.treeNeeds[l]||[];
-    var needsHtml=needs.length>0?needs.map(function(n,i){return '<span class="tm-need" style="background:'+Lcolor[l]+'" onclick="removeNeed(\''+l+'\','+i+')">'+n+' <span class="remove">&times;</span></span>'}).join(""):'<span class="tm-empty">No needs here yet. Tap "Add a need."</span>';
-    return '<div class="tm-layer" style="--lk:'+Lcolor[l]+'"><div class="tm-layer-head"><div><div class="tm-name">'+L[l]+'</div><div class="tm-desc">'+Ldesc[l]+'</div></div><div class="tm-count">'+needs.length+'</div></div><div class="tm-needs">'+needsHtml+'</div></div>';
+    var st = scores ? scoreStatus(scores[l]) : "unknown";
+    var layerClass = st === "strained" ? " tm-strained" : "";
+    var needsHtml=needs.length>0?needs.map(function(n,i){
+      var em=isEmergency(l,n)?' emergency':'';
+      return '<span class="tm-need'+em+'" style="background:'+Lcolor[l]+'" onclick="openDrawer(\''+l+'\',\''+n.replace(/'/g,"\\'")+'\')">'+n+' <span class="remove" onclick="event.stopPropagation();removeNeed(\''+l+'\','+i+')">&times;</span></span>';
+    }).join(""):'<span class="tm-empty">No needs here yet. Add one, or take the diagnostic and pick emergencies.</span>';
+    return '<div class="tm-layer'+layerClass+'" style="--lk:'+Lcolor[l]+'">'+
+      '<div class="tm-layer-head">'+
+        '<div class="tm-name-wrap"><span class="tm-status-dot '+st+'"></span><div><div class="tm-name">'+L[l]+'</div><div class="tm-desc">'+Ldesc[l]+'</div></div></div>'+
+        '<div class="tm-count">'+needs.length+'</div>'+
+      '</div>'+
+      '<div class="tm-needs">'+needsHtml+'</div>'+
+      '<div class="tm-actions">'+
+        '<button class="btn btn-outline btn-small" onclick="openAddNeedModal(\''+l+'\')">+ Add need</button>'+
+      '</div>'+
+    '</div>';
   }).join("");
+  if(scores){
+    var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
+    if(strained.length>0){
+      var note=document.createElement('div');
+      note.className="tm-focus-note";
+      note.textContent="Red dot = strained layer. Tap a need to open strategies or mark it as an emergency.";
+      container.parentNode.insertBefore(note, container.nextSibling);
+    }
+  }
 }
 function openAddNeedModal(layer){
   var modal=document.getElementById('addNeedModal');
@@ -1030,7 +1136,7 @@ function openAddNeedModal(layer){
   subtitle.textContent="Tap a need to add it to your "+L[layer]+" layer.";
   var layerNeeds=needsForLayer(layer);
   var existing=state.treeNeeds[layer]||[];
-  grid.innerHTML=layerNeeds.map(function(c){var added=existing.indexOf(c[1])>=0;return '<div class="modal-need'+(added?' added':'')+'" data-need="'+c[1]+'"><div style="font-weight:700">'+c[1]+'</div><div style="font-size:.72rem;color:var(--mute);margin-top:2px">'+c[2]+'</div></div>'}).join("");
+  grid.innerHTML=layerNeeds.map(function(c){var added=existing.indexOf(c[1])>=0;return '<div class="modal-need'+(added?' added':'')+'" data-need="'+c[1].replace(/'/g,"\\'")+'"><div style="font-weight:700">'+c[1]+'</div><div style="font-size:.72rem;color:var(--mute);margin-top:2px">'+c[2]+'</div></div>'}).join("");
   grid.querySelectorAll('.modal-need:not(.added)').forEach(function(el){el.onclick=function(){addNeedToTree(layer,el.dataset.need)}});
   modal.classList.add('show');
 }
@@ -1043,11 +1149,74 @@ function closeModal(){document.getElementById('addNeedModal').classList.remove('
 window.closeModal=closeModal;
 document.getElementById('addNeedModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 
+/* ===== DRAWER ===== */
+function openDrawer(layer, name){
+  var d=document.getElementById('drawer');
+  var ov=document.getElementById('drawerOverlay');
+  var r=reframeFor(name);
+  var idx=state.actionIndex[name]||0;
+  var chosen=state.chosenActions[name]||null;
+  var custom=state.customActions[name]||"";
+  var em=isEmergency(layer,name);
+  var desc = (C.find(function(x){return x[1]===name})||[])[2] || "";
+
+  function render(){
+    d.innerHTML=
+      '<div class="drawer-head"><div><div class="drawer-tag" style="color:'+Lcolor[layer]+'">'+L[layer]+'</div><div class="drawer-title">'+name+'</div></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>'+
+      (desc?'<div class="drawer-desc">'+desc+'</div>':'')+
+      '<div class="drawer-section">'+
+        '<div class="ds-label">Emergency need</div>'+
+        '<div class="em-toggle'+(em?' on':'')+'" id="emToggle"><div class="toggle-dot"></div><div><div class="toggle-label">'+(em?'Marked as emergency':'Mark this as an emergency')+'</div><div class="toggle-hint">'+(em?'Tap to remove from your emergencies.':'Emergencies get a red ring on your tree.')+'</div></div></div>'+
+      '</div>'+
+      '<div class="drawer-section"><div class="ds-label">Intellectualization</div><div class="ds-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div>'+
+      '<div class="drawer-section"><div class="ds-label">Maladaptive strategy</div><div class="ds-text strategy">'+r.strategy+'</div></div>'+
+      '<div class="drawer-section">'+
+        '<div class="drawer-shuffle"><div class="ds-label" style="margin:0">Pick an action</div><button class="btn btn-outline btn-small" id="drawerShuffle">Shuffle</button></div>'+
+        '<div class="drawer-actions">'+r.actions.map(function(a,i){
+          var sel = (chosen===a) || (!chosen && i===idx);
+          return '<button class="drawer-action'+(sel?' selected':'')+'" data-action="'+a.replace(/"/g,"&quot;")+'">'+a+'</button>';
+        }).join("")+'</div>'+
+      '</div>'+
+      '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+custom+'</textarea></div>'+
+      '<div class="drawer-actions-row"><button class="btn btn-outline" onclick="closeDrawer()">Close</button></div>';
+    d.querySelectorAll('[data-action]').forEach(function(b){
+      b.onclick=function(){state.chosenActions[name]=b.dataset.action;render()};
+    });
+    var sh=document.getElementById('drawerShuffle');
+    if(sh)sh.onclick=function(){
+      state.actionIndex[name]=((state.actionIndex[name]||0)+1)%r.actions.length;
+      delete state.chosenActions[name];
+      render();
+    };
+    var cust=document.getElementById('drawerCustom');
+    if(cust)cust.oninput=function(){state.customActions[name]=cust.value};
+    var emT=document.getElementById('emToggle');
+    if(emT)emT.onclick=function(){
+      var arr=state.emergencyPicks[layer];
+      var i=arr.indexOf(name);
+      if(i>=0)arr.splice(i,1);
+      else{if(arr.length>=3){alert("You can have up to 3 emergencies in "+L[layer]+". Remove one first.");return}arr.push(name)}
+      renderTreeMap();
+      render();
+    };
+  }
+  render();
+  d.classList.add('show');
+  ov.classList.add('show');
+}
+window.openDrawer=openDrawer;
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('show');
+  document.getElementById('drawerOverlay').classList.remove('show');
+}
+window.closeDrawer=closeDrawer;
+
+/* ===== JOURNAL ===== */
 function renderJournal(){
   var jc=document.getElementById('journalContent');
   if(!jc)return;
   var todaysCard=state.diagStrained?L[state.diagStrained]:null;
-  var newEntry='<div class="journal-new"><h3>Today\'s reflection</h3><p style="font-size:.88rem;color:var(--mute);margin-bottom:12px">'+(todaysCard?'Your strained layer: <strong>'+todaysCard+'</strong>':'Take the diagnostic to focus your journal.')+'</p><textarea id="journalText" placeholder="What does this stir? Where does it live in your body? What would change if you named it out loud?"></textarea><div class="action-row left" style="margin-top:12px"><button class="btn btn-primary" id="saveJournalBtn">Save reflection</button></div></div>';
+  var newEntry='<div class="journal-new"><h3>Today\'s reflection</h3><p style="font-size:.88rem;color:var(--mute);margin-bottom:12px">'+(todaysCard?'Most strained layer: <strong>'+todaysCard+'</strong>':'Take the diagnostic to focus your journal.')+'</p><textarea id="journalText" placeholder="What does this stir? Where does it live in your body? What would change if you named it out loud?"></textarea><div class="action-row left" style="margin-top:12px"><button class="btn btn-primary" id="saveJournalBtn">Save reflection</button></div></div>';
   var entriesHtml=state.journal.length>0?state.journal.map(function(e){return '<div class="journal-entry"><div class="je-date">'+e.date+'</div><div class="je-card">'+e.cardName+'</div><div class="je-reflection">'+e.text+'</div></div>'}).join(""):'<div class="empty-state"><div class="es-icon">O</div><h3>Your journal is quiet</h3><p>Write one reflection. Come back to see what shifts over time.</p></div>';
   jc.innerHTML=newEntry+entriesHtml;
   document.getElementById('saveJournalBtn').onclick=saveJournalEntry;
