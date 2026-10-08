@@ -10,7 +10,6 @@
   color-scheme:light;
   --bg:#E8EDE4;--ink:#17211A;--mute:#55635A;--card:#F4F7F1;--line:#C5D0BF;--moss:#4F6B4A;--hot:#8A3B5C;
   --c-roots:#6B4A32;--c-trunk:#4F6B4A;--c-branches:#2F6F7A;--c-leaves:#9A7B1E;--c-fruits:#8A3B5C;
-  --c-context:#5A4A6B;
   --c-healthy:#4F6B4A;--c-moderate:#D97706;--c-strained:#C0392B;
   --radius:14px;--radius-sm:10px;--radius-xs:8px;
   --shadow-sm:0 1px 3px rgba(23,33,26,.08);
@@ -20,9 +19,6 @@
   --font-display:'Fraunces',Georgia,serif;
   --font-body:'Public Sans',system-ui,sans-serif;
 }
-[data-theme="dark"]{
-  --bg:#121A14;--ink:#E6EDE2;--mute:#9FB0A3;--card:#1B261E;--line:#2E3F33;
-}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{min-height:100dvh;line-height:1.6;font-family:var(--font-body);font-size:16px;color:var(--ink);background:var(--bg)}
@@ -31,8 +27,6 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
 h1,h2,h3,h4{line-height:1.2;font-family:var(--font-display)}
 p{max-width:72ch}
 :focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:var(--radius-xs)}
-
-/* Layout */
 .app{display:flex;min-height:100dvh}
 .sidebar{width:240px;flex-shrink:0;background:var(--card);border-right:1px solid var(--line);padding:24px 0;position:fixed;top:0;bottom:0;left:0;z-index:100;display:flex;flex-direction:column;transition:transform var(--transition)}
 .sidebar-brand{padding:0 24px 24px;display:flex;align-items:center;gap:10px}
@@ -56,12 +50,8 @@ p{max-width:72ch}
 .mobile-header{display:none;align-items:center;gap:12px;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);position:sticky;top:0;z-index:50}
 .mobile-header button{padding:8px;border-radius:var(--radius-xs);background:var(--bg);border:1px solid var(--line);display:flex;align-items:center}
 .mobile-header span{font-family:var(--font-display);font-weight:700;font-size:1.2rem}
-
-/* Pages */
 .page{display:none}
 .page.active{display:block}
-
-/* Onboarding */
 .onboarding{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;max-width:520px;margin:0 auto}
 .onboarding h1{font-size:2.1rem;margin-bottom:16px}
 .onboarding p{font-size:1.08rem;color:var(--mute);margin-bottom:24px;line-height:1.7}
@@ -70,8 +60,6 @@ p{max-width:72ch}
 .onboarding .step-dot.active{background:var(--moss);transform:scale(1.2)}
 .onboarding .btn{width:100%;justify-content:center;padding:16px;margin-bottom:12px}
 .onboard-icon{width:120px;height:120px;margin:0 auto 24px}
-
-/* Context */
 .context-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto}
 .context-card{padding:22px 18px;border-radius:var(--radius);border:2px solid var(--line);background:var(--card);cursor:pointer;transition:all var(--transition);text-align:center}
 .context-card:hover{border-color:var(--moss);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
@@ -79,8 +67,6 @@ p{max-width:72ch}
 .context-card .cc-title{font-family:var(--font-display);font-weight:700;font-size:1rem}
 .context-card .cc-desc{font-size:.78rem;color:var(--mute);margin-top:4px}
 @media(max-width:500px){.context-grid{grid-template-columns:1fr}}
-
-/* Diagnostic */
 .diag-progress{height:6px;background:var(--line);border-radius:3px;margin-bottom:32px;overflow:hidden;max-width:600px;margin-left:auto;margin-right:auto}
 .diag-bar{height:100%;background:var(--moss);width:0;transition:width .4s ease}
 .diag-q{max-width:600px;margin:0 auto;background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:32px 28px}
@@ -92,8 +78,6 @@ p{max-width:72ch}
 .diag-scale button:hover{border-color:var(--moss)}
 .diag-scale button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .diag-scale .lab{display:block;font-size:.68rem;margin-top:2px;opacity:.7}
-
-/* Results */
 .results-container{max-width:680px;margin:0 auto}
 .results-header{text-align:center;margin-bottom:32px}
 .results-header h1{font-size:2rem;margin-bottom:8px}
@@ -110,7 +94,6 @@ p{max-width:72ch}
 .layer-bar-item.healthy .lbi-fill{background:var(--c-healthy)}
 .layer-bar-item.strained{border-color:rgba(192,57,43,.5)}
 @keyframes pulse-red{0%{opacity:1;box-shadow:0 0 0 0 rgba(192,57,43,.5)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(192,57,43,0)}100%{opacity:1;box-shadow:0 0 0 0 rgba(192,57,43,0)}}
-
 .results-detail{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .results-detail .rd-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;color:#fff}
 .results-detail h2{font-size:1.35rem;margin-bottom:12px}
@@ -118,8 +101,6 @@ p{max-width:72ch}
 .results-detail .rd-section h3{font-size:.95rem;margin-bottom:6px;font-family:var(--font-body);font-weight:600}
 .results-detail .rd-section p{font-size:.92rem;color:var(--mute);line-height:1.6}
 .results-detail .rd-question{font-style:italic;border-left:3px solid var(--moss);padding-left:14px;margin:16px 0;color:var(--ink);font-size:.95rem}
-
-/* Card sort */
 .sort-section{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .sort-section h2{font-size:1.3rem;margin-bottom:8px}
 .sort-section p{font-size:.9rem;color:var(--mute);margin-bottom:16px}
@@ -127,14 +108,12 @@ p{max-width:72ch}
 .sort-card{padding:12px;border-radius:var(--radius-sm);border:2px solid var(--line);background:var(--bg);cursor:pointer;transition:all var(--transition);text-align:left;font-size:.85rem;font-weight:500;position:relative}
 .sort-card:hover{border-color:var(--moss)}
 .sort-card.selected{border-color:var(--c-strained);background:rgba(192,57,43,0.06)}
-.sort-card.selected::after{content:"✓";position:absolute;top:6px;right:10px;color:var(--c-strained);font-weight:700}
+.sort-card.selected::after{content:"\2713";position:absolute;top:6px;right:10px;color:var(--c-strained);font-weight:700}
 .sort-card.disabled{opacity:.35;pointer-events:none}
 .sort-card .sc-name{font-weight:600;margin-bottom:2px}
 .sort-card .sc-desc{font-size:.72rem;color:var(--mute);font-weight:400}
 .sort-counter{text-align:center;font-size:.9rem;color:var(--mute);margin-bottom:12px}
 .sort-counter strong{color:var(--ink)}
-
-/* Reframe */
 .reframe-section{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .reframe-section h2{font-size:1.3rem;margin-bottom:8px}
 .reframe-section > p{font-size:.9rem;color:var(--mute);margin-bottom:16px}
@@ -149,8 +128,6 @@ p{max-width:72ch}
 .reframe-item .ri-text.action{border-left-color:var(--c-healthy)}
 .reframe-item .ri-input{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:var(--radius-xs);background:var(--card);font-family:var(--font-body);font-size:.88rem;margin-top:6px;resize:vertical;min-height:60px;color:var(--ink)}
 .reframe-item .ri-input:focus{outline:none;border-color:var(--moss)}
-
-/* Buttons */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:var(--radius-sm);font-size:.92rem;font-weight:600;transition:all var(--transition);min-height:44px;border:1.5px solid transparent}
 .btn-primary{background:var(--ink);color:var(--bg)}
 .btn-primary:hover{opacity:.88;transform:translateY(-1px)}
@@ -161,8 +138,6 @@ p{max-width:72ch}
 .btn:disabled{opacity:.4;pointer-events:none}
 .action-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 .action-row.left{justify-content:flex-start}
-
-/* My Tree */
 .tree-map-page{max-width:680px;margin:0 auto}
 .tree-map-instructions{text-align:center;margin-bottom:28px}
 .tree-map-instructions h2{font-size:1.6rem;margin-bottom:8px}
@@ -178,8 +153,6 @@ p{max-width:72ch}
 .tm-need:hover{opacity:.85;transform:scale(1.03)}
 .tm-need .remove{opacity:.7;font-size:1rem;line-height:1}
 .tm-empty{color:var(--mute);font-size:.85rem;font-style:italic;padding:4px 0;opacity:.7}
-
-/* Deck */
 .deck-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;justify-content:center}
 .deck-tab{padding:10px 16px;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;border:1.5px solid var(--line);transition:all var(--transition);min-height:40px}
 .deck-tab:hover{border-color:var(--moss)}
@@ -197,8 +170,6 @@ p{max-width:72ch}
 .deck-card.dark .dc-tag{color:#E7B3C9}
 .deck-card.dark .dc-desc{color:#9FB0A3}
 .deck-card.strat{border-style:dashed}
-
-/* Journal */
 .journal-page{max-width:600px;margin:0 auto}
 .journal-new{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px}
 .journal-new h3{margin-bottom:12px}
@@ -208,21 +179,16 @@ p{max-width:72ch}
 .journal-entry .je-date{font-size:.78rem;color:var(--mute);margin-bottom:6px}
 .journal-entry .je-card{font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px}
 .journal-entry .je-reflection{font-size:.9rem;line-height:1.6}
-
-/* Workshops */
-.workshop-page{max-width:600px;margin:0 auto;text-align:center}
-.workshop-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin:24px 0}
+.workshop-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin:24px auto;max-width:600px;text-align:center}
 .workshop-card .wc-badge{display:inline-block;background:var(--moss);color:#fff;padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
 .workshop-card h2{font-size:1.5rem;margin-bottom:8px}
 .workshop-card .wc-price{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--moss);margin:12px 0}
 .workshop-card .wc-includes{text-align:left;max-width:420px;margin:16px auto;list-style:none}
 .workshop-card .wc-includes li{padding:6px 0 6px 24px;position:relative;font-size:.92rem}
-.workshop-card .wc-includes li:before{content:"✓";position:absolute;left:0;font-weight:700;color:var(--moss)}
+.workshop-card .wc-includes li:before{content:"\2713";position:absolute;left:0;font-weight:700;color:var(--moss)}
 .workshop-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:20px auto 0}
 .workshop-form input{padding:12px 16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg);font-size:.92rem;color:var(--ink)}
 .workshop-form input:focus{outline:none;border-color:var(--moss)}
-
-/* Shared */
 .today-hero{text-align:center;margin-bottom:32px}
 .today-hero h1{font-size:clamp(1.7rem,1.2rem+2vw,2.4rem);margin-bottom:8px}
 .today-hero p{color:var(--mute);font-size:1.02rem;margin:0 auto;max-width:480px}
@@ -232,7 +198,17 @@ p{max-width:72ch}
 .empty-state .es-icon{font-size:2rem;margin-bottom:12px;opacity:.4}
 .empty-state h3{font-size:1.1rem;color:var(--ink);margin-bottom:4px}
 .empty-state p{font-size:.9rem;margin:0 auto;max-width:320px}
-.mt-4{margin-top:16px}.mb-4{margin-bottom:16px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius);max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:28px;box-shadow:var(--shadow-lg)}
+.modal h3{font-size:1.2rem;margin-bottom:4px}
+.modal p{font-size:.88rem;color:var(--mute);margin-bottom:16px}
+.modal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+@media(max-width:500px){.modal-grid{grid-template-columns:repeat(2,1fr)}}
+.modal-need{padding:10px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--line);font-size:.85rem;font-weight:500;cursor:pointer;transition:all var(--transition);text-align:center}
+.modal-need:hover{border-color:var(--moss);background:var(--card)}
+.modal-need.added{opacity:.4;pointer-events:none}
+.modal-close{position:sticky;top:0;float:right;font-size:1.4rem;padding:4px 8px;color:var(--mute)}
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
@@ -279,7 +255,6 @@ p{max-width:72ch}
       <p style="margin-top:8px">Reflection tool, not therapy or diagnosis.</p>
     </div>
   </aside>
-
   <div class="main">
     <div class="mobile-header">
       <button id="menuBtn" aria-label="Menu">
@@ -287,11 +262,9 @@ p{max-width:72ch}
       </button>
       <span>Needs Tree</span>
     </div>
-
     <div class="page active" id="page-onboarding">
       <div class="onboarding" id="onboardingContent"></div>
     </div>
-
     <div class="page" id="page-context">
       <div class="today-hero">
         <h1>Who is taking this today?</h1>
@@ -299,7 +272,6 @@ p{max-width:72ch}
       </div>
       <div class="context-grid" id="contextGrid"></div>
     </div>
-
     <div class="page" id="page-today">
       <div class="today-date" id="todayDate"></div>
       <div class="today-hero">
@@ -308,15 +280,13 @@ p{max-width:72ch}
       </div>
       <div id="todayBody"></div>
     </div>
-
     <div class="page" id="page-diagnostic">
       <div id="diagContent"></div>
     </div>
-
     <div class="page" id="page-deck">
       <div class="today-hero">
         <h1>The Deck</h1>
-        <p>80 core needs, 11 dark needs, 20 strategies. Not a fixed taxonomy — a vocabulary.</p>
+        <p>Core needs, dark needs, strategies. Not a fixed taxonomy — a vocabulary.</p>
       </div>
       <div class="deck-tabs" id="deckTabs">
         <button class="deck-tab active" data-filter="core">Core needs</button>
@@ -325,7 +295,6 @@ p{max-width:72ch}
       </div>
       <div class="deck-grid" id="deckGrid"></div>
     </div>
-
     <div class="page" id="page-tree">
       <div class="tree-map-instructions">
         <h2>Your Personal Tree</h2>
@@ -338,7 +307,6 @@ p{max-width:72ch}
       </div>
       <div class="safety-note">Layers are read from the roots up. If roots and trunk are both strained, start with the roots: leaves and fruits cannot fix them.</div>
     </div>
-
     <div class="page" id="page-journal">
       <div class="today-hero">
         <h1>Your Reflections</h1>
@@ -346,7 +314,6 @@ p{max-width:72ch}
       </div>
       <div id="journalContent" class="journal-page"></div>
     </div>
-
     <div class="page" id="page-workshops">
       <div class="today-hero">
         <h1>Starter Session</h1>
@@ -356,7 +323,7 @@ p{max-width:72ch}
         <span class="wc-badge">Beta</span>
         <h2>Needs Tree Starter Session</h2>
         <p style="color:var(--mute)">For people who understand themselves but still repeat the same patterns.</p>
-        <div class="wc-price">€49–99</div>
+        <div class="wc-price">49-99 EUR</div>
         <ul class="wc-includes">
           <li>The 15-statement diagnostic</li>
           <li>Guided card sort exercise</li>
@@ -374,7 +341,6 @@ p{max-width:72ch}
     </div>
   </div>
 </div>
-
 <div class="modal-overlay" id="addNeedModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -383,10 +349,9 @@ p{max-width:72ch}
     <div class="modal-grid" id="modalGrid"></div>
   </div>
 </div>
-
 <script>
 /* ============================================================
-   NEEDS TREE — script (fully context-aware)
+   NEEDS TREE
    ============================================================ */
 
 var L = {roots:"Roots", trunk:"Trunk", branches:"Branches", leaves:"Leaves", fruits:"Fruits"};
@@ -519,7 +484,7 @@ var S = [
   "I'll stay in this situation even though it hurts, because at least it's familiar."
 ];
 
-/* ===== DIAGNOSTIC: 15 QUESTIONS PER CONTEXT ===== */
+/* ===== DIAGNOSTIC QUESTIONS ===== */
 var DIAG_Q_SELF = [
   {layer:"roots", text:"I often feel physically drained, tired, or unwell — sleep, food, or movement feel like a chore."},
   {layer:"roots", text:"My living or working environment feels unstable, unsafe, or unpredictable."},
@@ -610,13 +575,11 @@ var DIAG_Q_BY_CONTEXT = {
   ]
 };
 
-/* Priority needs per context per layer.
-   needsForLayer() sorts by this. Contexts not listed (or "self") keep original order. */
 var PRIORITY_BY_CONTEXT = {
   self: null,
   professional: {
     roots:["Rest and sleep","Stability and consistency","Health","Nutritious food","Movement and exercise","Sensory comfort"],
-    trunk:["Autonomy","Self-advocacy","Identity","Integrity","Clarity","Self-knowledge","Structure","Boundaries","Freedom"],
+    trunk:["Autonomy","Self-advocacy","Identity","Integrity","Clarity","Self-knowledge","Structure","Freedom"],
     branches:["Recognition","Trust","Support","Belonging","Mentorship","Companionship","Mutuality"],
     leaves:["Relaxation","Play","Leisure","Beauty","Production","Celebration"],
     fruits:["Purpose","Impact","Growth","Contribution","Fulfillment"]
@@ -644,7 +607,6 @@ var PRIORITY_BY_CONTEXT = {
   }
 };
 
-/* ===== REFRAME — base + context overrides ===== */
 var REFRAME_BASE = {
   "Rest and sleep":{excuse:"I'll rest when the work is done.",strategy:"Scrolling until 2am to 'unwind', then waking up exhausted.",action:"Set a hard-stop alarm for work. Create a 20-minute wind-down with no screens."},
   "Nutritious food":{excuse:"I don't have time to cook — I'll eat properly when things calm down.",strategy:"Skipping meals, then bingeing on whatever's fastest.",action:"Batch-cook one thing on Sunday. Keep one no-decision meal ready."},
@@ -768,23 +730,20 @@ var REFRAME_BY_CONTEXT = {
   })
 };
 
-/* ===== CONTEXTS ===== */
 var CONTEXTS = [
-  {id:"self", icon:"○", title:"Just me", desc:"A full, personal map"},
-  {id:"professional", icon:"◐", title:"Professional", desc:"Work, boundaries, burnout"},
-  {id:"couple", icon:"◇", title:"A couple", desc:"Two trees, one shared space"},
-  {id:"parent", icon:"△", title:"Parent & child", desc:"Care, patience, capacity"},
-  {id:"team", icon:"□", title:"Working team", desc:"Shared conditions, shared output"}
+  {id:"self", icon:"O", title:"Just me", desc:"A full, personal map"},
+  {id:"professional", icon:"P", title:"Professional", desc:"Work, boundaries, burnout"},
+  {id:"couple", icon:"C", title:"A couple", desc:"Two trees, one shared space"},
+  {id:"parent", icon:"F", title:"Parent & child", desc:"Care, patience, capacity"},
+  {id:"team", icon:"T", title:"Working team", desc:"Shared conditions, shared output"}
 ];
 
-/* ===== ONBOARDING ===== */
 var ONBOARD = [
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><path d="M60 20 C40 20 25 35 25 55 C25 65 30 74 40 79 C32 84 28 94 28 105 L92 105 C92 94 88 84 80 79 C90 74 95 65 95 55 C95 35 80 20 60 20 Z" fill="none" stroke="#4F6B4A" stroke-width="2"/><path d="M60 40 L60 90" stroke="#6B4A32" stroke-width="3"/><path d="M60 55 L45 45 M60 55 L75 45 M60 70 L48 62 M60 70 L72 62" stroke="#4F6B4A" stroke-width="1.5" opacity=".6"/></svg>', title:"You understand yourself. Nothing changes.", body:"Because you might be feeding the wrong layer. This is not another productivity hack, not therapy, and not motivation. It is a way to find words for what you actually need — before it turns into behavior you regret."},
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><path d="M60 105 L60 60" stroke="#6B4A32" stroke-width="4"/><path d="M60 60 C60 40 40 35 35 25" stroke="#4F6B4A" stroke-width="2" fill="none"/><path d="M60 60 C60 40 80 35 85 25" stroke="#4F6B4A" stroke-width="2" fill="none"/><path d="M60 80 C60 70 50 68 45 62" stroke="#2F6F7A" stroke-width="2" fill="none"/><path d="M60 80 C60 70 70 68 75 62" stroke="#2F6F7A" stroke-width="2" fill="none"/><circle cx="35" cy="22" r="6" fill="#9A7B1E"/><circle cx="85" cy="22" r="6" fill="#9A7B1E"/><circle cx="45" cy="60" r="4" fill="#8A3B5C"/><circle cx="75" cy="60" r="4" fill="#8A3B5C"/></svg>', title:"Your needs are a tree, not a list.", body:"Roots feed everything. The trunk holds you upright. Branches reach outward. Leaves are seasonal output. Fruits appear when the tree is healthy. When you know which layer is starving, the fix becomes obvious."},
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><circle cx="60" cy="60" r="40" fill="none" stroke="#4F6B4A" stroke-width="1" opacity=".2"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#4F6B4A">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#55635A">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layer of your tree is under the most strain, pick three emergency needs, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
+  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><path d="M60 20 C40 20 25 35 25 55 C25 65 30 74 40 79 C32 84 28 94 28 105 L92 105 C92 94 88 84 80 79 C90 74 95 65 95 55 C95 35 80 20 60 20 Z" fill="none" stroke="#4F6B4A" stroke-width="2"/><path d="M60 40 L60 90" stroke="#6B4A32" stroke-width="3"/></svg>', title:"You understand yourself. Nothing changes.", body:"Because you might be feeding the wrong layer. This is not another productivity hack, not therapy, and not motivation. It is a way to find words for what you actually need — before it turns into behavior you regret."},
+  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><path d="M60 105 L60 60" stroke="#6B4A32" stroke-width="4"/><path d="M60 60 C60 40 40 35 35 25" stroke="#4F6B4A" stroke-width="2" fill="none"/><path d="M60 60 C60 40 80 35 85 25" stroke="#4F6B4A" stroke-width="2" fill="none"/><path d="M60 80 C60 70 50 68 45 62" stroke="#2F6F7A" stroke-width="2" fill="none"/><path d="M60 80 C60 70 70 68 75 62" stroke="#2F6F7A" stroke-width="2" fill="none"/><circle cx="35" cy="22" r="6" fill="#9A7B1E"/><circle cx="85" cy="22" r="6" fill="#9A7B1E"/></svg>', title:"Your needs are a tree, not a list.", body:"Roots feed everything. The trunk holds you upright. Branches reach outward. Leaves are seasonal output. Fruits appear when the tree is healthy. When you know which layer is starving, the fix becomes obvious."},
+  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#4F6B4A" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#4F6B4A">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#55635A">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layer of your tree is under the most strain, pick three emergency needs, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
 ];
 
-/* ===== LAYER INFO ===== */
 var LAYER_INFO = {
   roots:{what:"Roots are the environment-dependent needs that make life livable: safety, rest, food, shelter, health, stability. They are not preferences — they are conditions. Without them the whole tree destabilizes.",solves:"When roots are satisfied, you have energy to show up, a body that doesn't fight you, and a baseline of safety from which you can make choices instead of reacting.",priority:"You cannot fix a starving root by producing more leaves. If roots are strained, no amount of rest, creativity, or accomplishment will hold. Fix the foundation first."},
   trunk:{what:"The trunk is your internal structure: identity, autonomy, values, boundaries, self-knowledge. It's the backbone that lets you stand up without collapsing into what others want.",solves:"When the trunk is strong, you know what you want, you can say no without guilt, and your decisions come from who you are — not from pressure or fear.",priority:"A strained trunk makes every branch fragile. If you don't know who you are, relationships become negotiations about your worth. Stabilize the trunk before reaching outward."},
@@ -793,7 +752,6 @@ var LAYER_INFO = {
   fruits:{what:"Fruits are contribution, purpose, meaning, legacy. They appear naturally when conditions are right — they cannot be forced, and their absence is not failure.",solves:"When fruits are present, your life feels like it's about something. Your actions connect to something larger than the moment.",priority:"Fruits cannot grow on a starving tree. If you're chasing purpose while your roots and trunk are collapsing, you're asking a dying tree to bear fruit. Feed the lower layers first."}
 };
 
-/* ===== STATE ===== */
 var state = {
   onboardStep:0,
   context:null,
@@ -807,15 +765,11 @@ var state = {
   journal:[]
 };
 
-/* ===== HELPERS ===== */
-function currentQuestions(){
-  return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF;
-}
+function currentQuestions(){return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF}
 function currentReframe(name){
   var set = REFRAME_BY_CONTEXT[state.context] || REFRAME_BASE;
   return set[name] || REFRAME_BASE[name] || {excuse:"I'll deal with this when things calm down.",strategy:"Pushing through and hoping it resolves itself.",action:"Name one small thing you could do this week. Just one."};
 }
-/* Sort a set of [layer,name,desc] rows so context-priority needs come first */
 function sortByContextPriority(rows, layer){
   var priority = PRIORITY_BY_CONTEXT[state.context] && PRIORITY_BY_CONTEXT[state.context][layer];
   if(!priority || priority.length===0) return rows.slice();
@@ -827,20 +781,14 @@ function sortByContextPriority(rows, layer){
   inPriority.sort(function(a,b){return priority.indexOf(a[1])-priority.indexOf(b[1])});
   return inPriority.concat(rest);
 }
-function needsForLayer(layer){
-  return sortByContextPriority(C.filter(function(n){return n[0]===layer}), layer);
-}
-/* Return all core needs in deck order, but with context-priority needs of each layer pulled up */
+function needsForLayer(layer){return sortByContextPriority(C.filter(function(n){return n[0]===layer}), layer)}
 function allCoreNeedsOrdered(){
   if(!state.context || state.context==="self") return C.slice();
   var out = [];
-  LORDER.forEach(function(layer){
-    needsForLayer(layer).forEach(function(n){out.push(n)});
-  });
+  LORDER.forEach(function(layer){needsForLayer(layer).forEach(function(n){out.push(n)})});
   return out;
 }
 
-/* ===== NAVIGATION ===== */
 function navigateTo(page){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   var el=document.getElementById('page-'+page);
@@ -858,7 +806,6 @@ window.navigateTo=navigateTo;
 document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){navigateTo(n.dataset.page)})});
 document.getElementById('menuBtn').addEventListener('click',function(){document.getElementById('sidebar').classList.toggle('open')});
 
-/* ===== ONBOARDING ===== */
 function renderOnboarding(){
   var s=ONBOARD[state.onboardStep];
   var c=document.getElementById('onboardingContent');
@@ -871,7 +818,6 @@ function renderOnboarding(){
   if(back)back.onclick=function(){state.onboardStep--;renderOnboarding()};
 }
 
-/* ===== CONTEXT ===== */
 function renderContext(){
   var g=document.getElementById('contextGrid');
   g.innerHTML=CONTEXTS.map(function(c){return '<div class="context-card" data-id="'+c.id+'"><div class="cc-icon">'+c.icon+'</div><div class="cc-title">'+c.title+'</div><div class="cc-desc">'+c.desc+'</div></div>'}).join("");
@@ -889,7 +835,6 @@ function renderContext(){
   });
 }
 
-/* ===== DIAGNOSTIC ===== */
 function renderDiagnostic(){
   if(state.diagScores){renderResults();return}
   renderDiagQuestion();
@@ -928,16 +873,16 @@ function computeDiagResult(){
 }
 function scoreStatus(s){if(s<=3)return "healthy";if(s<=7)return "moderate";return "strained"}
 
-/* ===== RESULTS ===== */
 function renderResults(){
   var c=document.getElementById('diagContent');
   var scores=state.diagScores;
   var win=state.diagStrained;
   var info=LAYER_INFO[win];
-  var strains=[]; LORDER.forEach(function(l){if(scoreStatus(scores[l])==="strained")strains.push(l)});
-  if(strains.length===0)strains=[win];
-  var sortLayer=strains[0];
-  var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(c){return c.id===state.context})[0].title : null;
+  // FIXED: rank strained layers by score, not by fixed tree order
+  var strainedLayers = LORDER.filter(function(l){ return scoreStatus(scores[l]) === "strained"; });
+  strainedLayers.sort(function(a,b){ return scores[b] - scores[a]; });
+  var sortLayer = strainedLayers.length > 0 ? strainedLayers[0] : win;
+  var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(x){return x.id===state.context})[0].title : null;
 
   c.innerHTML='<div class="results-container">'+
     '<div class="results-header"><h1>Your most strained layer is '+L[win]+'.</h1><p>Read from the roots up. If roots and trunk are both strained, start with roots — leaves and fruits cannot fix them.</p>'+(ctxLabel?'<p style="font-size:.82rem;color:var(--mute);margin-top:6px">Context: '+ctxLabel+'</p>':'')+'</div>'+
@@ -969,14 +914,13 @@ function renderSortSection(layer){
   var slot=document.getElementById('sortSlot');
   if(!slot)return;
   var needs=needsForLayer(layer);
-  var ctxLabel = state.context && state.context!=="self" ? " tailored to "+CONTEXTS.filter(function(c){return c.id===state.context})[0].title.toLowerCase() : "";
-  slot.innerHTML='<div class="sort-section"><h2>Choose your three emergencies</h2><p>From your strained layer ('+L[layer]+'), pick exactly three needs that feel like emergencies right now'+ctxLabel+'. Not preferences. The ones you have been apologizing for.</p><div class="sort-counter" id="sortCounter"><strong>0</strong> of 3 selected</div><div class="sort-grid" id="sortGrid">'+needs.map(function(n){
+  var ctxLabel = state.context && state.context!=="self" ? " tailored to "+CONTEXTS.filter(function(x){return x.id===state.context})[0].title.toLowerCase() : "";
+  slot.innerHTML='<div class="sort-section"><h2>Choose your three emergencies</h2><p>From your most strained layer ('+L[layer]+'), pick exactly three needs that feel like emergencies right now'+ctxLabel+'. Not preferences. The ones you have been apologizing for.</p><div class="sort-counter" id="sortCounter"><strong>0</strong> of 3 selected</div><div class="sort-grid" id="sortGrid">'+needs.map(function(n){
     var sel=state.emergencyPicks.indexOf(n[1])>=0;
     return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
   }).join("")+'</div><div id="reframeSlot"></div></div>';
   bindSortCards();
 }
-
 function bindSortCards(){
   document.querySelectorAll('#sortGrid .sort-card').forEach(function(el){
     el.onclick=function(){
@@ -1012,7 +956,6 @@ function renderReframes(){
   slot.querySelectorAll('.ri-input').forEach(function(t){t.oninput=function(){state.reframeNotes[t.dataset.need]=t.value}});
 }
 
-/* ===== TODAY ===== */
 function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1021,7 +964,7 @@ function renderToday(){
   var body=document.getElementById('todayBody');
   if(!body)return;
   if(!state.diagScores){
-    body.innerHTML='<div class="empty-state"><div class="es-icon">◇</div><h3>Start with the diagnostic</h3><p>Fifteen statements. Two minutes. It will tell you which layer of your tree is under the most strain — and where to begin.</p><div class="action-row"><button class="btn btn-primary" onclick="navigateTo(\'diagnostic\')">Take the diagnostic</button></div></div>';
+    body.innerHTML='<div class="empty-state"><div class="es-icon">O</div><h3>Start with the diagnostic</h3><p>Fifteen statements. Two minutes. It will tell you which layer of your tree is under the most strain — and where to begin.</p><div class="action-row"><button class="btn btn-primary" onclick="navigateTo(\'diagnostic\')">Take the diagnostic</button></div></div>';
     return;
   }
   var scores=state.diagScores;
@@ -1033,7 +976,6 @@ function renderToday(){
   }).join("")+'</div><div class="results-detail" style="border-color:'+Lcolor[win]+'"><span class="rd-tag" style="background:'+Lcolor[win]+'">Today</span><h2>'+L[win]+' is your most strained layer.</h2><p style="font-size:.92rem;color:var(--mute)">'+LAYER_INFO[win].priority+'</p></div><div class="action-row"><button class="btn btn-outline" onclick="navigateTo(\'diagnostic\')">Retake diagnostic</button><button class="btn btn-primary" onclick="navigateTo(\'tree\')">View my tree</button></div><div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
 }
 
-/* ===== DECK ===== */
 var deckFilter="core";
 function svgFor(layer){
   var colors={roots:"#6B4A32",trunk:"#4F6B4A",branches:"#2F6F7A",leaves:"#9A7B1E",fruits:"#8A3B5C",dark:"#17211A"};
@@ -1041,7 +983,7 @@ function svgFor(layer){
   if(layer==="dark"){
     return '<svg viewBox="0 0 100 133" preserveAspectRatio="xMidYMid slice"><rect width="100" height="133" fill="'+c+'"/><circle cx="50" cy="55" r="22" fill="none" stroke="#E7B3C9" stroke-width="1.5"/><path d="M50 33 L50 77 M28 55 L72 55" stroke="#E7B3C9" stroke-width="1" opacity=".5"/><text x="50" y="120" text-anchor="middle" font-family="Georgia" font-size="7" fill="#E7B3C9">DARK NEED</text></svg>';
   }
-  return '<svg viewBox="0 0 100 133" preserveAspectRatio="xMidYMid slice"><rect width="100" height="133" fill="'+c+'" opacity=".15"/><path d="M50 115 L50 55" stroke="'+c+'" stroke-width="3"/><circle cx="50" cy="45" r="18" fill="none" stroke="'+c+'" stroke-width="1.5" opacity=".6"/><path d="M32 65 C32 50 40 42 50 42 M68 65 C68 50 60 42 50 42" stroke="'+c+'" stroke-width="1.5" fill="none" opacity=".5"/><text x="50" y="125" text-anchor="middle" font-family="Georgia" font-size="7" fill="'+c+'" letter-spacing="1">'+layer.toUpperCase()+'</text></svg>';
+  return '<svg viewBox="0 0 100 133" preserveAspectRatio="xMidYMid slice"><rect width="100" height="133" fill="'+c+'" opacity=".15"/><path d="M50 115 L50 55" stroke="'+c+'" stroke-width="3"/><circle cx="50" cy="45" r="18" fill="none" stroke="'+c+'" stroke-width="1.5" opacity=".6"/><text x="50" y="125" text-anchor="middle" font-family="Georgia" font-size="7" fill="'+c+'" letter-spacing="1">'+layer.toUpperCase()+'</text></svg>';
 }
 function renderDeck(filter){
   deckFilter=filter||"core";
@@ -1064,7 +1006,6 @@ function renderDeck(filter){
 }
 document.getElementById('deckTabs').addEventListener('click',function(e){if(e.target.dataset.filter)renderDeck(e.target.dataset.filter)});
 
-/* ===== TREE ===== */
 function renderTreeMap(){
   var container=document.getElementById('treeMapContainer');
   container.innerHTML=LORDER.slice().reverse().map(function(l){
@@ -1102,13 +1043,12 @@ function closeModal(){document.getElementById('addNeedModal').classList.remove('
 window.closeModal=closeModal;
 document.getElementById('addNeedModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 
-/* ===== JOURNAL ===== */
 function renderJournal(){
   var jc=document.getElementById('journalContent');
   if(!jc)return;
   var todaysCard=state.diagStrained?L[state.diagStrained]:null;
   var newEntry='<div class="journal-new"><h3>Today\'s reflection</h3><p style="font-size:.88rem;color:var(--mute);margin-bottom:12px">'+(todaysCard?'Your strained layer: <strong>'+todaysCard+'</strong>':'Take the diagnostic to focus your journal.')+'</p><textarea id="journalText" placeholder="What does this stir? Where does it live in your body? What would change if you named it out loud?"></textarea><div class="action-row left" style="margin-top:12px"><button class="btn btn-primary" id="saveJournalBtn">Save reflection</button></div></div>';
-  var entriesHtml=state.journal.length>0?state.journal.map(function(e){return '<div class="journal-entry"><div class="je-date">'+e.date+'</div><div class="je-card">'+e.cardName+'</div><div class="je-reflection">'+e.text+'</div></div>'}).join(""):'<div class="empty-state"><div class="es-icon">○</div><h3>Your journal is quiet</h3><p>Write one reflection. Come back to see what shifts over time.</p></div>';
+  var entriesHtml=state.journal.length>0?state.journal.map(function(e){return '<div class="journal-entry"><div class="je-date">'+e.date+'</div><div class="je-card">'+e.cardName+'</div><div class="je-reflection">'+e.text+'</div></div>'}).join(""):'<div class="empty-state"><div class="es-icon">O</div><h3>Your journal is quiet</h3><p>Write one reflection. Come back to see what shifts over time.</p></div>';
   jc.innerHTML=newEntry+entriesHtml;
   document.getElementById('saveJournalBtn').onclick=saveJournalEntry;
 }
@@ -1121,7 +1061,6 @@ function saveJournalEntry(){
   renderJournal();
 }
 
-/* ===== INIT ===== */
 renderOnboarding();
 renderContext();
 </script>
