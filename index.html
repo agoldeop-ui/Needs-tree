@@ -87,7 +87,7 @@ p{max-width:72ch}
 .layer-bar-item:hover{border-color:var(--moss);transform:translateX(2px)}
 .layer-bar-item.focused{border-color:var(--moss);border-width:2px;padding:13px 15px;background:rgba(79,107,74,.06)}
 .layer-bar-item .lbi-info{flex:1;min-width:0}
-.layer-bar-item .lbi-name{font-family:var(--font-display);font-weight:700;font-size:.98rem;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.layer-bar-item .lbi-name{font-family:var(--font-display);font-weight:700;font-size:.98rem;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .layer-bar-item .lbi-score{font-size:.78rem;color:var(--mute)}
 .layer-bar-item .lbi-track{width:120px;height:8px;background:var(--line);border-radius:4px;overflow:hidden;flex-shrink:0}
 .layer-bar-item .lbi-fill{height:100%;border-radius:4px;transition:width 1s ease}
@@ -178,6 +178,7 @@ p{max-width:72ch}
 .tm-legend-item .dot.strained{background:var(--c-strained)}
 .tm-legend-item .dot.emergency{background:transparent;border:2px solid var(--c-strained);width:10px;height:10px}
 .tm-legend-item .dot.plain{background:var(--mute)}
+.tm-focus-note{text-align:center;font-size:.82rem;color:var(--mute);margin-bottom:20px;font-style:italic}
 .deck-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;justify-content:center}
 .deck-tab{padding:10px 16px;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;border:1.5px solid var(--line);transition:all var(--transition);min-height:40px}
 .deck-tab:hover{border-color:var(--moss)}
@@ -267,8 +268,11 @@ p{max-width:72ch}
 @media(max-width:600px){.drawer{width:100%}}
 .overview-summary{text-align:center;font-size:.92rem;color:var(--mute);margin-bottom:24px;padding:12px;background:var(--card);border-radius:var(--radius-sm);border:1px solid var(--line)}
 .overview-summary strong{color:var(--ink)}
-.tm-focus-note{text-align:center;font-size:.82rem;color:var(--mute);margin-bottom:20px;font-style:italic}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
 </style>
+</head>
 <body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -356,7 +360,7 @@ p{max-width:72ch}
         <p>Your needs, mapped by layer. Emergencies ringed in red. Tap any need to open strategies, and to mark it as an emergency.</p>
       </div>
       <div class="tm-legend">
-        <div class="tm-legend-item"><span class="dot healthy"></span>Layer is healthy</div>
+        <div class="tm-legend-item"><span class="dot healthy"></span>Layer healthy</div>
         <div class="tm-legend-item"><span class="dot moderate"></span>Layer under strain</div>
         <div class="tm-legend-item"><span class="dot strained"></span>Layer strained</div>
         <div class="tm-legend-item"><span class="dot emergency"></span>Emergency need</div>
@@ -414,8 +418,7 @@ p{max-width:72ch}
 <div class="drawer" id="drawer"></div>
 <script>
 /* ============================================================
-   NEEDS TREE
-   Multi-layer results, per-layer emergency sort, strategy drawer.
+   NEEDS TREE — full single file
    ============================================================ */
 
 var L = {roots:"Roots", trunk:"Trunk", branches:"Branches", leaves:"Leaves", fruits:"Fruits"};
@@ -432,7 +435,6 @@ var Lcolor = {
   leaves:"var(--c-leaves)", fruits:"var(--c-fruits)"
 };
 
-/* ===== CORE NEEDS ===== */
 var C = [
   ["roots","Clean air and water","What the body takes in"],
   ["roots","Nutritious food","Fuel you can rely on"],
@@ -548,7 +550,6 @@ var S = [
   "I'll stay in this situation even though it hurts, because at least it's familiar."
 ];
 
-/* ===== DIAGNOSTIC QUESTIONS ===== */
 var DIAG_Q_SELF = [
   {layer:"roots", text:"I often feel physically drained, tired, or unwell — sleep, food, or movement feel like a chore."},
   {layer:"roots", text:"My living or working environment feels unstable, unsafe, or unpredictable."},
@@ -671,7 +672,6 @@ var PRIORITY_BY_CONTEXT = {
   }
 };
 
-/* ===== REFRAME — excuse + strategy + array of actions ===== */
 var REFRAME_BASE = {
   "Rest and sleep":{excuse:"I'll rest when the work is done.",strategy:"Scrolling until 2am to 'unwind', then waking up exhausted.",actions:["Set a hard-stop alarm for work. Create a 20-minute wind-down with no screens.","Move bedtime 30 minutes earlier for one week. Just one week.","Leave your phone outside the bedroom tonight.","Take one nap this week, without apologising.","Block 9 hours in bed for three nights. No exceptions."]},
   "Nutritious food":{excuse:"I don't have time to cook — I'll eat properly when things calm down.",strategy:"Skipping meals, then bingeing on whatever's fastest.",actions:["Batch-cook one thing on Sunday. Keep one no-decision meal ready.","Eat one meal this week without a screen. Sit down.","Buy one fruit you actually like. Put it where you'll see it.","Keep one emergency snack in your bag at all times.","Cook one meal this week where the only goal is that you enjoy it."]},
@@ -741,11 +741,9 @@ var REFRAME_BASE = {
   "Freedom from Responsibility":{excuse:"I can't take a break — everything falls apart.",strategy:"Pushing through, then burning out and dropping everything.",actions:["Take one afternoon off this week. Nothing productive allowed.","Say 'not today' to one thing.","Let something small go undone. Notice what happens.","Hand one task over. Don't take it back.","Tell someone you need a break."]},
   "Consent":{excuse:"It's not worth the awkwardness to say no.",strategy:"Going along with things, then feeling violated later.",actions:["Practice 'Let me think about it' as a response this week. Use it once.","Say no to one thing without apology.","Notice one moment where you went along with something. What did you want?","Ask for something, and notice how they respond.","Say 'I don't want to' instead of 'I can't'."]},
   "Identity affirmation":{excuse:"It doesn't matter if they get it right.",strategy:"Letting it slide, then feeling invisible.",actions:["Correct one person gently this week about how you want to be named.","Say your pronouns out loud. Once.","Tell one person how you'd like to be referred to.","Write down the words that feel like you.","Notice when someone gets it right. Let it matter."]},
-  "Understanding":{excuse:"I don't really need to understand — I just need to cope.",strategy:"Staying confused, then feeling powerless.",actions:["Ask one clarifying question this week.","Write down what you do understand and what you don't.","Look up one thing you've been guessing about.","Ask someone to explain. It's not weakness.","Write the messy version of what you think is happening."]},
-  "Inspiration and meaning":{excuse:"Meaning is for people with time.",strategy:"Numbing the emptiness.",actions:["Name one thing that matters to you. Say it out loud.","Do one thing this week that lines up with what you care about.","Write a sentence about why you do what you do.","Notice one moment today that felt meaningful."]}
+  "Understanding":{excuse:"I don't really need to understand — I just need to cope.",strategy:"Staying confused, then feeling powerless.",actions:["Ask one clarifying question this week.","Write down what you do understand and what you don't.","Look up one thing you've been guessing about.","Ask someone to explain. It's not weakness.","Write the messy version of what you think is happening."]}
 };
 
-/* Add a fallback for any need not explicitly listed */
 function reframeFor(name){
   if(REFRAME_BASE[name]) return REFRAME_BASE[name];
   return {
@@ -792,9 +790,9 @@ var state = {
   diagStrained:null,
   focusLayer:null,
   emergencyPicks:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
-  chosenActions:{}, // keyed by need name -> action string
-  customActions:{}, // keyed by need name -> user text
-  actionIndex:{}, // keyed by need name -> rotation index
+  chosenActions:{},
+  customActions:{},
+  actionIndex:{},
   treeNeeds:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
   journal:[]
 };
@@ -838,7 +836,6 @@ window.navigateTo=navigateTo;
 document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){navigateTo(n.dataset.page)})});
 document.getElementById('menuBtn').addEventListener('click',function(){document.getElementById('sidebar').classList.toggle('open')});
 
-/* ===== ONBOARDING ===== */
 function renderOnboarding(){
   var s=ONBOARD[state.onboardStep];
   var c=document.getElementById('onboardingContent');
@@ -851,7 +848,6 @@ function renderOnboarding(){
   if(back)back.onclick=function(){state.onboardStep--;renderOnboarding()};
 }
 
-/* ===== CONTEXT ===== */
 function renderContext(){
   var g=document.getElementById('contextGrid');
   g.innerHTML=CONTEXTS.map(function(c){return '<div class="context-card" data-id="'+c.id+'"><div class="cc-icon">'+c.icon+'</div><div class="cc-title">'+c.title+'</div><div class="cc-desc">'+c.desc+'</div></div>'}).join("");
@@ -872,7 +868,6 @@ function renderContext(){
   });
 }
 
-/* ===== DIAGNOSTIC ===== */
 function renderDiagnostic(){
   if(state.diagScores){renderResults();return}
   renderDiagQuestion();
@@ -913,12 +908,10 @@ function computeDiagResult(){
   state.focusLayer = strained.length > 0 ? strained[0] : win;
 }
 
-/* ===== RESULTS ===== */
 function renderResults(){
   var c=document.getElementById('diagContent');
   var scores=state.diagScores;
   var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(x){return x.id===state.context})[0].title : null;
-  var strained = LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
 
   c.innerHTML='<div class="results-container">'+
     '<div class="results-header"><h1>Your Needs Tree, this season.</h1><p>Tap any layer to see what it is, why it matters, and pick your emergencies there.'+(ctxLabel?' <span style="font-size:.85rem;color:var(--mute)">Context: '+ctxLabel+'</span>':'')+'</p></div>'+
@@ -944,7 +937,6 @@ function renderResults(){
   };
   document.getElementById('goTreeBtn').onclick=function(){navigateTo('tree')};
 
-  // Apply focus
   var fl = state.focusLayer || state.diagStrained;
   document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){
     el.classList.toggle('focused', el.dataset.layer === fl);
@@ -960,14 +952,13 @@ function renderLayerFocus(layer, scores){
   var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(x){return x.id===state.context})[0].title.toLowerCase() : "";
   var needs = needsForLayer(layer);
   var picks = state.emergencyPicks[layer] || [];
-  var cap = st === "strained" ? 3 : 0;
-
   var sortable = st === "strained";
+
   var sortHtml = sortable
     ? '<div class="sort-section"><h2>Pick up to three emergencies in '+L[layer]+'</h2><p>From this layer, pick the needs that feel like emergencies right now'+(ctxLabel?' for a '+ctxLabel:'')+'. Not preferences. The ones you have been apologizing for.</p><div class="sort-counter" id="sortCounter"><strong>'+picks.length+'</strong> of 3 selected</div><div class="sort-grid" id="sortGrid">'+needs.map(function(n){
         var sel=picks.indexOf(n[1])>=0;
         return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
-      }).join("")+'</div>'+(picks.length===3?'<div class="sort-complete">Three emergencies picked. Tap another layer above, or head to My Tree.</div>':'<div id="reframeSlot"></div>')+'</div>'
+      }).join("")+'</div><div id="reframeSlot"></div>'+(picks.length===3?'<div class="sort-complete" style="margin-top:16px">Three emergencies picked. Shuffle the actions above, or tap another layer to keep going.</div>':'')+'</div>'
     : '<div class="sort-section"><h2>'+L[layer]+' is '+st+' right now</h2><p>'+(st==="healthy"?'This layer is doing okay. Nothing to mark as emergency here. If you want to see what lives in this layer, tap a need on My Tree.':'This layer is under strain but not in the red. Keep an eye on it. If it drifts further, you can pick emergencies here.')+'</p></div>';
 
   slot.innerHTML=
@@ -987,8 +978,13 @@ function renderLayerFocus(layer, scores){
         var name=el.dataset.need;
         var arr = state.emergencyPicks[layer];
         var i=arr.indexOf(name);
-        if(i>=0){arr.splice(i,1)}
-        else{if(arr.length>=3)return;arr.push(name)}
+        if(i>=0){
+          arr.splice(i,1);
+        } else {
+          if(arr.length>=3)return;
+          arr.push(name);
+          if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
+        }
         renderLayerFocus(layer, scores);
       };
     });
@@ -1029,7 +1025,6 @@ function renderReframesFor(layer){
   });
 }
 
-/* ===== TODAY ===== */
 function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1042,7 +1037,6 @@ function renderToday(){
     return;
   }
   var scores=state.diagScores;
-  var win=state.diagStrained;
   var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
   body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
@@ -1056,7 +1050,6 @@ function renderToday(){
   '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
 }
 
-/* ===== DECK ===== */
 var deckFilter="core";
 function svgFor(layer){
   var colors={roots:"#6B4A32",trunk:"#4F6B4A",branches:"#2F6F7A",leaves:"#9A7B1E",fruits:"#8A3B5C",dark:"#17211A"};
@@ -1087,17 +1080,19 @@ function renderDeck(filter){
 }
 document.getElementById('deckTabs').addEventListener('click',function(e){if(e.target.dataset.filter)renderDeck(e.target.dataset.filter)});
 
-/* ===== MY TREE ===== */
 function renderTreeMap(){
   var container=document.getElementById('treeMapContainer');
   var scores = state.diagScores || null;
+  var existingNote = document.querySelector('.tm-focus-note');
+  if(existingNote) existingNote.remove();
   container.innerHTML=LORDER.slice().reverse().map(function(l){
     var needs=state.treeNeeds[l]||[];
     var st = scores ? scoreStatus(scores[l]) : "unknown";
     var layerClass = st === "strained" ? " tm-strained" : "";
     var needsHtml=needs.length>0?needs.map(function(n,i){
       var em=isEmergency(l,n)?' emergency':'';
-      return '<span class="tm-need'+em+'" style="background:'+Lcolor[l]+'" onclick="openDrawer(\''+l+'\',\''+n.replace(/'/g,"\\'")+'\')">'+n+' <span class="remove" onclick="event.stopPropagation();removeNeed(\''+l+'\','+i+')">&times;</span></span>';
+      var safeName = n.replace(/'/g, "\\'");
+      return '<span class="tm-need'+em+'" style="background:'+Lcolor[l]+'" onclick="openDrawer(\''+l+'\',\''+safeName+'\')">'+n+' <span class="remove" onclick="event.stopPropagation();removeNeed(\''+l+'\','+i+')">&times;</span></span>';
     }).join(""):'<span class="tm-empty">No needs here yet. Add one, or take the diagnostic and pick emergencies.</span>';
     return '<div class="tm-layer'+layerClass+'" style="--lk:'+Lcolor[l]+'">'+
       '<div class="tm-layer-head">'+
@@ -1136,7 +1131,11 @@ function openAddNeedModal(layer){
   subtitle.textContent="Tap a need to add it to your "+L[layer]+" layer.";
   var layerNeeds=needsForLayer(layer);
   var existing=state.treeNeeds[layer]||[];
-  grid.innerHTML=layerNeeds.map(function(c){var added=existing.indexOf(c[1])>=0;return '<div class="modal-need'+(added?' added':'')+'" data-need="'+c[1].replace(/'/g,"\\'")+'"><div style="font-weight:700">'+c[1]+'</div><div style="font-size:.72rem;color:var(--mute);margin-top:2px">'+c[2]+'</div></div>'}).join("");
+  grid.innerHTML=layerNeeds.map(function(c){
+    var added=existing.indexOf(c[1])>=0;
+    var safeName=c[1].replace(/'/g, "\\'");
+    return '<div class="modal-need'+(added?' added':'')+'" data-need="'+safeName+'"><div style="font-weight:700">'+c[1]+'</div><div style="font-size:.72rem;color:var(--mute);margin-top:2px">'+c[2]+'</div></div>';
+  }).join("");
   grid.querySelectorAll('.modal-need:not(.added)').forEach(function(el){el.onclick=function(){addNeedToTree(layer,el.dataset.need)}});
   modal.classList.add('show');
 }
@@ -1149,7 +1148,6 @@ function closeModal(){document.getElementById('addNeedModal').classList.remove('
 window.closeModal=closeModal;
 document.getElementById('addNeedModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 
-/* ===== DRAWER ===== */
 function openDrawer(layer, name){
   var d=document.getElementById('drawer');
   var ov=document.getElementById('drawerOverlay');
@@ -1158,7 +1156,8 @@ function openDrawer(layer, name){
   var chosen=state.chosenActions[name]||null;
   var custom=state.customActions[name]||"";
   var em=isEmergency(layer,name);
-  var desc = (C.find(function(x){return x[1]===name})||[])[2] || "";
+  var found = C.find(function(x){return x[1]===name});
+  var desc = found ? found[2] : "";
 
   function render(){
     d.innerHTML=
@@ -1174,7 +1173,8 @@ function openDrawer(layer, name){
         '<div class="drawer-shuffle"><div class="ds-label" style="margin:0">Pick an action</div><button class="btn btn-outline btn-small" id="drawerShuffle">Shuffle</button></div>'+
         '<div class="drawer-actions">'+r.actions.map(function(a,i){
           var sel = (chosen===a) || (!chosen && i===idx);
-          return '<button class="drawer-action'+(sel?' selected':'')+'" data-action="'+a.replace(/"/g,"&quot;")+'">'+a+'</button>';
+          var safeA = a.replace(/"/g,"&quot;");
+          return '<button class="drawer-action'+(sel?' selected':'')+'" data-action="'+safeA+'">'+a+'</button>';
         }).join("")+'</div>'+
       '</div>'+
       '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+custom+'</textarea></div>'+
@@ -1194,8 +1194,13 @@ function openDrawer(layer, name){
     if(emT)emT.onclick=function(){
       var arr=state.emergencyPicks[layer];
       var i=arr.indexOf(name);
-      if(i>=0)arr.splice(i,1);
-      else{if(arr.length>=3){alert("You can have up to 3 emergencies in "+L[layer]+". Remove one first.");return}arr.push(name)}
+      if(i>=0){
+        arr.splice(i,1);
+      } else {
+        if(arr.length>=3){alert("You can have up to 3 emergencies in "+L[layer]+". Remove one first.");return}
+        arr.push(name);
+        if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
+      }
       renderTreeMap();
       render();
     };
@@ -1211,7 +1216,6 @@ function closeDrawer(){
 }
 window.closeDrawer=closeDrawer;
 
-/* ===== JOURNAL ===== */
 function renderJournal(){
   var jc=document.getElementById('journalContent');
   if(!jc)return;
