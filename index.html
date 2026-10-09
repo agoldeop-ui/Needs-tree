@@ -177,7 +177,6 @@ p{max-width:72ch}
 .tm-legend-item .dot.moderate{background:var(--c-moderate)}
 .tm-legend-item .dot.strained{background:var(--c-strained)}
 .tm-legend-item .dot.emergency{background:transparent;border:2px solid var(--c-strained);width:10px;height:10px}
-.tm-legend-item .dot.plain{background:var(--mute)}
 .tm-focus-note{text-align:center;font-size:.82rem;color:var(--mute);margin-bottom:20px;font-style:italic}
 .deck-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;justify-content:center}
 .deck-tab{padding:10px 16px;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;border:1.5px solid var(--line);transition:all var(--transition);min-height:40px}
@@ -418,7 +417,7 @@ p{max-width:72ch}
 <div class="drawer" id="drawer"></div>
 <script>
 /* ============================================================
-   NEEDS TREE — full single file
+   NEEDS TREE — full file, drawer fix included
    ============================================================ */
 
 var L = {roots:"Roots", trunk:"Trunk", branches:"Branches", leaves:"Leaves", fruits:"Fruits"};
@@ -1152,14 +1151,16 @@ function openDrawer(layer, name){
   var d=document.getElementById('drawer');
   var ov=document.getElementById('drawerOverlay');
   var r=reframeFor(name);
-  var idx=state.actionIndex[name]||0;
-  var chosen=state.chosenActions[name]||null;
-  var custom=state.customActions[name]||"";
   var em=isEmergency(layer,name);
   var found = C.find(function(x){return x[1]===name});
   var desc = found ? found[2] : "";
+  var customSaveTimer = null;
 
   function render(){
+    var idx = state.actionIndex[name] || 0;
+    var chosen = state.chosenActions[name] || null;
+    var custom = state.customActions[name] || "";
+
     d.innerHTML=
       '<div class="drawer-head"><div><div class="drawer-tag" style="color:'+Lcolor[layer]+'">'+L[layer]+'</div><div class="drawer-title">'+name+'</div></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>'+
       (desc?'<div class="drawer-desc">'+desc+'</div>':'')+
@@ -1171,25 +1172,49 @@ function openDrawer(layer, name){
       '<div class="drawer-section"><div class="ds-label">Maladaptive strategy</div><div class="ds-text strategy">'+r.strategy+'</div></div>'+
       '<div class="drawer-section">'+
         '<div class="drawer-shuffle"><div class="ds-label" style="margin:0">Pick an action</div><button class="btn btn-outline btn-small" id="drawerShuffle">Shuffle</button></div>'+
-        '<div class="drawer-actions">'+r.actions.map(function(a,i){
-          var sel = (chosen===a) || (!chosen && i===idx);
-          var safeA = a.replace(/"/g,"&quot;");
-          return '<button class="drawer-action'+(sel?' selected':'')+'" data-action="'+safeA+'">'+a+'</button>';
+        '<div class="drawer-actions" id="drawerActions">'+r.actions.map(function(a,i){
+          var sel = (chosen === a) || (!chosen && i === idx);
+          return '<button type="button" class="drawer-action'+(sel?' selected':'')+'" data-idx="'+i+'">'+a+'</button>';
         }).join("")+'</div>'+
       '</div>'+
-      '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+custom+'</textarea></div>'+
+      '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+custom.replace(/</g,'&lt;')+'</textarea><div class="drawer-save-status" id="drawerSaveStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div></div>'+
       '<div class="drawer-actions-row"><button class="btn btn-outline" onclick="closeDrawer()">Close</button></div>';
-    d.querySelectorAll('[data-action]').forEach(function(b){
-      b.onclick=function(){state.chosenActions[name]=b.dataset.action;render()};
+
+    d.querySelectorAll('#drawerActions .drawer-action').forEach(function(b){
+      b.onclick=function(){
+        var i = parseInt(b.dataset.idx, 10);
+        state.chosenActions[name] = r.actions[i];
+        render();
+      };
     });
+
     var sh=document.getElementById('drawerShuffle');
     if(sh)sh.onclick=function(){
-      state.actionIndex[name]=((state.actionIndex[name]||0)+1)%r.actions.length;
+      state.actionIndex[name] = ((state.actionIndex[name]||0) + 1) % r.actions.length;
       delete state.chosenActions[name];
       render();
     };
+
     var cust=document.getElementById('drawerCustom');
-    if(cust)cust.oninput=function(){state.customActions[name]=cust.value};
+    var status=document.getElementById('drawerSaveStatus');
+    if(cust)cust.oninput=function(){
+      state.customActions[name]=cust.value;
+      if(status){
+        status.textContent = "Saving…";
+        status.style.color = "var(--mute)";
+      }
+      if(customSaveTimer) clearTimeout(customSaveTimer);
+      customSaveTimer = setTimeout(function(){
+        if(status){
+          status.textContent = "Saved \u2713";
+          status.style.color = "var(--moss)";
+        }
+      }, 400);
+    };
+    if(cust && state.customActions[name]){
+      if(status){ status.textContent = "Saved \u2713"; status.style.color = "var(--moss)"; }
+    }
+
     var emT=document.getElementById('emToggle');
     if(emT)emT.onclick=function(){
       var arr=state.emergencyPicks[layer];
@@ -1201,6 +1226,7 @@ function openDrawer(layer, name){
         arr.push(name);
         if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
       }
+      em = isEmergency(layer,name);
       renderTreeMap();
       render();
     };
