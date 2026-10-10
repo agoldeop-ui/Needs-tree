@@ -917,6 +917,7 @@ var state = {
   emergencyPicks:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
   chosenActions:{},
   customActions:{},
+  ifThenCue:{},
   actionIndex:{},
   treeNeeds:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
   journal:[],
@@ -1308,6 +1309,18 @@ function openDrawer(layer, name){
           return '<button type="button" class="drawer-action'+(sel?' selected':'')+'" data-idx="'+i+'">'+a+'</button>';
         }).join("")+'</div>'+
       '</div>'+
+      '<div class="drawer-section">'+
+        '<div class="ds-label">If-then plan</div>'+
+        '<p style="font-size:.82rem;color:var(--mute);margin-bottom:8px">The research on behavior change is clear: vague plans fail. Specific plans work. Fill in the cue \u2014 the moment when this need gets ignored \u2014 and the app will hold the whole sentence for you.</p>'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.92rem">'+
+          '<span style="font-weight:600">If</span>'+
+          '<input type="text" id="drawerCue" placeholder="it\u2019s 6pm and I\u2019m still working" value="'+(state.ifThenCue[name]||'').replace(/"/g,'&quot;')+'" style="flex:1;min-width:160px;padding:10px 12px;border:1.5px solid var(--line);border-radius:var(--radius-xs);background:var(--card);font-family:var(--font-body);font-size:.88rem;color:var(--ink)">'+
+          '<span style="font-weight:600">, then I will</span>'+
+        '</div>'+
+        '<div style="margin-top:8px;padding:10px 12px;border-radius:var(--radius-xs);background:var(--bg);border:1px dashed var(--line);font-size:.9rem;font-style:italic;color:var(--mute)" id="ifThenPreview">'+
+          (state.ifThenCue[name] ? 'If ' + state.ifThenCue[name] + ', then I will ' + action.charAt(0).toLowerCase() + action.slice(1).replace(/\.$/,'') + '.' : 'Type your cue above, and your plan will appear here.')+
+        '</div>'+
+      '</div>'+
       '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+custom.replace(/</g,'&lt;')+'</textarea><div class="drawer-save-status" id="drawerSaveStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div></div>'+
       '<div class="drawer-actions-row"><button class="btn btn-outline" onclick="closeDrawer()">Close</button></div>';
 
@@ -1326,6 +1339,18 @@ function openDrawer(layer, name){
       render();
     };
 
+    var cueInput = document.getElementById('drawerCue');
+    if(cueInput)cueInput.oninput=function(){
+      state.ifThenCue[name] = cueInput.value;
+      var preview = document.getElementById('ifThenPreview');
+      if(preview){
+        if(cueInput.value){
+          preview.textContent = 'If ' + cueInput.value + ', then I will ' + action.charAt(0).toLowerCase() + action.slice(1).replace(/\.$/,'') + '.';
+        } else {
+          preview.textContent = 'Type your cue above, and your plan will appear here.';
+        }
+      }
+    };
     var cust=document.getElementById('drawerCustom');
     var status=document.getElementById('drawerSaveStatus');
     if(cust)cust.oninput=function(){
