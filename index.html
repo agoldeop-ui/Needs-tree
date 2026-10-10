@@ -359,7 +359,7 @@ p{max-width:72ch}
       </button>
       <button class="nav-item" data-page="workshops">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-        Workshops
+        Continue
       </button>
     </nav>
     <div class="sidebar-footer">
@@ -981,6 +981,7 @@ function navigateTo(page){
   if(page==='today')renderToday();
   if(page==='diagnostic')renderDiagnostic();
   if(page==='deck')renderDeck('core');
+  if(page==='learn')renderLearn();
   if(page==='play')renderPlay();
   if(page==='tree')renderTreeMap();
   if(page==='journal')renderJournal();
@@ -1652,6 +1653,128 @@ function playAnother(){
 }
 window.playAnother=playAnother;
 
+/* ===== LEARN SECTION ===== */
+var LEARN_ARTICLES = [
+  {id:"why-i-built-this", title:"Why I built this", topic:"Start here", layer:null,
+   summary:"The moment that started it. Not a mission statement — just what happened when I realised I'd been treating a need as a problem.",
+   body:"[Your article goes here. Replace this paragraph with the real piece. Aim for 600–900 words. Start with the specific moment, not the idea. The reader should feel something before they understand anything. — to be written]"},
+  {id:"need-vs-strategy", title:"Need vs strategy", topic:"The core idea", layer:null,
+   summary:"The single distinction the whole app is built on. A need is a condition. A strategy is what you do instead. Same behaviour, different meaning.",
+   body:"[Your article goes here. This is the piece that explains why the framework works. Start with an example — someone doing something that looks like a problem, then reveal the need underneath. Aim for 700–1000 words. — to be written]"},
+  {id:"three-emergencies", title:"Why only three emergencies", topic:"The cap", layer:null,
+   summary:"The rule that made one user laugh, then made her think. Why the cap is not a limitation — it's the whole point.",
+   body:"[Your article goes here. This one answers the review directly. Start with the laugh, then explain the psychology: why we can't hold more than three things as urgent, and why naming the rest as non-emergencies is a relief, not a loss. — to be written]"},
+  {id:"roots-first", title:"Why roots come first", topic:"Roots", layer:"roots",
+   summary:"You cannot fix a starving root by producing more leaves. What this means, practically, in a week where everything feels urgent.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"identity-under-pressure", title:"Identity under pressure", topic:"Trunk", layer:"trunk",
+   summary:"What happens when you've been everyone's everything and can't remember what you want. And the two questions that help.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"alone-in-a-crowd", title:"Alone in a crowd", topic:"Branches", layer:"branches",
+   summary:"Why connection doesn't fix loneliness, and why belonging does. The difference is small but it changes everything.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"output-is-not-rest", title:"Why output is not rest", topic:"Leaves", layer:"leaves",
+   summary:"Burnout isn't about working too much. It's about treating leaves as roots. What the fix actually looks like.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"purpose-cant-be-forced", title:"Purpose can't be forced", topic:"Fruits", layer:"fruits",
+   summary:"Fruits appear when conditions are right. If you're chasing them on a starving tree, you'll burn out. What to do instead.",
+   body:"[Your article goes here. — to be written]"}
+];
+
+var LEARN_PARTNERS = [
+  {name:"A therapist", for:"Branches", desc:"Slots reserved for licensed therapists who work with the relational layer. Coming soon.", tag:"Therapy"},
+  {name:"A coach", for:"Trunk", desc:"Slots reserved for coaches who work with identity, boundaries, and burnout. Coming soon.", tag:"Coaching"},
+  {name:"An educator", for:"Leaves", desc:"Slots reserved for teachers and creators whose work feeds the Learning and growth need. Coming soon.", tag:"EdTech"}
+];
+
+function renderLearn(){
+  var grid = document.getElementById('learnArticleGrid');
+  if(!grid) return;
+
+  var ordered = LEARN_ARTICLES.slice();
+  if(state.diagScores){
+    var strained = LORDER.filter(function(l){return scoreStatus(state.diagScores[l])==="strained"});
+    ordered.sort(function(a, b){
+      var aMatch = a.layer && strained.indexOf(a.layer) >= 0 ? 1 : 0;
+      var bMatch = b.layer && strained.indexOf(b.layer) >= 0 ? 1 : 0;
+      return bMatch - aMatch;
+    });
+  }
+
+  grid.innerHTML = ordered.map(function(a){
+    var tag = a.layer ? L[a.layer] : a.topic;
+    var tagColor = a.layer ? Lcolor[a.layer] : "var(--moss)";
+    return '<div class="deck-card" style="border-color:'+tagColor+'">'+
+      '<div class="dc-body" style="padding:16px">'+
+        '<div class="dc-tag" style="color:'+tagColor+'">'+tag+'</div>'+
+        '<div class="dc-name" style="font-size:1.05rem">'+a.title+'</div>'+
+        '<div class="dc-desc" style="font-size:.85rem;margin-top:6px">'+a.summary+'</div>'+
+        '<div style="margin-top:12px"><button class="btn btn-outline btn-small" onclick="openArticle(\''+a.id+'\')">Read →</button></div>'+
+      '</div>'+
+    '</div>';
+  }).join("");
+
+  var partnersGrid = document.getElementById('learnPartnersGrid');
+  if(partnersGrid){
+    partnersGrid.innerHTML = LEARN_PARTNERS.map(function(p){
+      return '<div class="game-card locked">'+
+        '<span class="gc-badge">'+p.tag+'</span>'+
+        '<div class="gc-title" style="font-size:1.05rem">'+p.name+'</div>'+
+        '<div class="gc-for">For the '+p.for+' layer</div>'+
+        '<div class="gc-pitch">'+p.desc+'</div>'+
+      '</div>';
+    }).join("");
+  }
+}
+window.renderLearn = renderLearn;
+
+function openArticle(id){
+  var a = LEARN_ARTICLES.find(function(x){return x.id === id});
+  if(!a) return;
+  var c = document.getElementById('page-learn');
+  c.innerHTML =
+    '<div style="max-width:680px;margin:0 auto">'+
+      '<button class="btn btn-ghost btn-small" onclick="renderLearnReset()">← Back to Learn</button>'+
+      '<div class="today-hero" style="margin-top:24px;text-align:left">'+
+        '<div style="font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">'+a.topic+'</div>'+
+        '<h1 style="font-size:2rem">'+a.title+'</h1>'+
+        '<p style="font-size:1.02rem;color:var(--mute)">'+a.summary+'</p>'+
+      '</div>'+
+      '<div class="results-detail" style="border:none;padding:0;background:transparent">'+
+        '<p style="font-size:1.05rem;line-height:1.75;white-space:pre-wrap">'+a.body+'</p>'+
+      '</div>'+
+      '<div class="safety-note" style="margin-top:40px">Reflection tool, not therapy or diagnosis.</div>'+
+      '<div class="action-row" style="margin-top:16px">'+
+        '<button class="btn btn-outline" onclick="renderLearnReset()">← Back to Learn</button>'+
+      '</div>'+
+    '</div>';
+}
+window.openArticle = openArticle;
+
+function renderLearnReset(){
+  var c = document.getElementById('page-learn');
+  c.innerHTML =
+    '<div class="today-hero"><h1>Learn</h1><p>Short pieces about needs, why they hide, and how to work with them. Written in plain language.</p></div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)">'+
+      '<div class="rd-context">Featured</div>'+
+      '<h2 style="font-size:1.3rem">Why I built this</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it.</p>'+
+      '<div class="action-row left" style="margin-top:14px"><button class="btn btn-outline btn-small" onclick="openArticle(\'why-i-built-this\')">Read →</button></div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px">'+
+      '<h2 style="font-size:1.2rem">Read by topic</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">Sorted by your strained layers if you\'ve done the diagnostic.</p>'+
+      '<div id="learnArticleGrid" class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent">'+
+      '<h2 style="font-size:1.1rem">Partners</h2>'+
+      '<p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coming soon.</p>'+
+      '<div class="game-grid" style="margin-top:16px" id="learnPartnersGrid"></div>'+
+    '</div>'+
+    '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
+  renderLearn();
+}
+window.renderLearnReset = renderLearnReset;
   /* ===== SWAP AND COMPARE (solo-on-one-device, discuss together) ===== */
 function renderSwapSetup(c){
   c.innerHTML=
@@ -1799,6 +1922,7 @@ function swapFinish(){
 
 function renderSwapDone(c){
   var p = state.play;
+  var showAll = p.swapShowAll || false;
   c.innerHTML=
     '<div class="play-hero"><h1>Your three to compare</h1><p>Your partner did the same thing on their phone. Now sit side by side. Take turns reading one of these. Ask them what theirs was. Do not argue, do not justify — just answer, then swap.</p></div>'+
     '<div class="results-container">'+
@@ -1814,8 +1938,12 @@ function renderSwapDone(c){
         '<div class="rd-section"><p>Where you agreed, there is nothing to do. Where you differed, ask: what does this need mean to them that it does not mean to me?</p></div>'+
         '<div class="rd-section"><p>Do not try to change each other tonight. Just notice. The noticing is the work.</p></div>'+
       '</div>'+
+      '<div class="action-row" style="margin-top:8px">'+
+        '<button class="btn btn-outline" id="toggleShowAll">'+(showAll?'Hide the full sort':'Show everything I sorted')+'</button>'+
+      '</div>'+
+      '<div id="swapAllSlot"></div>'+
       '<div class="closing-prompt">'+
-        '<h3>One thing you learned about them</h3>'+
+        '<h3>One thing you learned about({date them</h3>'+
         '<p>After the conversation, write it here. Only if you want to.</p>'+
         '<textarea id="swapReflection" placeholder="One sentence is enough."></textarea>'+
         '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
@@ -1826,7 +1954,75 @@ function renderSwapDone(c){
         '<div id="swapSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
       '</div>'+
     '</div>';
+
+  document.getElementById('toggleShowAll').onclick=function(){
+    state.play.swapShowAll = !state.play.swapShowAll;
+    renderSwapDone(c);
+  };
+
+  if(showAll){
+    var slot = document.getElementById('swapAllSlot');
+    var piles = [
+      {id:"emergency", title:"Emergency", cls:"pile-emergency"},
+      {id:"nonneg", title:"Non-negotiable", cls:""},
+      {id:"painful", title:"Painful if unmet", cls:""},
+      {id:"nice", title:"Nice to have", cls:""}
+    ];
+    slot.innerHTML=
+      '<div class="closing-prompt" style="margin-top:20px">'+
+        '<h3>Everything you sorted</h3>'+
+        '<p>These are the fifteen cards from this session. If one of them is worth a conversation with your partner, tap it and write yourself a note. Notes go to your journal, not to them.</p>'+
+        '<div class="pile-grid" style="margin-top:16px">'+piles.map(function(pl){
+          var needs = (p.swapSorted[pl.id] || []);
+          return '<div class="pile '+pl.cls+'">'+
+            '<div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+
+            needs.map(function(n){
+              var safe = n.replace(/'/g, "\\'");
+              return '<span class="pile-need" style="cursor:pointer" onclick="openSwapNote(\''+safe+'\')">'+n+'</span>';
+            }).join("")+
+          '</div>';
+        }).join("")+'</div>'+
+        '<div id="swapNoteSlot"></div>'+
+      '</div>';
+  }
 }
+
+function openSwapNote(name){
+  var slot = document.getElementById('swapNoteSlot');
+  if(!slot) return;
+  var existing = (state.play.swapNotes && state.play.swapNotes[name]) || "";
+  slot.innerHTML=
+    '<div style="margin-top:18px;padding:16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg)">'+
+      '<div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">'+name+'</div>'+
+      '<div style="font-size:.85rem;color:var(--mute);margin-bottom:10px">What do you want to remember about this one?</div>'+
+      '<textarea class="ri-input" id="swapNoteInput" placeholder="One sentence is enough.">'+existing+'</textarea>'+
+      '<div class="game-actions" style="margin-top:10px;justify-content:flex-start">'+
+        '<button class="btn btn-primary btn-small" onclick="saveSwapNote(\''+name.replace(/'/g,"\\'")+'\')">Save note</button>'+
+        '<button class="btn btn-ghost btn-small" onclick="closeSwapNote()">Close</button>'+
+      '</div>'+
+      '<div id="swapNoteStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div>'+
+    '</div>';
+}
+
+function closeSwapNote(){
+  var slot = document.getElementById('swapNoteSlot');
+  if(slot) slot.innerHTML = "";
+}
+
+function saveSwapNote(name){
+  var t = document.getElementById('swapNoteInput').value.trim();
+  if(!t){alert("Write something first, even one sentence.");return}
+  if(!state.play.swapNotes) state.play.swapNotes = {};
+  state.play.swapNotes[name] = t;
+  var d = new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  state.journal.unshift:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap note — "+name,text:t});
+  var s = document.getElementById('swapNoteStatus');
+  if(s) s.textContent = "Saved ✓";
+}
+window.openSwapNote=openSwapNote;
+window.closeSwapNote=closeSwapNote;
+window.saveSwapNote=saveSwapNote;
 function saveSwapReflection(){
   var t = document.getElementById('swapReflection').value.trim();
   if(!t){alert("Write something first, even one sentence.");return}
