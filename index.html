@@ -145,8 +145,7 @@ p{max-width:72ch}
 .btn:disabled{opacity:.4;pointer-events:none}
 .action-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 .action-row.left{justify-content:flex-start}
-/* === PART 1 END — CONTINUE WITH PART 2 === */
-  .tree-map-page{max-width:680px;margin:0 auto}
+.tree-map-page{max-width:680px;margin:0 auto}
 .tree-map-instructions{text-align:center;margin-bottom:28px}
 .tree-map-instructions h2{font-size:1.6rem;margin-bottom:8px}
 .tree-map-instructions p{color:var(--mute);max-width:480px;margin:0 auto}
@@ -205,7 +204,7 @@ p{max-width:72ch}
 .journal-entry .je-date{font-size:.78rem;color:var(--mute);margin-bottom:6px}
 .journal-entry .je-card{font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px}
 .journal-entry .je-reflection{font-size:.9rem;line-height:1.6}
-.workshop-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin:24px auto;max-width:600px;text-align:center}
+.workshop-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin:24px auto;max-width:640px;text-align:center}
 .workshop-card .wc-badge{display:inline-block;background:var(--moss);color:#fff;padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
 .workshop-card h2{font-size:1.5rem;margin-bottom:8px}
 .workshop-card .wc-price{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--moss);margin:12px 0}
@@ -268,7 +267,6 @@ p{max-width:72ch}
 @media(max-width:600px){.drawer{width:100%}}
 .overview-summary{text-align:center;font-size:.92rem;color:var(--mute);margin-bottom:24px;padding:12px;background:var(--card);border-radius:var(--radius-sm);border:1px solid var(--line)}
 .overview-summary strong{color:var(--ink)}
-/* Play page */
 .play-hero{text-align:center;margin-bottom:32px}
 .play-hero h1{font-size:clamp(1.7rem,1.2rem+2vw,2.4rem);margin-bottom:8px}
 .play-hero p{color:var(--mute);font-size:1.02rem;margin:0 auto;max-width:520px}
@@ -318,8 +316,7 @@ p{max-width:72ch}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
 </style>
 </head>
-/* === PART 2 END — CONTINUE WITH PART 3 === */
-  <body>
+<body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
@@ -341,13 +338,13 @@ p{max-width:72ch}
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20M6 12h8M6 16h6"/></svg>
         Deck
       </button>
-      <button class="nav-item" data-page="learn">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Learn
-      </button>
       <button class="nav-item" data-page="play">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Play
+      </button>
+      <button class="nav-item" data-page="learn">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Learn
       </button>
       <button class="nav-item" data-page="tree">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 2 1 4 3 5-2 1-3 3-3 5v3h14v-3c0-2-1-4-3-5 2-1 3-3 3-5 0-4-3-7-7-7z"/></svg>
@@ -411,31 +408,6 @@ p{max-width:72ch}
     <div class="page" id="page-play">
       <div id="playContent"></div>
     </div>
-    <div class="page" id="page-tree">
-      <div class="tree-map-instructions">
-        <h2>Your Personal Tree</h2>
-        <p>Your needs, mapped by layer. Emergencies ringed in red. Tap any need to open strategies, and to mark it as an emergency.</p>
-      </div>
-      <div class="tm-legend">
-        <div class="tm-legend-item"><span class="dot healthy"></span>Layer healthy</div>
-        <div class="tm-legend-item"><span class="dot moderate"></span>Layer under strain</div>
-        <div class="tm-legend-item"><span class="dot strained"></span>Layer strained</div>
-        <div class="tm-legend-item"><span class="dot emergency"></span>Emergency need</div>
-      </div>
-      <div class="tree-map-container" id="treeMapContainer"></div>
-      <div class="action-row">
-        <button class="btn btn-primary" onclick="openAddNeedModal()">Add a need</button>
-        <button class="btn btn-outline" onclick="navigateTo('deck')">Browse deck</button>
-      </div>
-      <div class="safety-note">Layers are read from the roots up. If roots and trunk are both strained, start with the roots: leaves and fruits cannot fix them.</div>
-    </div>
-    <div class="page" id="page-journal">
-      <div class="today-hero">
-        <h1>Your Reflections</h1>
-        <p>Draw a card. Write what it stirs. Come back to see what shifts.</p>
-      </div>
-      <div id="journalContent" class="journal-page"></div>
-    </div>
     <div class="page" id="page-learn">
       <div class="today-hero">
         <h1>Learn</h1>
@@ -464,6 +436,31 @@ p{max-width:72ch}
       </div>
 
       <div class="safety-note">Reflection tool, not therapy or diagnosis. If a piece brings something up, talk to someone you trust or a professional.</div>
+    </div>
+    <div class="page" id="page-tree">
+      <div class="tree-map-instructions">
+        <h2>Your Personal Tree</h2>
+        <p>Your needs, mapped by layer. Emergencies ringed in red. Tap any need to open strategies, and to mark it as an emergency.</p>
+      </div>
+      <div class="tm-legend">
+        <div class="tm-legend-item"><span class="dot healthy"></span>Layer healthy</div>
+        <div class="tm-legend-item"><span class="dot moderate"></span>Layer under strain</div>
+        <div class="tm-legend-item"><span class="dot strained"></span>Layer strained</div>
+        <div class="tm-legend-item"><span class="dot emergency"></span>Emergency need</div>
+      </div>
+      <div class="tree-map-container" id="treeMapContainer"></div>
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="openAddNeedModal()">Add a need</button>
+        <button class="btn btn-outline" onclick="navigateTo('deck')">Browse deck</button>
+      </div>
+      <div class="safety-note">Layers are read from the roots up. If roots and trunk are both strained, start with the roots: leaves and fruits cannot fix them.</div>
+    </div>
+    <div class="page" id="page-journal">
+      <div class="today-hero">
+        <h1>Your Reflections</h1>
+        <p>Draw a card. Write what it stirs. Come back to see what shifts.</p>
+      </div>
+      <div id="journalContent" class="journal-page"></div>
     </div>
     <div class="page" id="page-workshops">
       <div class="today-hero">
@@ -520,26 +517,6 @@ p{max-width:72ch}
 
       <div class="safety-note">Reflection tool, not therapy or diagnosis. If something comes up, talk to someone you trust or a professional.</div>
     </div>
-      <div class="workshop-card">
-        <span class="wc-badge">Beta</span>
-        <h2>Needs Tree Starter Session</h2>
-        <p style="color:var(--mute)">For people who understand themselves but still repeat the same patterns.</p>
-        <div class="wc-price">49-99 EUR</div>
-        <ul class="wc-includes">
-          <li>The 15-statement diagnostic</li>
-          <li>Guided card sort exercise</li>
-          <li>Your personal Tree Map</li>
-          <li>Reframed action plans</li>
-          <li>One question to take home</li>
-        </ul>
-        <p style="font-size:.88rem;color:var(--mute);margin-top:12px">After this, you'll relate to your needs differently — you'll have language for what you've been calling "being too much."</p>
-        <form class="workshop-form" onsubmit="event.preventDefault();alert('Thanks. We will be in touch about the next session.')">
-          <input type="email" placeholder="Your email" required>
-          <button type="submit" class="btn btn-primary" style="justify-content:center">Notify me of the next session</button>
-        </form>
-      </div>
-      <div class="safety-note">Not therapy or a diagnosis. If something comes up during a session, the facilitator will pause and refer to a professional if needed.</div>
-    </div>
   </div>
 </div>
 <div class="modal-overlay" id="addNeedModal">
@@ -565,9 +542,8 @@ p{max-width:72ch}
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer"></div>
 <script>
-/* === PART 3 END — CONTINUE WITH PART 4 === */
-  /* ============================================================
-   NEEDS TREE — full file with Play section
+/* ============================================================
+   NEEDS TREE — complete
    ============================================================ */
 
 var L = {roots:"Roots", trunk:"Trunk", branches:"Branches", leaves:"Leaves", fruits:"Fruits"};
@@ -929,8 +905,8 @@ var LAYER_INFO = {
   leaves:{what:"Leaves are what you produce: work, creativity, caretaking, output, play. They are seasonal — they regenerate when the tree is healthy, and they die back when it isn't.",solves:"When leaves are healthy, you have energy to create, to play, to contribute without resentment. Rest actually restores you.",priority:"Treating leaves as roots causes collapse. If your output is the only thing holding your identity together, you are one bad season away from burnout. The leaves cannot feed the tree."},
   fruits:{what:"Fruits are contribution, purpose, meaning, legacy. They appear naturally when conditions are right — they cannot be forced, and their absence is not failure.",solves:"When fruits are present, your life feels like it's about something. Your actions connect to something larger than the moment.",priority:"Fruits cannot grow on a starving tree. If you're chasing purpose while your roots and trunk are collapsing, you're asking a dying tree to bear fruit. Feed the lower layers first."}
 };
-/* === PART 4 END — CONTINUE WITH PART 5 === */
-  var state = {
+
+var state = {
   onboardStep:0,
   context:null,
   diagAnswers:new Array(15).fill(null),
@@ -945,7 +921,7 @@ var LAYER_INFO = {
   treeNeeds:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
   journal:[],
   darkWaitlist:[],
-  play:{ view:"menu", scope:null, subScope:null, cards:[], sorted:{}, pileOrder:["nice","painful","nonneg","emergency"], currentIdx:0 }
+  play:{ view:"menu", scope:null, subScope:null, cards:[], sorted:{}, currentIdx:0, swapScope:null, swapSubScope:null, swapCards:[], swapSorted:{}, swapIdx:0, swapTop:[], swapShowAll:false, swapNotes:{}, sayItCard:null, sayItRound:1 }
 };
 
 function currentQuestions(){return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF}
@@ -981,8 +957,8 @@ function navigateTo(page){
   if(page==='today')renderToday();
   if(page==='diagnostic')renderDiagnostic();
   if(page==='deck')renderDeck('core');
-  if(page==='learn')renderLearn();
   if(page==='play')renderPlay();
+  if(page==='learn')renderLearn();
   if(page==='tree')renderTreeMap();
   if(page==='journal')renderJournal();
 }
@@ -1414,8 +1390,128 @@ function saveJournalEntry(){
   state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:state.diagStrained?L[state.diagStrained]:"Reflection",text:text});
   renderJournal();
 }
-/* === PART 5 END — CONTINUE WITH PART 6 === */
-  /* ===== PLAY SECTION ===== */
+
+/* ===== LEARN SECTION ===== */
+var LEARN_ARTICLES = [
+  {id:"why-i-built-this", title:"Why I built this", topic:"Start here", layer:null,
+   summary:"The moment that started it. Not a mission statement — just what happened when I realised I'd been treating a need as a problem.",
+   body:"[Your article goes here. Replace this paragraph with the real piece. Aim for 600–900 words. Start with the specific moment, not the idea. — to be written]"},
+  {id:"need-vs-strategy", title:"Need vs strategy", topic:"The core idea", layer:null,
+   summary:"The single distinction the whole app is built on. A need is a condition. A strategy is what you do instead.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"three-emergencies", title:"Why only three emergencies", topic:"The cap", layer:null,
+   summary:"The rule that made one user laugh, then made her think. Why the cap is not a limitation — it's the whole point.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"roots-first", title:"Why roots come first", topic:"Roots", layer:"roots",
+   summary:"You cannot fix a starving root by producing more leaves.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"identity-under-pressure", title:"Identity under pressure", topic:"Trunk", layer:"trunk",
+   summary:"What happens when you've been everyone's everything and can't remember what you want.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"alone-in-a-crowd", title:"Alone in a crowd", topic:"Branches", layer:"branches",
+   summary:"Why connection doesn't fix loneliness, and why belonging does.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"output-is-not-rest", title:"Why output is not rest", topic:"Leaves", layer:"leaves",
+   summary:"Burnout isn't about working too much. It's about treating leaves as roots.",
+   body:"[Your article goes here. — to be written]"},
+  {id:"purpose-cant-be-forced", title:"Purpose can't be forced", topic:"Fruits", layer:"fruits",
+   summary:"Fruits appear when conditions are right. If you're chasing them on a starving tree, you'll burn out.",
+   body:"[Your article goes here. — to be written]"}
+];
+
+var LEARN_PARTNERS = [
+  {name:"A therapist", for:"Branches", desc:"Slots reserved for licensed therapists who work with the relational layer. Coming soon.", tag:"Therapy"},
+  {name:"A coach", for:"Trunk", desc:"Slots reserved for coaches who work with identity, boundaries, and burnout. Coming soon.", tag:"Coaching"},
+  {name:"An educator", for:"Leaves", desc:"Slots reserved for teachers and creators whose work feeds the Learning and growth need. Coming soon.", tag:"EdTech"}
+];
+
+function renderLearn(){
+  var grid = document.getElementById('learnArticleGrid');
+  if(!grid) return;
+  var ordered = LEARN_ARTICLES.slice();
+  if(state.diagScores){
+    var strained = LORDER.filter(function(l){return scoreStatus(state.diagScores[l])==="strained"});
+    ordered.sort(function(a, b){
+      var aMatch = a.layer && strained.indexOf(a.layer) >= 0 ? 1 : 0;
+      var bMatch = b.layer && strained.indexOf(b.layer) >= 0 ? 1 : 0;
+      return bMatch - aMatch;
+    });
+  }
+  grid.innerHTML = ordered.map(function(a){
+    var tag = a.layer ? L[a.layer] : a.topic;
+    var tagColor = a.layer ? Lcolor[a.layer] : "var(--moss)";
+    return '<div class="deck-card" style="border-color:'+tagColor+'">'+
+      '<div class="dc-body" style="padding:16px">'+
+        '<div class="dc-tag" style="color:'+tagColor+'">'+tag+'</div>'+
+        '<div class="dc-name" style="font-size:1.05rem">'+a.title+'</div>'+
+        '<div class="dc-desc" style="font-size:.85rem;margin-top:6px">'+a.summary+'</div>'+
+        '<div style="margin-top:12px"><button class="btn btn-outline btn-small" onclick="openArticle(\''+a.id+'\')">Read →</button></div>'+
+      '</div>'+
+    '</div>';
+  }).join("");
+  var partnersGrid = document.getElementById('learnPartnersGrid');
+  if(partnersGrid){
+    partnersGrid.innerHTML = LEARN_PARTNERS.map(function(p){
+      return '<div class="game-card locked">'+
+        '<span class="gc-badge">'+p.tag+'</span>'+
+        '<div class="gc-title" style="font-size:1.05rem">'+p.name+'</div>'+
+        '<div class="gc-for">For the '+p.for+' layer</div>'+
+        '<div class="gc-pitch">'+p.desc+'</div>'+
+      '</div>';
+    }).join("");
+  }
+}
+window.renderLearn = renderLearn;
+
+function openArticle(id){
+  var a = LEARN_ARTICLES.find(function(x){return x.id === id});
+  if(!a) return;
+  var c = document.getElementById('page-learn');
+  c.innerHTML =
+    '<div style="max-width:680px;margin:0 auto">'+
+      '<button class="btn btn-ghost btn-small" onclick="renderLearnReset()">← Back to Learn</button>'+
+      '<div class="today-hero" style="margin-top:24px;text-align:left">'+
+        '<div style="font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">'+a.topic+'</div>'+
+        '<h1 style="font-size:2rem">'+a.title+'</h1>'+
+        '<p style="font-size:1.02rem;color:var(--mute)">'+a.summary+'</p>'+
+      '</div>'+
+      '<div class="results-detail" style="border:none;padding:0;background:transparent">'+
+        '<p style="font-size:1.05rem;line-height:1.75;white-space:pre-wrap">'+a.body+'</p>'+
+      '</div>'+
+      '<div class="safety-note" style="margin-top:40px">Reflection tool, not therapy or diagnosis.</div>'+
+      '<div class="action-row" style="margin-top:16px">'+
+        '<button class="btn btn-outline" onclick="renderLearnReset()">← Back to Learn</button>'+
+      '</div>'+
+    '</div>';
+}
+window.openArticle = openArticle;
+
+function renderLearnReset(){
+  var c = document.getElementById('page-learn');
+  c.innerHTML =
+    '<div class="today-hero"><h1>Learn</h1><p>Short pieces about needs, why they hide, and how to work with them. Written in plain language.</p></div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)">'+
+      '<div class="rd-context">Featured</div>'+
+      '<h2 style="font-size:1.3rem">Why I built this</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it.</p>'+
+      '<div class="action-row left" style="margin-top:14px"><button class="btn btn-outline btn-small" onclick="openArticle(\'why-i-built-this\')">Read →</button></div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px">'+
+      '<h2 style="font-size:1.2rem">Read by topic</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">Sorted by your strained layers if you\'ve done the diagnostic.</p>'+
+      '<div id="learnArticleGrid" class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent">'+
+      '<h2 style="font-size:1.1rem">Partners</h2>'+
+      '<p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coming soon.</p>'+
+      '<div class="game-grid" style="margin-top:16px" id="learnPartnersGrid"></div>'+
+    '</div>'+
+    '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
+  renderLearn();
+}
+window.renderLearnReset = renderLearnReset;
+
+/* ===== PLAY SECTION ===== */
 var SCOPES = [
   {id:"all", title:"All layers", sub:"The full deck — 80 core needs. Random 15."},
   {id:"one", title:"One layer", sub:"Choose Roots, Trunk, Branches, Leaves, or Fruits."},
@@ -1538,9 +1634,7 @@ window.dealCards=dealCards;
 
 function renderPlaySort(c){
   var p = state.play;
-  if(p.currentIdx >= p.cards.length){
-    p.view = "done"; renderPlay(); return;
-  }
+  if(p.currentIdx >= p.cards.length){ p.view = "done"; renderPlay(); return; }
   var current = p.cards[p.currentIdx];
   var emCount = p.sorted.emergency.length;
   var piles = [
@@ -1566,9 +1660,7 @@ function renderPlaySort(c){
         needs.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+
       '</div>';
     }).join("")+'</div>'+
-    '<div class="game-actions">'+
-      '<button class="btn btn-ghost" onclick="abandonSort()">Stop</button>'+
-    '</div>';
+    '<div class="game-actions"><button class="btn btn-ghost" onclick="abandonSort()">Stop</button></div>';
 
   document.querySelectorAll('#pileGrid .pile').forEach(function(el){
     el.onclick=function(){
@@ -1634,11 +1726,7 @@ function savePlayReflection(){
   if(!t){alert("Write something first, even one sentence.");return}
   var d = new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  state.journal.unshift({
-    date: months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),
-    cardName: "Sort it — reflection",
-    text: t
-  });
+  state.journal.unshift({date: months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName: "Sort it — reflection",text: t});
   var s = document.getElementById('playSaveStatus');
   if(s) s.textContent = "Saved to your journal ✓";
 }
@@ -1654,8 +1742,6 @@ function playAnother(){
   renderPlay();
 }
 window.playAnother=playAnother;
-
-/* ---- Swap and compare ---- */
 
 function startSwap(){
   state.play.view = "swap-setup";
@@ -1787,7 +1873,6 @@ function swapFinish(){
       state.emergencyPicks[layer].push(name);
     }
   });
-
   var candidates = [];
   (p.swapSorted.emergency||[]).forEach(function(n){candidates.push({name:n, pile:"Emergency", rank:3})});
   (p.swapSorted.nonneg||[]).forEach(function(n){candidates.push({name:n, pile:"Non-negotiable", rank:2})});
@@ -1922,8 +2007,6 @@ function saveSwapReflection(){
 }
 window.saveSwapReflection=saveSwapReflection;
 
-/* ---- Say it out loud ---- */
-
 function startSayIt(){
   state.play.view = "sayit";
   state.play.sayItCard = null;
@@ -2012,519 +2095,7 @@ function saveSayItNeed(layer, name){
   alert(name+" added to your "+L[layer]+" layer.");
 }
 window.saveSayItNeed=saveSayItNeed;
-  /* ===== LEARN SECTION ===== */
-var LEARN_ARTICLES = [
-  {id:"why-i-built-this", title:"Why I built this", topic:"Start here", layer:null,
-   summary:"The moment that started it. Not a mission statement — just what happened when I realised I'd been treating a need as a problem.",
-   body:"[Your article goes here. Replace this paragraph with the real piece. Aim for 600–900 words. Start with the specific moment, not the idea. The reader should feel something before they understand anything. — to be written]"},
-  {id:"need-vs-strategy", title:"Need vs strategy", topic:"The core idea", layer:null,
-   summary:"The single distinction the whole app is built on. A need is a condition. A strategy is what you do instead. Same behaviour, different meaning.",
-   body:"[Your article goes here. This is the piece that explains why the framework works. Start with an example — someone doing something that looks like a problem, then reveal the need underneath. Aim for 700–1000 words. — to be written]"},
-  {id:"three-emergencies", title:"Why only three emergencies", topic:"The cap", layer:null,
-   summary:"The rule that made one user laugh, then made her think. Why the cap is not a limitation — it's the whole point.",
-   body:"[Your article goes here. This one answers the review directly. Start with the laugh, then explain the psychology: why we can't hold more than three things as urgent, and why naming the rest as non-emergencies is a relief, not a loss. — to be written]"},
-  {id:"roots-first", title:"Why roots come first", topic:"Roots", layer:"roots",
-   summary:"You cannot fix a starving root by producing more leaves. What this means, practically, in a week where everything feels urgent.",
-   body:"[Your article goes here. — to be written]"},
-  {id:"identity-under-pressure", title:"Identity under pressure", topic:"Trunk", layer:"trunk",
-   summary:"What happens when you've been everyone's everything and can't remember what you want. And the two questions that help.",
-   body:"[Your article goes here. — to be written]"},
-  {id:"alone-in-a-crowd", title:"Alone in a crowd", topic:"Branches", layer:"branches",
-   summary:"Why connection doesn't fix loneliness, and why belonging does. The difference is small but it changes everything.",
-   body:"[Your article goes here. — to be written]"},
-  {id:"output-is-not-rest", title:"Why output is not rest", topic:"Leaves", layer:"leaves",
-   summary:"Burnout isn't about working too much. It's about treating leaves as roots. What the fix actually looks like.",
-   body:"[Your article goes here. — to be written]"},
-  {id:"purpose-cant-be-forced", title:"Purpose can't be forced", topic:"Fruits", layer:"fruits",
-   summary:"Fruits appear when conditions are right. If you're chasing them on a starving tree, you'll burn out. What to do instead.",
-   body:"[Your article goes here. — to be written]"}
-];
 
-var LEARN_PARTNERS = [
-  {name:"A therapist", for:"Branches", desc:"Slots reserved for licensed therapists who work with the relational layer. Coming soon.", tag:"Therapy"},
-  {name:"A coach", for:"Trunk", desc:"Slots reserved for coaches who work with identity, boundaries, and burnout. Coming soon.", tag:"Coaching"},
-  {name:"An educator", for:"Leaves", desc:"Slots reserved for teachers and creators whose work feeds the Learning and growth need. Coming soon.", tag:"EdTech"}
-];
-
-function renderLearn(){
-  var grid = document.getElementById('learnArticleGrid');
-  if(!grid) return;
-
-  var ordered = LEARN_ARTICLES.slice();
-  if(state.diagScores){
-    var strained = LORDER.filter(function(l){return scoreStatus(state.diagScores[l])==="strained"});
-    ordered.sort(function(a, b){
-      var aMatch = a.layer && strained.indexOf(a.layer) >= 0 ? 1 : 0;
-      var bMatch = b.layer && strained.indexOf(b.layer) >= 0 ? 1 : 0;
-      return bMatch - aMatch;
-    });
-  }
-
-  grid.innerHTML = ordered.map(function(a){
-    var tag = a.layer ? L[a.layer] : a.topic;
-    var tagColor = a.layer ? Lcolor[a.layer] : "var(--moss)";
-    return '<div class="deck-card" style="border-color:'+tagColor+'">'+
-      '<div class="dc-body" style="padding:16px">'+
-        '<div class="dc-tag" style="color:'+tagColor+'">'+tag+'</div>'+
-        '<div class="dc-name" style="font-size:1.05rem">'+a.title+'</div>'+
-        '<div class="dc-desc" style="font-size:.85rem;margin-top:6px">'+a.summary+'</div>'+
-        '<div style="margin-top:12px"><button class="btn btn-outline btn-small" onclick="openArticle(\''+a.id+'\')">Read →</button></div>'+
-      '</div>'+
-    '</div>';
-  }).join("");
-
-  var partnersGrid = document.getElementById('learnPartnersGrid');
-  if(partnersGrid){
-    partnersGrid.innerHTML = LEARN_PARTNERS.map(function(p){
-      return '<div class="game-card locked">'+
-        '<span class="gc-badge">'+p.tag+'</span>'+
-        '<div class="gc-title" style="font-size:1.05rem">'+p.name+'</div>'+
-        '<div class="gc-for">For the '+p.for+' layer</div>'+
-        '<div class="gc-pitch">'+p.desc+'</div>'+
-      '</div>';
-    }).join("");
-  }
-}
-window.renderLearn = renderLearn;
-
-function openArticle(id){
-  var a = LEARN_ARTICLES.find(function(x){return x.id === id});
-  if(!a) return;
-  var c = document.getElementById('page-learn');
-  c.innerHTML =
-    '<div style="max-width:680px;margin:0 auto">'+
-      '<button class="btn btn-ghost btn-small" onclick="renderLearnReset()">← Back to Learn</button>'+
-      '<div class="today-hero" style="margin-top:24px;text-align:left">'+
-        '<div style="font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">'+a.topic+'</div>'+
-        '<h1 style="font-size:2rem">'+a.title+'</h1>'+
-        '<p style="font-size:1.02rem;color:var(--mute)">'+a.summary+'</p>'+
-      '</div>'+
-      '<div class="results-detail" style="border:none;padding:0;background:transparent">'+
-        '<p style="font-size:1.05rem;line-height:1.75;white-space:pre-wrap">'+a.body+'</p>'+
-      '</div>'+
-      '<div class="safety-note" style="margin-top:40px">Reflection tool, not therapy or diagnosis.</div>'+
-      '<div class="action-row" style="margin-top:16px">'+
-        '<button class="btn btn-outline" onclick="renderLearnReset()">← Back to Learn</button>'+
-      '</div>'+
-    '</div>';
-}
-window.openArticle = openArticle;
-
-function renderLearnReset(){
-  var c = document.getElementById('page-learn');
-  c.innerHTML =
-    '<div class="today-hero"><h1>Learn</h1><p>Short pieces about needs, why they hide, and how to work with them. Written in plain language.</p></div>'+
-    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)">'+
-      '<div class="rd-context">Featured</div>'+
-      '<h2 style="font-size:1.3rem">Why I built this</h2>'+
-      '<p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it.</p>'+
-      '<div class="action-row left" style="margin-top:14px"><button class="btn btn-outline btn-small" onclick="openArticle(\'why-i-built-this\')">Read →</button></div>'+
-    '</div>'+
-    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px">'+
-      '<h2 style="font-size:1.2rem">Read by topic</h2>'+
-      '<p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">Sorted by your strained layers if you\'ve done the diagnostic.</p>'+
-      '<div id="learnArticleGrid" class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>'+
-    '</div>'+
-    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent">'+
-      '<h2 style="font-size:1.1rem">Partners</h2>'+
-      '<p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coming soon.</p>'+
-      '<div class="game-grid" style="margin-top:16px" id="learnPartnersGrid"></div>'+
-    '</div>'+
-    '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
-  renderLearn();
-}
-window.renderLearnReset = renderLearnReset;
-  /* ===== SWAP AND COMPARE (solo-on-one-device, discuss together) ===== */
-function renderSwapSetup(c){
-  c.innerHTML=
-    '<div class="play-hero"><h1>Swap and compare</h1><p>This one is for two people with two phones. You each sort the same 15 cards, privately, on your own device. Then you sit down together and walk through your differences. The app gives you the script. The conversation is yours.</p></div>'+
-    '<div class="scope-grid" id="swapScopeGrid">'+
-      [{id:"branchleaves",title:"Branches + Leaves",sub:"The relational layers. Where most couples' differences live."},
-       {id:"all",title:"All layers",sub:"The full deck. Random 15. Wider conversation."},
-       {id:"one",title:"One layer",sub:"Choose Roots, Trunk, Branches, Leaves, or Fruits."}
-      ].map(function(s){
-        return '<div class="scope-card'+(state.play.swapScope===s.id?' selected':'')+'" data-id="'+s.id+'"><div class="sc-title">'+s.title+'</div><div class="sc-sub">'+s.sub+'</div></div>';
-      }).join("")+
-    '</div>'+
-    '<div id="swapSubScopeSlot"></div>'+
-    '<div class="game-actions">'+
-      '<button class="btn btn-ghost" onclick="state.play.view=\'menu\';renderPlay()">← Back</button>'+
-      (state.play.swapScope && !(state.play.swapScope==="one" && !state.play.swapSubScope) ? '<button class="btn btn-primary" onclick="swapDeal()">Deal 15 cards</button>' : '')+
-    '</div>';
-
-  document.querySelectorAll('#swapScopeGrid .scope-card').forEach(function(el){
-    el.onclick=function(){
-      state.play.swapScope = el.dataset.id;
-      if(el.dataset.id==="one") state.play.swapSubScope = state.play.swapSubScope || "branches";
-      else state.play.swapSubScope = null;
-      renderPlay();
-    };
-  });
-
-  if(state.play.swapScope==="one"){
-    var slot = document.getElementById('swapSubScopeSlot');
-    slot.innerHTML =
-      '<div style="margin-top:16px"><div style="font-size:.82rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Which layer?</div>'+
-      '<div class="scope-grid">'+LORDER.map(function(l){
-        var sel = state.play.swapSubScope === l;
-        return '<div class="scope-card'+(sel?' selected':'')+'" data-sub="'+l+'"><div class="sc-title">'+L[l]+'</div><div class="sc-sub">'+Ldesc[l]+'</div></div>';
-      }).join("")+'</div></div>';
-    slot.querySelectorAll('[data-sub]').forEach(function(el){
-      el.onclick=function(){ state.play.swapSubScope = el.dataset.sub; renderPlay(); };
-    });
-  }
-}
-
-function swapPool(){
-  var s = state.play.swapScope;
-  if(s==="all") return C.slice();
-  if(s==="one") return C.filter(function(n){return n[0]===state.play.swapSubScope});
-  if(s==="branchleaves") return C.filter(function(n){return n[0]==="branches"||n[0]==="leaves"});
-  return C.slice();
-}
-
-function swapDeal(){
-  var pool = swapPool();
-  var dealt = shuffle(pool).slice(0, Math.min(15, pool.length));
-  state.play.swapCards = dealt.map(function(c){return {layer:c[0], name:c[1], desc:c[2]}});
-  state.play.swapSorted = {nice:[], painful:[], nonneg:[], emergency:[]};
-  state.play.swapIdx = 0;
-  state.play.view = "swap";
-  renderPlay();
-}
-window.swapDeal=swapDeal;
-
-function renderSwapSort(c){
-  var p = state.play;
-  if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
-  var current = p.swapCards[p.swapIdx];
-  var emCount = p.swapSorted.emergency.length;
-  var piles = [
-    {id:"nice", title:"Nice to have", cls:""},
-    {id:"painful", title:"Painful if unmet", cls:""},
-    {id:"nonneg", title:"Non-negotiable", cls:""},
-    {id:"emergency", title:"Emergency (max 3)", cls:"pile-emergency"+(emCount>=3?" full":"")}
-  ];
-  c.innerHTML=
-    '<div class="play-hero"><h1>Swap and compare</h1><p>Card '+(p.swapIdx+1)+' of '+p.swapCards.length+'. Sort privately. Your partner will sort the same cards on their own phone.</p></div>'+
-    '<div class="deal-area">'+
-      '<div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px">'+
-        '<div class="dc-name" style="font-size:1.2rem">'+current.name+'</div>'+
-        '<div class="dc-tag">'+L[current.layer]+'</div>'+
-        '<div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+current.desc+'</div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="pile-grid" id="swapPileGrid">'+piles.map(function(pl){
-      var needs = p.swapSorted[pl.id] || [];
-      var disabled = (pl.id==="emergency" && emCount>=3) ? ' style="opacity:.5;pointer-events:none"' : '';
-      return '<div class="pile '+pl.cls+'" data-pile="'+pl.id+'"'+disabled+'>'+
-        '<div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+
-        needs.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+
-      '</div>';
-    }).join("")+'</div>'+
-    '<div class="game-actions"><button class="btn btn-ghost" onclick="abandonSwap()">Stop</button></div>';
-
-  document.querySelectorAll('#swapPileGrid .pile').forEach(function(el){
-    el.onclick=function(){
-      var id = el.dataset.pile;
-      if(id==="emergency" && p.swapSorted.emergency.length>=3) return;
-      p.swapSorted[id].push(current.name);
-      p.swapIdx++;
-      if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
-      renderPlay();
-    };
-  });
-}
-function abandonSwap(){
-  state.play.view = "menu";
-  state.play.swapCards = [];
-  state.play.swapSorted = {};
-  state.play.swapIdx = 0;
-  renderPlay();
-}
-window.abandonSwap=abandonSwap;
-
-function swapFinish(){
-  var p = state.play;
-  // Save emergencies to this user's Tree
-  (p.swapSorted.emergency || []).forEach(function(name){
-    var found = p.swapCards.find(function(c){return c.name===name});
-    if(!found) return;
-    var layer = found.layer;
-    if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
-    if(state.emergencyPicks[layer].indexOf(name)<0 && state.emergencyPicks[layer].length<3){
-      state.emergencyPicks[layer].push(name);
-    }
-  });
-
-  // Pick the 3 "most likely to differ" cards: emergencies first, then non-negotiables,
-  // then painfuls. Randomly chosen within each bucket so it varies between sessions.
-  var candidates = [];
-  (p.swapSorted.emergency||[]).forEach(function(n){candidates.push({name:n, pile:"Emergency", rank:3})});
-  (p.swapSorted.nonneg||[]).forEach(function(n){candidates.push({name:n, pile:"Non-negotiable", rank:2})});
-  (p.swapSorted.painful||[]).forEach(function(n){candidates.push({name:n, pile:"Painful if unmet", rank:1})});
-  candidates.sort(function(a,b){return b.rank - a.rank});
-  var top = candidates.slice(0,3);
-  // If fewer than 3, fill from the remaining pool of dealt cards
-  if(top.length<3){
-    p.swapCards.forEach(function(c){
-      if(top.length>=3) return;
-      if(!top.find(function(x){return x.name===c.name})){
-        top.push({name:c.name, pile:"Nice to have", rank:0});
-      }
-    });
-  }
-  p.swapTop = top;
-  p.view = "swap-done";
-  renderPlay();
-}
-
-function renderSwapDone(c){
-  var p = state.play;
-  var showAll = p.swapShowAll || false;
-  c.innerHTML=
-    '<div class="play-hero"><h1>Your three to compare</h1><p>Your partner did the same thing on their phone. Now sit side by side. Take turns reading one of these. Ask them what theirs was. Do not argue, do not justify — just answer, then swap.</p></div>'+
-    '<div class="results-container">'+
-      p.swapTop.map(function(item, i){
-        return '<div class="results-detail"><div class="rd-context">Number '+(i+1)+'</div>'+
-          '<h2>'+item.name+'</h2>'+
-          '<div class="rd-section"><h3>You sorted this as</h3><p><strong>'+item.pile+'</strong></p></div>'+
-          '<div class="rd-question">"For me, '+item.name+' is '+item.pile.toLowerCase()+'. What is it for you?"</div>'+
-        '</div>';
-      }).join("")+
-      '<div class="results-detail" style="border-color:var(--moss)">'+
-        '<h2>The question to sit with</h2>'+
-        '<div class="rd-section"><p>Where you agreed, there is nothing to do. Where you differed, ask: what does this need mean to them that it does not mean to me?</p></div>'+
-        '<div class="rd-section"><p>Do not try to change each other tonight. Just notice. The noticing is the work.</p></div>'+
-      '</div>'+
-      '<div class="action-row" style="margin-top:8px">'+
-        '<button class="btn btn-outline" id="toggleShowAll">'+(showAll?'Hide the full sort':'Show everything I sorted')+'</button>'+
-      '</div>'+
-      '<div id="swapAllSlot"></div>'+
-      '<div class="closing-prompt">'+
-        '<h3>One thing you learned about({date them</h3>'+
-        '<p>After the conversation, write it here. Only if you want to.</p>'+
-        '<textarea id="swapReflection" placeholder="One sentence is enough."></textarea>'+
-        '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
-          '<button class="btn btn-primary" onclick="saveSwapReflection()">Save to journal</button>'+
-          '<button class="btn btn-outline" onclick="playAnother()">Play another</button>'+
-          '<button class="btn btn-ghost" onclick="navigateTo(\'tree\')">Open my tree →</button>'+
-        '</div>'+
-        '<div id="swapSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
-      '</div>'+
-    '</div>';
-
-  document.getElementById('toggleShowAll').onclick=function(){
-    state.play.swapShowAll = !state.play.swapShowAll;
-    renderSwapDone(c);
-  };
-
-  if(showAll){
-    var slot = document.getElementById('swapAllSlot');
-    var piles = [
-      {id:"emergency", title:"Emergency", cls:"pile-emergency"},
-      {id:"nonneg", title:"Non-negotiable", cls:""},
-      {id:"painful", title:"Painful if unmet", cls:""},
-      {id:"nice", title:"Nice to have", cls:""}
-    ];
-    slot.innerHTML=
-      '<div class="closing-prompt" style="margin-top:20px">'+
-        '<h3>Everything you sorted</h3>'+
-        '<p>These are the fifteen cards from this session. If one of them is worth a conversation with your partner, tap it and write yourself a note. Notes go to your journal, not to them.</p>'+
-        '<div class="pile-grid" style="margin-top:16px">'+piles.map(function(pl){
-          var needs = (p.swapSorted[pl.id] || []);
-          return '<div class="pile '+pl.cls+'">'+
-            '<div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+
-            needs.map(function(n){
-              var safe = n.replace(/'/g, "\\'");
-              return '<span class="pile-need" style="cursor:pointer" onclick="openSwapNote(\''+safe+'\')">'+n+'</span>';
-            }).join("")+
-          '</div>';
-        }).join("")+'</div>'+
-        '<div id="swapNoteSlot"></div>'+
-      '</div>';
-  }
-}
-
-function openSwapNote(name){
-  var slot = document.getElementById('swapNoteSlot');
-  if(!slot) return;
-  var existing = (state.play.swapNotes && state.play.swapNotes[name]) || "";
-  slot.innerHTML=
-    '<div style="margin-top:18px;padding:16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg)">'+
-      '<div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">'+name+'</div>'+
-      '<div style="font-size:.85rem;color:var(--mute);margin-bottom:10px">What do you want to remember about this one?</div>'+
-      '<textarea class="ri-input" id="swapNoteInput" placeholder="One sentence is enough.">'+existing+'</textarea>'+
-      '<div class="game-actions" style="margin-top:10px;justify-content:flex-start">'+
-        '<button class="btn btn-primary btn-small" onclick="saveSwapNote(\''+name.replace(/'/g,"\\'")+'\')">Save note</button>'+
-        '<button class="btn btn-ghost btn-small" onclick="closeSwapNote()">Close</button>'+
-      '</div>'+
-      '<div id="swapNoteStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div>'+
-    '</div>';
-}
-
-function closeSwapNote(){
-  var slot = document.getElementById('swapNoteSlot');
-  if(slot) slot.innerHTML = "";
-}
-
-function saveSwapNote(name){
-  var t = document.getElementById('swapNoteInput').value.trim();
-  if(!t){alert("Write something first, even one sentence.");return}
-  if(!state.play.swapNotes) state.play.swapNotes = {};
-  state.play.swapNotes[name] = t;
-  var d = new Date();
-  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  state.journal.unshift:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap note — "+name,text:t});
-  var s = document.getElementById('swapNoteStatus');
-  if(s) s.textContent = "Saved ✓";
-}
-window.openSwapNote=openSwapNote;
-window.closeSwapNote=closeSwapNote;
-window.saveSwapNote=saveSwapNote;
-function saveSwapReflection(){
-  var t = document.getElementById('swapReflection').value.trim();
-  if(!t){alert("Write something first, even one sentence.");return}
-  var d = new Date();
-  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap and compare — reflection",text:t});
-  var s = document.getElementById('swapSaveStatus');
-  if(s) s.textContent = "Saved to your journal ✓";
-}
-window.saveSwapReflection=saveSwapReflection;
-
-/* ===== SAY IT OUT LOUD (solo-on-one-device, together in the room) ===== */
-function renderSayIt(c){
-  var p = state.play;
-  if(!p.sayItCard){
-    // Draw one random card
-    var pool = C.slice();
-    var c2 = pool[Math.floor(Math.random()*pool.length)];
-    p.sayItCard = {layer:c2[0], name:c2[1], desc:c2[2]};
-    p.sayItRound = 1;
-  }
-  var card = p.sayItCard;
-  c.innerHTML=
-    '<div class="play-hero"><h1>Say it out loud</h1><p>Ten minutes. One card. One sentence. No advice.</p></div>'+
-    '<div class="deal-area">'+
-      '<div class="dealt-card flipped" style="display:inline-block;padding:24px 32px;min-width:240px;max-width:320px">'+
-        '<div class="dc-name" style="font-size:1.25rem">'+card.name+'</div>'+
-        '<div class="dc-tag">'+L[card.layer]+'</div>'+
-        '<div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+card.desc+'</div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="closing-prompt" style="max-width:520px;margin:24px auto 0">'+
-      '<h3>Say this to them</h3>'+
-      '<p style="font-style:italic;font-size:1rem;color:var(--ink);background:var(--bg);padding:14px;border-left:3px solid var(--moss);border-radius:8px;margin:12px 0">'+
-        '"I need '+card.name.toLowerCase()+', and what I usually do instead is \u2026"'+
-      '</p>'+
-      '<p style="font-size:.86rem;color:var(--mute)">Finish the sentence out loud. Then stop. Do not explain it. Do not justify it.</p>'+
-      '<p style="font-size:.86rem;color:var(--mute);margin-top:14px"><strong>Their only line:</strong> "Thank you for telling me." Nothing else. No fixing. No questions.</p>'+
-    '</div>'+
-    '<div class="game-actions">'+
-      '<button class="btn btn-outline" onclick="sayAnotherRound()">Swap — next person</button>'+
-      '<button class="btn btn-ghost" onclick="sayItDone()">Finish</button>'+
-    '</div>'+
-    '<div class="play-hero" style="margin-top:28px"><p style="font-size:.82rem;color:var(--mute)">Round '+p.sayItRound+'</p></div>';
-}
-function sayAnotherRound(){
-  var p = state.play;
-  var pool = C.slice();
-  var c2 = pool[Math.floor(Math.random()*pool.length)];
-  p.sayItCard = {layer:c2[0], name:c2[1], desc:c2[2]};
-  p.sayItRound = (p.sayItRound||1) + 1;
-  renderPlay();
-}
-window.sayAnotherRound=sayAnotherRound;
-function sayItDone(){
-  state.play.view = "sayit-done";
-  renderPlay();
-}
-window.sayItDone=sayItDone;
-
-function renderSayItDone(c){
-  var p = state.play;
-  var card = p.sayItCard;
-  c.innerHTML=
-    '<div class="play-hero"><h1>Done.</h1><p>The cards are not saved. What you said tonight is not recorded. That was the point — the sentence happened, and that is enough.</p></div>'+
-    '<div class="closing-prompt" style="max-width:520px;margin:0 auto">'+
-      '<h3>One optional question</h3>'+
-      '<p>What was it like to say that out loud without being fixed?</p>'+
-      '<textarea id="sayItReflection" placeholder="Write something, or skip this. No wrong answer."></textarea>'+
-      '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
-        '<button class="btn btn-primary" onclick="saveSayItReflection()">Save to journal</button>'+
-        '<button class="btn btn-outline" onclick="playAnother()">Play another</button>'+
-      '</div>'+
-      '<div id="sayItSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
-    '</div>'+
-    (card ? '<div style="max-width:520px;margin:24px auto 0"><button class="btn btn-outline" onclick="saveSayItNeed(\''+card.layer+'\',\''+card.name.replace(/'/g,"\\'")+'\')">Add '+card.name+' to my tree</button></div>' : '');
-}
-function saveSayItReflection(){
-  var t = document.getElementById('sayItReflection').value.trim();
-  if(!t){alert("Write something first, even one sentence.");return}
-  var d = new Date();
-  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Say it out loud — reflection",text:t});
-  var s = document.getElementById('sayItSaveStatus');
-  if(s) s.textContent = "Saved to your journal ✓";
-}
-window.saveSayItReflection=saveSayItReflection;
-function saveSayItNeed(layer, name){
-  if(!state.treeNeeds[layer]) state.treeNeeds[layer]=[];
-  if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
-  alert(name+" added to your "+L[layer]+" layer.");
-}
-window.saveSayItNeed=saveSayItNeed;
-
-/* ===== UPDATED PLAY MENU ===== */
-function renderPlayMenu(c){
-  var games = [
-    {id:"sortit", title:"Sort it", for:"Solo · 15 min", pitch:"Deal 15 cards at random. Sort them into Nice to have, Painful if unmet, Non-negotiable, Emergency. Only three may be emergencies. Then: which of those have you been treating as a preference?", live:true, fn:"startSortIt()"},
-    {id:"swap", title:"Swap and compare", for:"Two people · two phones · 30 min", pitch:"You each sort 15 cards on your own phone. Then you sit together. The app picks the three differences most worth talking about, and gives you the script. No arguing. Just noticing.", live:true, fn:"startSwap()"},
-    {id:"sayit", title:"Say it out loud", for:"Two people · 10 min", pitch:"Draw one card. Say to them: 'I need ___, and what I usually do instead is ___.' They reply only: 'Thank you for telling me.' Nothing is recorded. The sentence is the whole point.", live:true, fn:"startSayIt()"}
-  ];
-  c.innerHTML=
-    '<div class="play-hero"><h1>Play</h1><p>These are the games that made the deck. Play alone on a Sunday afternoon. Play with a partner on a long evening. Play with a team when something is off and nobody is saying it.</p></div>'+
-    '<div class="game-grid">'+games.map(function(g){
-      return '<div class="game-card '+(g.live?'live':'locked')+'" '+(g.live?'onclick="'+g.fn+'"':'')+'>'+
-        '<span class="gc-badge">'+(g.live?'Ready':'Coming next')+'</span>'+
-        '<div class="gc-title">'+g.title+'</div>'+
-        '<div class="gc-for">'+g.for+'</div>'+
-        '<div class="gc-pitch">'+g.pitch+'</div>'+
-        '<div class="gc-action">'+(g.live?'Start →':'In development')+'</div>'+
-      '</div>';
-    }).join("")+'</div>';
-}
-function startSwap(){
-  state.play.view = "swap-setup";
-  state.play.swapScope = "branchleaves";
-  state.play.swapSubScope = null;
-  renderPlay();
-}
-window.startSwap=startSwap;
-function startSayIt(){
-  state.play.view = "sayit";
-  state.play.sayItCard = null;
-  state.play.sayItRound = 1;
-  renderPlay();
-}
-window.startSayIt=startSayIt;
-
-/* ===== UPDATED PLAY ROUTER ===== */
-function renderPlay(){
-  var c = document.getElementById('playContent');
-  var view = state.play.view;
-  if(view==="menu") return renderPlayMenu(c);
-  if(view==="scope") return renderPlayScope(c);
-  if(view==="sort") return renderPlaySort(c);
-  if(view==="done") return renderPlayDone(c);
-  if(view==="swap-setup") return renderSwapSetup(c);
-  if(view==="swap") return renderSwapSort(c);
-  if(view==="swap-done") return renderSwapDone(c);
-  if(view==="sayit") return renderSayIt(c);
-  if(view==="sayit-done") return renderSayItDone(c);
-  renderPlayMenu(c);
-}
 /* ===== DARK WAITLIST ===== */
 function openDarkWaitlist(){
   document.getElementById('darkWaitlistModal').classList.add('show');
