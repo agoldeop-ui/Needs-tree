@@ -341,6 +341,10 @@ p{max-width:72ch}
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20M6 12h8M6 16h6"/></svg>
         Deck
       </button>
+      <button class="nav-item" data-page="learn">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Learn
+      </button>
       <button class="nav-item" data-page="play">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Play
@@ -432,11 +436,90 @@ p{max-width:72ch}
       </div>
       <div id="journalContent" class="journal-page"></div>
     </div>
+    <div class="page" id="page-learn">
+      <div class="today-hero">
+        <h1>Learn</h1>
+        <p>Short pieces about needs, why they hide, and how to work with them. Written in plain language. No jargon, no theory for theory's sake.</p>
+      </div>
+
+      <div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)">
+        <div class="rd-context">Featured</div>
+        <h2 style="font-size:1.3rem">Why I built this</h2>
+        <p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it — not a mission statement, not a vision, just what happened when I realised I'd been treating a need as a problem for years.</p>
+        <div class="action-row left" style="margin-top:14px">
+          <button class="btn btn-outline btn-small" onclick="openArticle('why-i-built-this')">Read →</button>
+        </div>
+      </div>
+
+      <div class="results-detail" style="max-width:720px;margin:0 auto 24px">
+        <h2 style="font-size:1.2rem">Read by topic</h2>
+        <p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">If you've done the diagnostic, these are sorted by your strained layers. If you haven't, they're in reading order — starting with the pieces that explain the idea.</p>
+        <div id="learnArticleGrid" class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>
+      </div>
+
+      <div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent">
+        <h2 style="font-size:1.1rem">Partners</h2>
+        <p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coaches, therapists, and creators whose work lines up with this one. Each one answers a specific need from the tree. Coming soon.</p>
+        <div class="game-grid" style="margin-top:16px" id="learnPartnersGrid"></div>
+      </div>
+
+      <div class="safety-note">Reflection tool, not therapy or diagnosis. If a piece brings something up, talk to someone you trust or a professional.</div>
+    </div>
     <div class="page" id="page-workshops">
       <div class="today-hero">
-        <h1>Starter Session</h1>
-        <p>A 90-minute guided experience. Not therapy. Not motivational content. A way to find words.</p>
+        <h1>You found the words. Now what?</h1>
+        <p>You named your emergencies. You saw which layer was starving. This is the part where most people drift back to old patterns — not because the insight failed, but because the insight has nowhere to go.</p>
       </div>
+
+      <div class="results-detail" style="max-width:640px;margin:0 auto 24px">
+        <h2>What people said after using it</h2>
+        <div class="rd-section" style="font-style:italic;border-left:3px solid var(--moss);padding-left:16px">
+          <p>"I had to go back to the house because I forgot something, and my immediate reaction was 'Ohhh, shit!' But then I remembered that movement is my emergency need, and became excited 'Yeah! More movement to me!'. Such a simple thing suddenly felt aligned with my goals. It is grounding."</p>
+        </div>
+        <div class="rd-section" style="font-style:italic;border-left:3px solid var(--moss);padding-left:16px">
+          <p>"I laughed when I realised that I can't add a 4th emergency need to my tree! It made me think better about my current priorities, and also about the needs that might not be an emergency, but still need attention."</p>
+        </div>
+        <div class="rd-section">
+          <p style="font-size:.82rem;color:var(--mute);font-style:normal">— from early users, shared with permission</p>
+        </div>
+      </div>
+
+      <div class="results-detail" style="max-width:640px;margin:0 auto 24px">
+        <h2>What you can do today</h2>
+        <div class="rd-section">
+          <ul style="list-style:none;padding:0;margin:0">
+            <li style="padding:8px 0 8px 26px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Take the diagnostic as many times as you like</li>
+            <li style="padding:8px 0 8px 26px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Sort your emergencies, layer by layer</li>
+            <li style="padding:8px 0 8px 26px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Play all three games — solo, or with someone beside you</li>
+            <li style="padding:8px 0 8px 26px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Open strategies for any need in your tree</li>
+            <li style="padding:8px 0 8px 26px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Write reflections in the journal</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="workshop-card" style="max-width:640px">
+        <span class="wc-badge">Coming soon</span>
+        <h2>Your tree, saved</h2>
+        <p style="color:var(--mute)">Right now, everything in this app resets when you close the tab. Your tree, your emergencies, the strategies you picked. Tomorrow, you start over.</p>
+        <p style="font-size:.95rem;margin-top:16px">We're building the version that keeps it. Your tree, growing over time. Re-take the diagnostic in three months and watch your Branches go from red to amber. Notes and reflections that stay.</p>
+        <p style="font-size:.95rem;margin-top:16px"><strong>If you want it, leave your email.</strong> We'll tell you when it's ready. If nobody asks, we won't build it.</p>
+        <form class="workshop-form" onsubmit="event.preventDefault();alert('You are on the list. We will tell you when it is ready.')">
+          <input type="email" placeholder="Your email" required>
+          <button type="submit" class="btn btn-primary" style="justify-content:center">Put me on the list</button>
+        </form>
+        <p style="font-size:.78rem;color:var(--mute);margin-top:12px">One email when it is ready. Nothing else. No newsletter, no marketing. We never share your address.</p>
+      </div>
+
+      <div class="results-detail" style="max-width:640px;margin:24px auto 0;border:1px dashed var(--line);background:transparent">
+        <h2 style="font-size:1.1rem">Also available: a live Starter Session</h2>
+        <p style="font-size:.92rem;color:var(--mute)">90 minutes, small group, in person or over video. If you'd rather learn this with a facilitator and a few other people, this is the door. €49–99, depending on group size.</p>
+        <div class="action-row left" style="margin-top:12px">
+          <button class="btn btn-outline" onclick="alert('We will be in touch about the next session.')">Join the next Starter Session</button>
+        </div>
+      </div>
+
+      <div class="safety-note">Reflection tool, not therapy or diagnosis. If something comes up, talk to someone you trust or a professional.</div>
+    </div>
       <div class="workshop-card">
         <span class="wc-badge">Beta</span>
         <h2>Needs Tree Starter Session</h2>
