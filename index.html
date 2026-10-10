@@ -1426,26 +1426,30 @@ var SCOPES = [
 ];
 
 function renderPlay(){
-  var c=document.getElementById('playContent');
+  var c = document.getElementById('playContent');
   var view = state.play.view;
-
-  if(view==="menu"){ renderPlayMenu(c); return; }
-  if(view==="scope"){ renderPlayScope(c); return; }
-  if(view==="sort"){ renderPlaySort(c); return; }
-  if(view==="done"){ renderPlayDone(c); return; }
+  if(view==="menu") return renderPlayMenu(c);
+  if(view==="scope") return renderPlayScope(c);
+  if(view==="sort") return renderPlaySort(c);
+  if(view==="done") return renderPlayDone(c);
+  if(view==="swap-setup") return renderSwapSetup(c);
+  if(view==="swap") return renderSwapSort(c);
+  if(view==="swap-done") return renderSwapDone(c);
+  if(view==="sayit") return renderSayIt(c);
+  if(view==="sayit-done") return renderSayItDone(c);
   renderPlayMenu(c);
 }
 
 function renderPlayMenu(c){
   var games = [
-    {id:"sortit", title:"Sort it", for:"Solo · 15 min", pitch:"Deal 15 cards at random. Sort them into Nice to have, Painful if unmet, Non-negotiable, Emergency. Only three may be emergencies. Then: which of those have you been treating as a preference?", live:true},
-    {id:"swap", title:"Swap and compare", for:"Couple · 30 min", pitch:"You and one other person sort the same 15 cards, privately. Then you reveal. You find three differences and say only: 'For me, ___ is non-negotiable. What is it for you?' No fixing, no arguing.", live:false},
-    {id:"sayit", title:"Say it out loud", for:"Pair · 10 min", pitch:"Draw one card. Say to your partner: 'I need ___, and what I usually do instead is ___.' They reply only: 'Thank you for telling me.' Swap. No advice.", live:false}
+    {id:"sortit", title:"Sort it", for:"Solo · 15 min", pitch:"Deal 15 cards at random. Sort them into Nice to have, Painful if unmet, Non-negotiable, Emergency. Only three may be emergencies. Then: which of those have you been treating as a preference?", live:true, fn:"startSortIt()"},
+    {id:"swap", title:"Swap and compare", for:"Two people · two phones · 30 min", pitch:"You each sort 15 cards on your own phone. Then you sit together. The app picks the three differences most worth talking about, and gives you the script. No arguing. Just noticing.", live:true, fn:"startSwap()"},
+    {id:"sayit", title:"Say it out loud", for:"Two people · 10 min", pitch:"Draw one card. Say to them: 'I need ___, and what I usually do instead is ___.' They reply only: 'Thank you for telling me.' Nothing is recorded. The sentence is the whole point.", live:true, fn:"startSayIt()"}
   ];
   c.innerHTML=
     '<div class="play-hero"><h1>Play</h1><p>These are the games that made the deck. Play alone on a Sunday afternoon. Play with a partner on a long evening. Play with a team when something is off and nobody is saying it.</p></div>'+
     '<div class="game-grid">'+games.map(function(g){
-      return '<div class="game-card '+(g.live?'live':'locked')+'" '+(g.live?'onclick="startSortIt()"':'')+'>'+
+      return '<div class="game-card '+(g.live?'live':'locked')+'" '+(g.live?'onclick="'+g.fn+'"':'')+'>'+
         '<span class="gc-badge">'+(g.live?'Ready':'Coming next')+'</span>'+
         '<div class="gc-title">'+g.title+'</div>'+
         '<div class="gc-for">'+g.for+'</div>'+
@@ -1535,7 +1539,6 @@ window.dealCards=dealCards;
 function renderPlaySort(c){
   var p = state.play;
   if(p.currentIdx >= p.cards.length){
-    // Shouldn't happen — done is handled after last assignment
     p.view = "done"; renderPlay(); return;
   }
   var current = p.cards[p.currentIdx];
@@ -1588,7 +1591,6 @@ function abandonSort(){
 window.abandonSort=abandonSort;
 
 function finishSort(){
-  // Push emergencies into tree + emergencyPicks
   var em = state.play.sorted.emergency || [];
   em.forEach(function(name){
     var found = state.play.cards.find(function(c){return c.name===name});
@@ -1653,7 +1655,364 @@ function playAnother(){
 }
 window.playAnother=playAnother;
 
-/* ===== LEARN SECTION ===== */
+/* ---- Swap and compare ---- */
+
+function startSwap(){
+  state.play.view = "swap-setup";
+  state.play.swapScope = "branchleaves";
+  state.play.swapSubScope = null;
+  renderPlay();
+}
+window.startSwap=startSwap;
+
+function renderSwapSetup(c){
+  c.innerHTML=
+    '<div class="play-hero"><h1>Swap and compare</h1><p>This one is for two people with two phones. You each sort the same 15 cards, privately, on your own device. Then you sit down together and walk through your differences. The app gives you the script. The conversation is yours.</p></div>'+
+    '<div class="scope-grid" id="swapScopeGrid">'+
+      [{id:"branchleaves",title:"Branches + Leaves",sub:"The relational layers. Where most couples' differences live."},
+       {id:"all",title:"All layers",sub:"The full deck. Random 15. Wider conversation."},
+       {id:"one",title:"One layer",sub:"Choose Roots, Trunk, Branches, Leaves, or Fruits."}
+      ].map(function(s){
+        return '<div class="scope-card'+(state.play.swapScope===s.id?' selected':'')+'" data-id="'+s.id+'"><div class="sc-title">'+s.title+'</div><div class="sc-sub">'+s.sub+'</div></div>';
+      }).join("")+
+    '</div>'+
+    '<div id="swapSubScopeSlot"></div>'+
+    '<div class="game-actions">'+
+      '<button class="btn btn-ghost" onclick="state.play.view=\'menu\';renderPlay()">← Back</button>'+
+      (state.play.swapScope && !(state.play.swapScope==="one" && !state.play.swapSubScope) ? '<button class="btn btn-primary" onclick="swapDeal()">Deal 15 cards</button>' : '')+
+    '</div>';
+
+  document.querySelectorAll('#swapScopeGrid .scope-card').forEach(function(el){
+    el.onclick=function(){
+      state.play.swapScope = el.dataset.id;
+      if(el.dataset.id==="one") state.play.swapSubScope = state.play.swapSubScope || "branches";
+      else state.play.swapSubScope = null;
+      renderPlay();
+    };
+  });
+
+  if(state.play.swapScope==="one"){
+    var slot = document.getElementById('swapSubScopeSlot');
+    slot.innerHTML =
+      '<div style="margin-top:16px"><div style="font-size:.82rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Which layer?</div>'+
+      '<div class="scope-grid">'+LORDER.map(function(l){
+        var sel = state.play.swapSubScope === l;
+        return '<div class="scope-card'+(sel?' selected':'')+'" data-sub="'+l+'"><div class="sc-title">'+L[l]+'</div><div class="sc-sub">'+Ldesc[l]+'</div></div>';
+      }).join("")+'</div></div>';
+    slot.querySelectorAll('[data-sub]').forEach(function(el){
+      el.onclick=function(){ state.play.swapSubScope = el.dataset.sub; renderPlay(); };
+    });
+  }
+}
+
+function swapPool(){
+  var s = state.play.swapScope;
+  if(s==="all") return C.slice();
+  if(s==="one") return C.filter(function(n){return n[0]===state.play.swapSubScope});
+  if(s==="branchleaves") return C.filter(function(n){return n[0]==="branches"||n[0]==="leaves"});
+  return C.slice();
+}
+
+function swapDeal(){
+  var pool = swapPool();
+  var dealt = shuffle(pool).slice(0, Math.min(15, pool.length));
+  state.play.swapCards = dealt.map(function(c){return {layer:c[0], name:c[1], desc:c[2]}});
+  state.play.swapSorted = {nice:[], painful:[], nonneg:[], emergency:[]};
+  state.play.swapIdx = 0;
+  state.play.swapShowAll = false;
+  state.play.swapNotes = {};
+  state.play.view = "swap";
+  renderPlay();
+}
+window.swapDeal=swapDeal;
+
+function renderSwapSort(c){
+  var p = state.play;
+  if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
+  var current = p.swapCards[p.swapIdx];
+  var emCount = p.swapSorted.emergency.length;
+  var piles = [
+    {id:"nice", title:"Nice to have", cls:""},
+    {id:"painful", title:"Painful if unmet", cls:""},
+    {id:"nonneg", title:"Non-negotiable", cls:""},
+    {id:"emergency", title:"Emergency (max 3)", cls:"pile-emergency"+(emCount>=3?" full":"")}
+  ];
+  c.innerHTML=
+    '<div class="play-hero"><h1>Swap and compare</h1><p>Card '+(p.swapIdx+1)+' of '+p.swapCards.length+'. Sort privately. Your partner will sort the same cards on their own phone.</p></div>'+
+    '<div class="deal-area">'+
+      '<div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px">'+
+        '<div class="dc-name" style="font-size:1.2rem">'+current.name+'</div>'+
+        '<div class="dc-tag">'+L[current.layer]+'</div>'+
+        '<div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+current.desc+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="pile-grid" id="swapPileGrid">'+piles.map(function(pl){
+      var needs = p.swapSorted[pl.id] || [];
+      var disabled = (pl.id==="emergency" && emCount>=3) ? ' style="opacity:.5;pointer-events:none"' : '';
+      return '<div class="pile '+pl.cls+'" data-pile="'+pl.id+'"'+disabled+'>'+
+        '<div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+
+        needs.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+
+      '</div>';
+    }).join("")+'</div>'+
+    '<div class="game-actions"><button class="btn btn-ghost" onclick="abandonSwap()">Stop</button></div>';
+
+  document.querySelectorAll('#swapPileGrid .pile').forEach(function(el){
+    el.onclick=function(){
+      var id = el.dataset.pile;
+      if(id==="emergency" && p.swapSorted.emergency.length>=3) return;
+      p.swapSorted[id].push(current.name);
+      p.swapIdx++;
+      if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
+      renderPlay();
+    };
+  });
+}
+function abandonSwap(){
+  state.play.view = "menu";
+  state.play.swapCards = [];
+  state.play.swapSorted = {};
+  state.play.swapIdx = 0;
+  renderPlay();
+}
+window.abandonSwap=abandonSwap;
+
+function swapFinish(){
+  var p = state.play;
+  (p.swapSorted.emergency || []).forEach(function(name){
+    var found = p.swapCards.find(function(c){return c.name===name});
+    if(!found) return;
+    var layer = found.layer;
+    if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
+    if(state.emergencyPicks[layer].indexOf(name)<0 && state.emergencyPicks[layer].length<3){
+      state.emergencyPicks[layer].push(name);
+    }
+  });
+
+  var candidates = [];
+  (p.swapSorted.emergency||[]).forEach(function(n){candidates.push({name:n, pile:"Emergency", rank:3})});
+  (p.swapSorted.nonneg||[]).forEach(function(n){candidates.push({name:n, pile:"Non-negotiable", rank:2})});
+  (p.swapSorted.painful||[]).forEach(function(n){candidates.push({name:n, pile:"Painful if unmet", rank:1})});
+  candidates.sort(function(a,b){return b.rank - a.rank});
+  var top = candidates.slice(0,3);
+  if(top.length<3){
+    p.swapCards.forEach(function(cd){
+      if(top.length>=3) return;
+      if(!top.find(function(x){return x.name===cd.name})){
+        top.push({name:cd.name, pile:"Nice to have", rank:0});
+      }
+    });
+  }
+  p.swapTop = top;
+  p.view = "swap-done";
+  renderPlay();
+}
+
+function renderSwapDone(c){
+  var p = state.play;
+  var showAll = p.swapShowAll || false;
+  c.innerHTML=
+    '<div class="play-hero"><h1>Your three to compare</h1><p>Your partner did the same thing on their phone. Now sit side by side. Take turns reading one of these. Ask them what theirs was. Do not argue, do not justify — just answer, then swap.</p></div>'+
+    '<div class="results-container">'+
+      p.swapTop.map(function(item, i){
+        return '<div class="results-detail"><div class="rd-context">Number '+(i+1)+'</div>'+
+          '<h2>'+item.name+'</h2>'+
+          '<div class="rd-section"><h3>You sorted this as</h3><p><strong>'+item.pile+'</strong></p></div>'+
+          '<div class="rd-question">"For me, '+item.name+' is '+item.pile.toLowerCase()+'. What is it for you?"</div>'+
+        '</div>';
+      }).join("")+
+      '<div class="results-detail" style="border-color:var(--moss)">'+
+        '<h2>The question to sit with</h2>'+
+        '<div class="rd-section"><p>Where you agreed, there is nothing to do. Where you differed, ask: what does this need mean to them that it does not mean to me?</p></div>'+
+        '<div class="rd-section"><p>Do not try to change each other tonight. Just notice. The noticing is the work.</p></div>'+
+      '</div>'+
+      '<div class="action-row" style="margin-top:8px">'+
+        '<button class="btn btn-outline" id="toggleShowAll">'+(showAll?'Hide the full sort':'Show everything I sorted')+'</button>'+
+      '</div>'+
+      '<div id="swapAllSlot"></div>'+
+      '<div class="closing-prompt">'+
+        '<h3>One thing you learned about them</h3>'+
+        '<p>After the conversation, write it here. Only if you want to.</p>'+
+        '<textarea id="swapReflection" placeholder="One sentence is enough."></textarea>'+
+        '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
+          '<button class="btn btn-primary" onclick="saveSwapReflection()">Save to journal</button>'+
+          '<button class="btn btn-outline" onclick="playAnother()">Play another</button>'+
+          '<button class="btn btn-ghost" onclick="navigateTo(\'tree\')">Open my tree →</button>'+
+        '</div>'+
+        '<div id="swapSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
+      '</div>'+
+    '</div>';
+
+  document.getElementById('toggleShowAll').onclick=function(){
+    state.play.swapShowAll = !state.play.swapShowAll;
+    renderSwapDone(c);
+  };
+
+  if(showAll){
+    var slot = document.getElementById('swapAllSlot');
+    var piles = [
+      {id:"emergency", title:"Emergency", cls:"pile-emergency"},
+      {id:"nonneg", title:"Non-negotiable", cls:""},
+      {id:"painful", title:"Painful if unmet", cls:""},
+      {id:"nice", title:"Nice to have", cls:""}
+    ];
+    slot.innerHTML=
+      '<div class="closing-prompt" style="margin-top:20px">'+
+        '<h3>Everything you sorted</h3>'+
+        '<p>These are the fifteen cards from this session. If one of them is worth a conversation with your partner, tap it and write yourself a note. Notes go to your journal, not to them.</p>'+
+        '<div class="pile-grid" style="margin-top:16px">'+piles.map(function(pl){
+          var needs = (p.swapSorted[pl.id] || []);
+          return '<div class="pile '+pl.cls+'">'+
+            '<div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+
+            needs.map(function(n){
+              var safe = n.replace(/'/g, "\\'");
+              return '<span class="pile-need" style="cursor:pointer" onclick="openSwapNote(\''+safe+'\')">'+n+'</span>';
+            }).join("")+
+          '</div>';
+        }).join("")+'</div>'+
+        '<div id="swapNoteSlot"></div>'+
+      '</div>';
+  }
+}
+
+function openSwapNote(name){
+  var slot = document.getElementById('swapNoteSlot');
+  if(!slot) return;
+  var existing = (state.play.swapNotes && state.play.swapNotes[name]) || "";
+  slot.innerHTML=
+    '<div style="margin-top:18px;padding:16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg)">'+
+      '<div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">'+name+'</div>'+
+      '<div style="font-size:.85rem;color:var(--mute);margin-bottom:10px">What do you want to remember about this one?</div>'+
+      '<textarea class="ri-input" id="swapNoteInput" placeholder="One sentence is enough.">'+existing+'</textarea>'+
+      '<div class="game-actions" style="margin-top:10px;justify-content:flex-start">'+
+        '<button class="btn btn-primary btn-small" onclick="saveSwapNote(\''+name.replace(/'/g,"\\'")+'\')">Save note</button>'+
+        '<button class="btn btn-ghost btn-small" onclick="closeSwapNote()">Close</button>'+
+      '</div>'+
+      '<div id="swapNoteStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div>'+
+    '</div>';
+}
+
+function closeSwapNote(){
+  var slot = document.getElementById('swapNoteSlot');
+  if(slot) slot.innerHTML = "";
+}
+
+function saveSwapNote(name){
+  var t = document.getElementById('swapNoteInput').value.trim();
+  if(!t){alert("Write something first, even one sentence.");return}
+  if(!state.play.swapNotes) state.play.swapNotes = {};
+  state.play.swapNotes[name] = t;
+  var d = new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap note — "+name,text:t});
+  var s = document.getElementById('swapNoteStatus');
+  if(s) s.textContent = "Saved ✓";
+}
+window.openSwapNote=openSwapNote;
+window.closeSwapNote=closeSwapNote;
+window.saveSwapNote=saveSwapNote;
+
+function saveSwapReflection(){
+  var t = document.getElementById('swapReflection').value.trim();
+  if(!t){alert("Write something first, even one sentence.");return}
+  var d = new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap and compare — reflection",text:t});
+  var s = document.getElementById('swapSaveStatus');
+  if(s) s.textContent = "Saved to your journal ✓";
+}
+window.saveSwapReflection=saveSwapReflection;
+
+/* ---- Say it out loud ---- */
+
+function startSayIt(){
+  state.play.view = "sayit";
+  state.play.sayItCard = null;
+  state.play.sayItRound = 1;
+  renderPlay();
+}
+window.startSayIt=startSayIt;
+
+function renderSayIt(c){
+  var p = state.play;
+  if(!p.sayItCard){
+    var pool = C.slice();
+    var c2 = pool[Math.floor(Math.random()*pool.length)];
+    p.sayItCard = {layer:c2[0], name:c2[1], desc:c2[2]};
+    p.sayItRound = 1;
+  }
+  var card = p.sayItCard;
+  c.innerHTML=
+    '<div class="play-hero"><h1>Say it out loud</h1><p>Ten minutes. One card. One sentence. No advice.</p></div>'+
+    '<div class="deal-area">'+
+      '<div class="dealt-card flipped" style="display:inline-block;padding:24px 32px;min-width:240px;max-width:320px">'+
+        '<div class="dc-name" style="font-size:1.25rem">'+card.name+'</div>'+
+        '<div class="dc-tag">'+L[card.layer]+'</div>'+
+        '<div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+card.desc+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="closing-prompt" style="max-width:520px;margin:24px auto 0">'+
+      '<h3>Say this to them</h3>'+
+      '<p style="font-style:italic;font-size:1rem;color:var(--ink);background:var(--bg);padding:14px;border-left:3px solid var(--moss);border-radius:8px;margin:12px 0">'+
+        '"I need '+card.name.toLowerCase()+', and what I usually do instead is \u2026"'+
+      '</p>'+
+      '<p style="font-size:.86rem;color:var(--mute)">Finish the sentence out loud. Then stop. Do not explain it. Do not justify it.</p>'+
+      '<p style="font-size:.86rem;color:var(--mute);margin-top:14px"><strong>Their only line:</strong> "Thank you for telling me." Nothing else. No fixing. No questions.</p>'+
+    '</div>'+
+    '<div class="game-actions">'+
+      '<button class="btn btn-outline" onclick="sayAnotherRound()">Swap — next person</button>'+
+      '<button class="btn btn-ghost" onclick="sayItDone()">Finish</button>'+
+    '</div>'+
+    '<div class="play-hero" style="margin-top:28px"><p style="font-size:.82rem;color:var(--mute)">Round '+p.sayItRound+'</p></div>';
+}
+function sayAnotherRound(){
+  var p = state.play;
+  var pool = C.slice();
+  var c2 = pool[Math.floor(Math.random()*pool.length)];
+  p.sayItCard = {layer:c2[0], name:c2[1], desc:c2[2]};
+  p.sayItRound = (p.sayItRound||1) + 1;
+  renderPlay();
+}
+window.sayAnotherRound=sayAnotherRound;
+function sayItDone(){
+  state.play.view = "sayit-done";
+  renderPlay();
+}
+window.sayItDone=sayItDone;
+
+function renderSayItDone(c){
+  var p = state.play;
+  var card = p.sayItCard;
+  c.innerHTML=
+    '<div class="play-hero"><h1>Done.</h1><p>The cards are not saved. What you said tonight is not recorded. That was the point — the sentence happened, and that is enough.</p></div>'+
+    '<div class="closing-prompt" style="max-width:520px;margin:0 auto">'+
+      '<h3>One optional question</h3>'+
+      '<p>What was it like to say that out loud without being fixed?</p>'+
+      '<textarea id="sayItReflection" placeholder="Write something, or skip this. No wrong answer."></textarea>'+
+      '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
+        '<button class="btn btn-primary" onclick="saveSayItReflection()">Save to journal</button>'+
+        '<button class="btn btn-outline" onclick="playAnother()">Play another</button>'+
+      '</div>'+
+      '<div id="sayItSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
+    '</div>'+
+    (card ? '<div style="max-width:520px;margin:24px auto 0"><button class="btn btn-outline" onclick="saveSayItNeed(\''+card.layer+'\',\''+card.name.replace(/'/g,"\\'")+'\')">Add '+card.name+' to my tree</button></div>' : '');
+}
+function saveSayItReflection(){
+  var t = document.getElementById('sayItReflection').value.trim();
+  if(!t){alert("Write something first, even one sentence.");return}
+  var d = new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Say it out loud — reflection",text:t});
+  var s = document.getElementById('sayItSaveStatus');
+  if(s) s.textContent = "Saved to your journal ✓";
+}
+window.saveSayItReflection=saveSayItReflection;
+function saveSayItNeed(layer, name){
+  if(!state.treeNeeds[layer]) state.treeNeeds[layer]=[];
+  if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
+  alert(name+" added to your "+L[layer]+" layer.");
+}
+window.saveSayItNeed=saveSayItNeed;
+  /* ===== LEARN SECTION ===== */
 var LEARN_ARTICLES = [
   {id:"why-i-built-this", title:"Why I built this", topic:"Start here", layer:null,
    summary:"The moment that started it. Not a mission statement — just what happened when I realised I'd been treating a need as a problem.",
