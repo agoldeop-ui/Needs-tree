@@ -418,7 +418,7 @@ p{max-width:72ch}
         <h2>Your tree, saved</h2>
         <p style="color:var(--mute)">Right now, everything in this app resets when you close the tab. We're building the version that keeps it. Your tree, growing over time. Plans and reflections that stay.</p>
         <p style="font-size:.95rem;margin-top:16px"><strong>If you want it, leave your email.</strong> We'll tell you when it's ready.</p>
-        <form class="workshop-form" action="https://formsubmit.co/YOUR@EMAIL.COM" method="POST">
+        <form class="workshop-form" action="https://formsubmit.co/AGOLDEOP@GMAIL.COM" method="POST">
           <input type="hidden" name="_subject" value="Needs Tree signup">
           <input type="email" name="email" placeholder="Your email" required>
           <button type="submit" class="btn btn-primary" style="justify-content:center">Put me on the list</button>
@@ -1141,7 +1141,7 @@ function fakeDoorSubmit(kind){
   var label = kind === "save" ? "Save my tree" : "Dark Needs deck";
   status.style.color = "var(--mute)";
   status.textContent = "Sending…";
-  fetch("https://formsubmit.co/ajax/YOUR@EMAIL.COM", {
+  fetch("https://formsubmit.co/ajax/AGOLDEOP@GMAIL.COM", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
     body: JSON.stringify({ email: email, _subject: "Fake door: " + label, _template: "table" })
