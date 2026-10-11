@@ -936,6 +936,43 @@ var state = {
   darkWaitlist:[],
   play:{ view:"menu", scope:null, subScope:null, cards:[], sorted:{}, currentIdx:0, swapScope:null, swapSubScope:null, swapCards:[], swapSorted:{}, swapIdx:0, swapTop:[], swapShowAll:false, swapNotes:{}, sayItCard:null, sayItRound:1 }
 };
+  var STORAGE_KEY = "needsTree.v1";
+var saveTimer = null;
+function saveState(){
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    try{
+      var snapshot = {
+        context: state.context,
+        diagAnswers: state.diagAnswers,
+        diagCurrent: state.diagCurrent,
+        diagScores: state.diagScores,
+        diagStrained: state.diagStrained,
+        focusLayer: state.focusLayer,
+        emergencyPicks: state.emergencyPicks,
+        chosenActions: state.chosenActions,
+        customActions: state.customActions,
+        actionIndex: state.actionIndex,
+        ifThenCue: state.ifThenCue,
+        ifThenAction: state.ifThenAction,
+        treeNeeds: state.treeNeeds,
+        journal: state.journal,
+        darkWaitlist: state.darkWaitlist
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    }catch(e){}
+  }, 300);
+}
+function loadState(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    var s = JSON.parse(raw);
+    Object.keys(s).forEach(function(k){
+      if(k in state) state[k] = s[k];
+    });
+  }catch(e){}
+}
 
 function currentQuestions(){return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF}
 function sortByContextPriority(rows, layer){
@@ -2211,8 +2248,38 @@ document.getElementById('darkWaitlistModal').addEventListener('click', function(
 });
 
 /* ===== INIT ===== */
+loadState();
 renderOnboarding();
 renderContext();
+
+// Save state whenever the user makes a meaningful change.
+// We listen on the whole document for clicks and input changes.
+document.addEventListener('click', function(){ setTimeout(saveState, 50); }, true);
+document.addEventListener('input', function(){ saveState(); }, true);
+document.addEventListener('change', function(){ saveState(); }, true);
+
+// Save on tab close (best effort).
+window.addEventListener('beforeunload', function(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      context: state.context,
+      diagAnswers: state.diagAnswers,
+      diagCurrent: state.diagCurrent,
+      diagScores: state.diagScores,
+      diagStrained: state.diagStrained,
+      focusLayer: state.focusLayer,
+      emergencyPicks: state.emergencyPicks,
+      chosenActions: state.chosenActions,
+      customActions: state.customActions,
+      actionIndex: state.actionIndex,
+      ifThenCue: state.ifThenCue,
+      ifThenAction: state.ifThenAction,
+      treeNeeds: state.treeNeeds,
+      journal: state.journal,
+      darkWaitlist: state.darkWaitlist
+    }));
+  }catch(e){}
+});
 </script>
 </body>
 </html>
