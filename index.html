@@ -1340,17 +1340,25 @@ function openDrawer(layer, name){
     };
 
     var cueInput = document.getElementById('drawerCue');
-    if(cueInput)cueInput.oninput=function(){
-      state.ifThenCue[name] = cueInput.value;
-      var preview = document.getElementById('ifThenPreview');
-      if(preview){
-        if(cueInput.value){
-          preview.textContent = 'If ' + cueInput.value + ', then I will ' + action.charAt(0).toLowerCase() + action.slice(1).replace(/\.$/,'') + '.';
-        } else {
-          preview.textContent = 'Type your cue above, and your plan will appear here.';
-        }
+    var previewEl = document.getElementById('ifThenPreview');
+    function refreshPreview(){
+      if(!previewEl) return;
+      var v = cueInput ? cueInput.value.trim() : "";
+      if(v){
+        var tail = action.charAt(0).toLowerCase() + action.slice(1).replace(/\.$/,'');
+        previewEl.textContent = 'If ' + v + ', then I will ' + tail + '.';
+      } else {
+        previewEl.textContent = 'Type your cue above, and your plan will appear here.';
       }
-    };
+    }
+    if(cueInput){
+      cueInput.addEventListener('input', function(){
+        state.ifThenCue[name] = cueInput.value;
+        refreshPreview();
+      });
+      cueInput.addEventListener('change', refreshPreview);
+      refreshPreview();
+    }
     var cust=document.getElementById('drawerCustom');
     var status=document.getElementById('drawerSaveStatus');
     if(cust)cust.oninput=function(){
@@ -1393,11 +1401,12 @@ function openDrawer(layer, name){
 }
 window.openDrawer=openDrawer;
 function closeDrawer(){
-  document.getElementById('drawer').classList.remove('show');
-  document.getElementById('drawerOverlay').classList.remove('show');
+  var d = document.getElementById('drawer');
+  var ov = document.getElementById('drawerOverlay');
+  if(d){ d.classList.remove('show'); d.innerHTML = ''; }
+  if(ov) ov.classList.remove('show');
 }
 window.closeDrawer=closeDrawer;
-
 function renderJournal(){
   var jc=document.getElementById('journalContent');
   if(!jc)return;
