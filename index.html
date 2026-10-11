@@ -1679,11 +1679,20 @@ function swapFinish(){
 function renderSwapDone(c){
   var p = state.play;
   var showAll = p.swapShowAll || false;
-  c.innerHTML = '<div class="play-hero"><h1>Your three to compare</h1><p>Your partner did the same thing. Now sit side by side.</p></div><div class="results-container">'+p.swapTop.map(function(item, i){
+  var topHtml = p.swapTop.map(function(item, i){
     return '<div class="results-detail"><div class="rd-context">Number '+(i+1)+'</div><h2>'+item.name+'</h2><div class="rd-section"><h3>You sorted this as</h3><p><strong>'+item.pile+'</strong></p></div><div class="rd-question">"For me, '+item.name+' is '+item.pile.toLowerCase()+'. What is it for you?"</div></div>';
-  }).join("")+'<div class="results-detail" style="border-color:var(--moss)"><h2>The question to sit with</h2><div class="rd-section"><p>Where you agreed, there is nothing to do. Where you differed, ask: what does this need mean to them that it does not mean to me?</p></div></div><div class="action-row" style="margin-top:8px"><button class="btn btn-outline" id="toggleShowAll">'+(showAll?'Hide the full sort':'Show everything I sorted')+'</button></div><div id="swapAllSlot"></div><div class="closing-prompt"><h3>One thing you learned about them</h3><textarea id="swapReflection" placeholder="One sentence is enough."></textarea><div class="game-actions" style="\\margin-top:14px;justify-content:flex-start"><button' class="btn btn-primary" onclick="saveSwapReflection");
-()">Save to journal</button><button class="       btn btn-outline" onclick="playAnother()"> returnPlay another</button><button class="btn btn-ghost" onclick="navigateTo(\'tree\')">Open my tree →</button></div><div id="swapSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div></div></div>';
-  document.getElementById('toggleShowAll').onclick=function(){ state.play.swapShowAll = !state.play.swapShowAll; renderSwapDone(c); };
+  }).join("");
+  var sitHtml = '<div class="results-detail" style="border-color:var(--moss)"><h2>The question to sit with</h2><div class="rd-section"><p>Where you agreed, there is nothing to do. Where you differed, ask: what does this need mean to them that it does not mean to me?</p></div></div>';
+  var toggleHtml = '<div class="action-row" style="margin-top:8px"><button class="btn btn-outline" id="toggleShowAll">'+(showAll?'Hide the full sort':'Show everything I sorted')+'</button></div><div id="swapAllSlot"></div>';
+  var closingHtml = '<div class="closing-prompt"><h3>One thing you learned about them</h3><textarea id="swapReflection" placeholder="One sentence is enough."></textarea><div class="game-actions" style="margin-top:14px;justify-content:flex-start"><button class="btn btn-primary" onclick="saveSwapReflection()">Save to journal</button><button class="btn btn-outline" onclick="playAnother()">Play another</button><button class="btn btn-ghost" onclick="navigateTo(\'tree\')">Open my tree →</button></div><div id="swapSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div></div>';
+
+  c.innerHTML = '<div class="play-hero"><h1>Your three to compare</h1><p>Your partner did the same thing. Now sit side by side.</p></div><div class="results-container">'+topHtml+sitHtml+toggleHtml+closingHtml+'</div>';
+
+  document.getElementById('toggleShowAll').onclick=function(){
+    state.play.swapShowAll = !state.play.swapShowAll;
+    renderSwapDone(c);
+  };
+
   if(showAll){
     var slot = document.getElementById('swapAllSlot');
     var piles = [
@@ -1692,15 +1701,17 @@ function renderSwapDone(c){
       {id:"painful", title:"Painful if unmet"},
       {id:"nice", title:"Nice to have"}
     ];
-    slot.innerHTML = '<div class="closing-prompt" style="margin-top:20px"><h3>Everything you sorted</h3><p>Tap a card to write yourself a note.</p><div class="pile-grid" style="margin-top:16px">'+piles.map(function(pl){
+    var pilesHtml = piles.map(function(pl){
       var needs = (p.swapSorted[pl.id] || []);
-      return '<div class="pile '+(pl.cls||'')+'"><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n){
-        var safe = n.replace(/'/g, " '<span class="pile-need" style="cursor:pointer" onclick="openSwapNote(\''+safe+'\')">'+n+'</span>';
-      }).join("")+'</div>';
-    }).join("")+'</div><div id="swapNoteSlot"></div></div>';
+      var needsHtml = needs.map(function(n){
+        var safe = n.replace(/'/g, "\\'");
+        return '<span class="pile-need" style="cursor:pointer" onclick="openSwapNote(\''+safe+'\')">'+n+'</span>';
+      }).join("");
+      return '<div class="pile '+(pl.cls||'')+'"><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needsHtml+'</div>';
+    }).join("");
+    slot.innerHTML = '<div class="closing-prompt" style="margin-top:20px"><h3>Everything you sorted</h3><p>Tap a card to write yourself a note.</p><div class="pile-grid" style="margin-top:16px">'+pilesHtml+'</div><div id="swapNoteSlot"></div></div>';
   }
-}
-function openSwapNote(name){
+}function openSwapNote(name){
   var slot = document.getElementById('swapNoteSlot');
   if(!slot) return;
   var existing = (state.play.swapNotes && state.play.swapNotes[name]) || "";
@@ -1746,9 +1757,9 @@ function renderSayIt(c){
     p.sayItRound = 1;
   }
   var card = p.sayItCard;
-  c.innerHTML = '<div class="play-hero"><h1>Say it out loud</h1><p>Ten minutes. One card. One sentence. No advice.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 32px;min-width:240px;max-width:320px"><div class="dc-name" style="font-size:1.25rem">'+card.name+'</div>< whatdiv class="dc-tag">'+ IL[card.layer]+'</div><div usually style="font-size:.82rem;color:var(-- domute);margin-top:6px">'+ insteadcard.desc+'</div></div></div><div class="closing-prompt" style="max-width:520px;margin:24px auto 0"><h3>Say this to them</h3><p style="font-style:italic;font-size:1rem;color:var(--ink);background:var(--bg);padding:14px;border-left:3px solid var(--moss);border-radius:8px;margin:12px 0">"I need '+card.name.toLowerCase()+', and is …"</p><p style="font-size:.86rem;color:var(--mute)">Finish the sentence out loud. Then stop.</p><p style="font-size:.86rem;color:var(--mute);margin-top:14px"><strong>Their only line:</strong> "Thank you for telling me."</p></div><div class="game-actions"><button class="btn btn-outline" onclick="sayAnotherRound()">Swap — next person</button><button class="btn btn-ghost" onclick="sayItDone()">Finish</button></div><div class="play-hero" style="margin-top:28px"><p style="font-size:.82rem;color:var(--mute)">Round '+p.sayItRound+'</p></div>';
+  c.innerHTML = '<div class="play-hero"><h1>Say it out loud</h1><p>Ten minutes. One card. One sentence. No advice.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 32px;min-width:240px;max-width:320px"><div class="dc-name" style="font-size:1.25rem">'+card.name+'</div><div class="dc-tag">'+L[card.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+card.desc+'</div></div></div><div class="closing-prompt" style="max-width:520px;margin:24px auto 0"><h3>Say this to them</h3><p style="font-style:italic;font-size:1rem;color:var(--ink);background:var(--bg);padding:14px;border-left:3px solid var(--moss);border-radius:8px;margin:12px 0">"I need '+card.name.toLowerCase()+', and what I usually do instead is …"</p><p style="font-size:.86rem;color:var(--mute)">Finish the sentence out loud. Then stop.</p><p style="font-size:.86rem;color:var(--mute);margin-top:14px"><strong>Their only line:</strong> "Thank you for telling me."</p></div><div class="game-actions"><button class="btn btn-outline" onclick="sayAnotherRound()">Swap — next person</button><button class="btn btn-ghost" onclick="sayItDone()">Finish</button></div><div class="play-hero" style="margin-top:28px"><p style="font-size:.82rem;color:var(--mute)">Round '+p.sayItRound+'</p></div>';
 }
-function sayAnotherRound(){
+  function sayAnotherRound(){
   var p = state.play;
   var pool = C.slice();
   var c2 = pool[Math.floor(Math.random()*pool.length)];
