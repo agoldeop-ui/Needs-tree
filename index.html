@@ -419,7 +419,6 @@ p{max-width:72ch}
       <div class="deck-tabs" id="deckTabs">
         <button class="deck-tab active" data-filter="core">Core needs</button>
         <button class="deck-tab" data-filter="dark">Dark needs</button>
-        <button class="deck-tab" data-filter="strat">Strategies</button>
       </div>
       <div class="deck-grid" id="deckGrid"></div>
     </div>
@@ -1345,7 +1344,44 @@ function renderDeck(filter){
     var ordered = allCoreNeedsOrdered();
     cards=ordered.map(function(c){return{layer:c[0],name:c[1],desc:c[2],art:svgFor(c[0]),cls:c[0]}});
   }else if(deckFilter==="dark"){
-    cards=D.map(function(d){return{name:d[0],desc:d[1],shadow:d[2],integrated:d[3],art:svgFor("dark"),cls:"dark",type:"dark"}});
+    var darkVisible = D.slice(0, 2);
+    grid.innerHTML = darkVisible.map(function(d){
+      return '<div class="deck-card dark">'+
+        '<div class="dc-art">'+svgFor("dark")+'</div>'+
+        '<div class="dc-body"><div class="dc-tag">Dark need</div>'+
+        '<div class="dc-name">'+d[0]+'</div>'+
+        '<div class="dc-desc"><em>Shadow:</em> '+d[2]+'</div>'+
+        '<div class="dc-desc"><em>Integrated:</em> '+d[3]+'</div>'+
+      '</div></div>';
+    }).join("");
+    grid.innerHTML +=
+      '<div class="deck-card" style="border-style:dashed;grid-column:span 2;background:var(--card)">'+
+        '<div class="dc-body" style="padding:20px;text-align:center">'+
+          '<div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">9 more dark needs</div>'+
+          '<div style="font-size:.82rem;color:var(--mute);margin-bottom:14px">Control. Power. Attention. Revenge. Destruction. The ones you were taught not to have.</div>'+
+          '<div class="action-row" style="justify-content:center;margin-top:0">'+
+            '<button class="btn btn-primary btn-small" onclick="fakeDoorTap(\'dark\')">Get the Dark Needs deck</button>'+
+          '</div>'+
+          '<div id="fakeDoorDark" style="max-width:360px;margin:12px auto 0"></div>'+
+        '</div>'+
+      '</div>';
+    // Two strategy cards below
+    var teaserStrategies = [
+      {need: "Control", strategy: "When you notice yourself micromanaging a plan, ask: what am I afraid will happen if I let go? Name the fear before you act."},
+      {need: "Attention", strategy: "Before you tell a story to get a reaction, ask: what do I actually want to be seen for right now? Name that, not the story."}
+    ];
+    grid.innerHTML +=
+      '<div style="grid-column:1/-1;margin-top:24px;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:0">Strategies that work with these</div>'+
+      teaserStrategies.map(function(t){
+        return '<div class="deck-card strat">'+
+          '<div class="dc-art">'+svgFor("dark")+'</div>'+
+          '<div class="dc-body">'+
+            '<div class="dc-tag">For the '+t.need+' need</div>'+
+            '<div class="dc-name" style="font-size:.9rem;line-height:1.4">'+t.strategy+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join("");
+    return;
   }else{
     cards=S.map(function(s){return{name:s,desc:"What need could be underneath?",art:svgFor("dark"),cls:"strat",type:"strat"}});
   }
@@ -1725,6 +1761,8 @@ function renderPlay(){
   if(view==="swap-done") return renderSwapDone(c);
   if(view==="sayit") return renderSayIt(c);
   if(view==="sayit-done") return renderSayItDone(c);
+  if(view==="strategy") return renderStrategyGame(c);
+  if(view==="strategy-done") return renderStrategyDone(c);
   renderPlayMenu(c);
 }
 
@@ -1732,7 +1770,8 @@ function renderPlayMenu(c){
   var games = [
     {id:"sortit", title:"Sort it", for:"Solo · 15 min", pitch:"Deal 15 cards at random. Sort them into Nice to have, Painful if unmet, Non-negotiable, Emergency. Only three may be emergencies. Then: which of those have you been treating as a preference?", live:true, fn:"startSortIt()"},
     {id:"swap", title:"Swap and compare", for:"Two people · two phones · 30 min", pitch:"You each sort 15 cards on your own phone. Then you sit together. The app picks the three differences most worth talking about, and gives you the script. No arguing. Just noticing.", live:true, fn:"startSwap()"},
-    {id:"sayit", title:"Say it out loud", for:"Two people · 10 min", pitch:"Draw one card. Say to them: 'I need ___, and what I usually do instead is ___.' They reply only: 'Thank you for telling me.' Nothing is recorded. The sentence is the whole point.", live:true, fn:"startSayIt()"}
+    {id:"sayit", title:"Say it out loud", for:"Two people · 10 min", pitch:"Draw one card. Say to them: 'I need ___, and what I usually do instead is ___.' They reply only: 'Thank you for telling me.' Nothing is recorded. The sentence is the whole point.", live:true, fn:"startSayIt()"},
+    {id:"strategy", title:"Guess the need", for:"Solo · 10 min", pitch:"You're dealt three strategies — real sentences people say when a need is hiding. For each one, guess which core need it's masking. Then see what the strategy often hides.", live:true, fn:"startStrategyGame()"}
   ];
   c.innerHTML=
     '<div class="play-hero"><h1>Play</h1><p>These are the games that made the deck. Play alone on a Sunday afternoon. Play with a partner on a long evening. Play with a team when something is off and nobody is saying it.</p></div>'+
@@ -2198,7 +2237,156 @@ function saveSwapReflection(){
   if(s) s.textContent = "Saved to your journal ✓";
 }
 window.saveSwapReflection=saveSwapReflection;
+/* ===== STRATEGY GAME — Guess the need ===== */
+var STRATEGY_HINTS = {
+  "I need you to text me back right now.": ["Connection", "Validation", "Trust"],
+  "I'll just do it myself.": ["Autonomy", "Control", "Independence"],
+  "I'm fine, it's nothing.": ["Emotional safety", "Compassion", "Acceptance"],
+  "If I work harder, they'll finally notice me.": ["Recognition", "Validation", "Impact"],
+  "I'll go quiet until they figure it out.": ["Empathy", "Attention", "Validation"],
+  "They should just know.": ["Empathy", "Intimacy", "Connection"],
+  "I can't say no to this.": ["Boundaries", "Autonomy", "Consent"],
+  "I check their phone, just to be sure.": ["Trust", "Reassurance", "Control"],
+  "I'll make myself indispensable so they can't leave.": ["Belonging", "Security", "Worth"],
+  "I'm not going to ask — if they cared, they'd offer.": ["Validation", "Empathy", "Recognition"],
+  "I'll disappear for a few days so they worry.": ["Attention", "Connection", "Recognition"],
+  "I'll prove I'm the best so no one can replace me.": ["Specialness", "Recognition", "Security"],
+  "I'll agree to everything and resent them later.": ["Peace", "Belonging", "Boundaries"],
+  "I'll fix their problems so they need me.": ["Worth", "Belonging", "Control"],
+  "I'll create a crisis so someone has to respond.": ["Attention", "Connection", "Care"],
+  "I'll compete with everyone to prove I matter.": ["Recognition", "Impact", "Worth"],
+  "I'll stop resting until this is done.": ["Mastery", "Security", "Worth"],
+  "I'll make sure they feel guilty for not being there.": ["Revenge", "Validation", "Recognition"],
+  "I'll take control of every detail so nothing goes wrong.": ["Control", "Safety", "Certainty"],
+  "I'll stay in this situation even though it hurts, because at least it's familiar.": ["Stability", "Belonging", "Safety"]
+};
 
+var ALL_NEEDS_FOR_GAME = [
+  "Autonomy","Independence","Authenticity","Integrity","Freedom","Self-expression",
+  "Self-knowledge","Privacy","Identity","Consent","Recognition","Validation",
+  "Acceptance","Affection","Support","Companionship","Empathy","Trust","Belonging",
+  "Mutuality","Connection","Intimacy","Love","Compassion","Emotional safety","Play",
+  "Humor","Leisure","Relaxation","Fun","Beauty","Adventure","Celebration","Purpose",
+  "Contribution","Impact","Growth","Fulfillment","Service","Spirituality","Gratitude",
+  "Transcendence","Rest and sleep","Stability and consistency","Physical safety",
+  "Sensory comfort","Movement and exercise","Sunlight","Health","Clean air and water"
+];
+
+function startStrategyGame(){
+  state.play.view = "strategy";
+  var shuffled = shuffle(S).slice(0,3);
+  state.play.strategyRound = shuffled.map(function(s){
+    return { text: s, guess: null, revealed: false };
+  });
+  state.play.strategyIdx = 0;
+  renderPlay();
+}
+window.startStrategyGame=startStrategyGame;
+
+function renderStrategyGame(c){
+  var p = state.play;
+  var round = p.strategyRound[p.strategyIdx];
+  var em = ["not"];
+  var step = p.strategyIdx + 1;
+
+  if(round.revealed){
+    var hints = STRATEGY_HINTS[round.text] || ["Connection","Validation","Autonomy"];
+    c.innerHTML =
+      '<div class="play-hero"><h1>Guess the need</h1><p>Card '+step+' of '+p.strategyRound.length+'.</p></div>'+
+      '<div class="deal-area">'+
+        '<div class="dealt-card flipped" style="display:inline-block;padding:24px 28px;min-width:260px;max-width:420px">'+
+          '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">Strategy</div>'+
+          '<div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;line-height:1.4">&ldquo;'+round.text+'&rdquo;</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="closing-prompt" style="max-width:520px;margin:20px auto 0">'+
+        '<h3>You guessed: '+round.guess+'</h3>'+
+        '<p style="font-size:.9rem;color:var(--mute);margin-top:6px">A single strategy can hide more than one need. This one often hides:</p>'+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+
+          hints.map(function(h){
+            var isGuess = (h === round.guess);
+            return '<span style="padding:6px 14px;border-radius:20px;font-size:.88rem;font-weight:600;'+(isGuess?'background:var(--moss);color:#fff;':'background:var(--card);border:1.5px solid var(--line);color:var(--ink);')+'">'+h+(isGuess?' \u2713':'')+'</span>';
+          }).join("")+
+        '</div>'+
+        '<div class="game-actions" style="margin-top:20px;justify-content:flex-start">'+
+          '<button class="btn btn-primary" onclick="strategyNext()">'+(step < p.strategyRound.length ? 'Next strategy \u2192' : 'Finish')+'</button>'+
+        '</div>'+
+      '</div>';
+    return;
+  }
+
+  c.innerHTML =
+    '<div class="play-hero"><h1>Guess the need</h1><p>Card '+step+' of '+p.strategyRound.length+'. What need is hiding underneath this sentence?</p></div>'+
+    '<div class="deal-area">'+
+      '<div class="dealt-card flipped" style="display:inline-block;padding:24px 28px;min-width:260px;max-width:420px">'+
+        '<div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">Strategy</div>'+
+        '<div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;line-height:1.4">&ldquo;'+round.text+'&rdquo;</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="closing-prompt" style="max-width:520px;margin:20px auto 0">'+
+      '<h3>Pick the need you think is hiding</h3>'+
+      '<p style="font-size:.85rem;color:var(--mute);margin-bottom:12px">There is no correct answer. The point is to notice how many needs a single strategy can hide.</p>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:8px">'+
+        shuffle(ALL_NEEDS_FOR_GAME).slice(0,6).map(function(n){
+          return '<button class="btn btn-outline btn-small" onclick="strategyGuess(\''+n.replace(/'/g,"\\'")+'\')">'+n+'</button>';
+        }).join("")+
+      '</div>'+
+      '<div class="game-actions" style="margin-top:16px;justify-content:flex-start">'+
+        '<button class="btn btn-ghost" onclick="abandonStrategy()">Stop</button>'+
+      '</div>'+
+    '</div>';
+}
+function strategyGuess(name){
+  var p = state.play;
+  p.strategyRound[p.strategyIdx].guess = name;
+  p.strategyRound[p.strategyIdx].revealed = true;
+  renderPlay();
+}
+function strategyNext(){
+  var p = state.play;
+  if(p.strategyIdx + 1 >= p.strategyRound.length){
+    p.view = "strategy-done";
+    renderPlay();
+    return;
+  }
+  p.strategyIdx++;
+  renderPlay();
+}
+function abandonStrategy(){
+  state.play.view = "menu";
+  state.play.strategyRound = [];
+  state.play.strategyIdx = 0;
+  renderPlay();
+}
+window.strategyGuess=strategyGuess;
+window.strategyNext=strategyNext;
+window.abandonStrategy=abandonStrategy;
+
+function renderStrategyDone(c){
+  var p = state.play;
+  c.innerHTML =
+    '<div class="play-hero"><h1>Done.</h1><p>Three strategies. Three guesses. The point was not the right answer. The point was to notice how many needs a single sentence can hide \u2014 in you, and in everyone else.</p></div>'+
+    '<div class="closing-prompt" style="max-width:520px;margin:0 auto">'+
+      '<h3>One optional reflection</h3>'+
+      '<p>Which of the three strategies felt closest to one you use?</p>'+
+      '<textarea id="strategyReflection" placeholder="Write something, or skip this."></textarea>'+
+      '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
+        '<button class="btn btn-primary" onclick="saveStrategyReflection()">Save to journal</button>'+
+        '<button class="btn btn-outline" onclick="playAnother()">Play another</button>'+
+      '</div>'+
+      '<div id="strategySaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
+    '</div>';
+}
+function saveStrategyReflection(){
+  var t = document.getElementById('strategyReflection').value.trim();
+  if(!t){alert("Write something first, even one sentence.");return}
+  var d = new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Guess the need \u2014 reflection",text:t});
+  var s = document.getElementById('strategySaveStatus');
+  if(s) s.textContent = "Saved to your journal \u2713";
+}
+window.saveStrategyReflection=saveStrategyReflection;
 function startSayIt(){
   state.play.view = "sayit";
   state.play.sayItCard = null;
