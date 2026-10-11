@@ -414,16 +414,23 @@ p{max-width:72ch}
         </div>
       </div>
       <div class="workshop-card" style="max-width:640px">
-        <span class="wc-badge">Coming soon</span>
-        <h2>Your tree, saved</h2>
-        <p style="color:var(--mute)">Right now, everything in this app resets when you close the tab. We're building the version that keeps it. Your tree, growing over time. Plans and reflections that stay.</p>
-        <p style="font-size:.95rem;margin-top:16px"><strong>If you want it, leave your email.</strong> We'll tell you when it's ready.</p>
+        <span class="wc-badge">What's next</span>
+        <h2>What's free. What's coming.</h2>
+        <p style="color:var(--mute)">Everything you're using right now is free, and stays free. The diagnostic. Your tree. The games. Your if-then plans. Your journal. That's not a demo — it's the product, and it's yours.</p>
+        <p style="font-size:.95rem;margin-top:16px">Later this year we're adding the parts that need a server:</p>
+        <ul style="text-align:left;max-width:420px;margin:12px auto;list-style:none">
+          <li style="padding:6px 0 6px 24px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Your tree on every device</li>
+          <li style="padding:6px 0 6px 24px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> Reminders at the moment your plan matters</li>
+          <li style="padding:6px 0 6px 24px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> The Dark Needs deck</li>
+          <li style="padding:6px 0 6px 24px;position:relative"><span style="position:absolute;left:0;color:var(--moss);font-weight:700">✓</span> History — your tree from six weeks ago, side by side with today</li>
+        </ul>
+        <p style="font-size:.95rem;margin-top:16px"><strong>If you want to be first to try them, leave your email.</strong></p>
         <form class="workshop-form" action="https://formsubmit.co/AGOLDEOP@GMAIL.COM" method="POST">
           <input type="hidden" name="_subject" value="Needs Tree signup">
           <input type="email" name="email" placeholder="Your email" required>
-          <button type="submit" class="btn btn-primary" style="justify-content:center">Put me on the list</button>
+          <button type="submit" class="btn btn-primary" style="justify-content:center">Notify me</button>
         </form>
-        <p style="font-size:.78rem;color:var(--mute);margin-top:12px">One email when it's ready. Nothing else.</p>
+        <p style="font-size:.78rem;color:var(--mute);margin-top:12px">One email. Nothing else.</p>
       </div>
       <div class="safety-note">Reflection tool, not therapy or diagnosis.</div>
     </div>
@@ -1072,23 +1079,10 @@ function renderToday(){
   var fakeDoorHtml =
     '<div class="results-detail" style="max-width:640px;margin:0 auto 16px;border-color:var(--moss);border-width:2px">'+
       '<h2 style="font-size:1.1rem">Want to keep this tree?</h2>'+
-      '<p style="font-size:.9rem;color:var(--mute);margin:6px 0 12px">What's free. What's coming.
- 
-Everything you're using right now is free, and stays free. The diagnostic. Your tree. The games. Your if-then plans. Your journal. That's not a demo. It's the product, and it's yours.
- 
-Later this year, we're adding the parts that need a server to work:
- 
-Your tree on every device. Phone, tablet, laptop. Same tree, everywhere.
-Reminders. Your plan, at the moment it matters — a small message when your if-then is supposed to fire.
-The Dark Needs deck. Eleven needs that hide. Five strategies each.
-History. Your tree from six weeks ago, side by side with today.
- 
-Those will cost €X/month. The free version doesn't go away.
- 
-If you want to be first to try the paid version, leave your email. We'll reach out when it's ready.</p>'+
+      '<p style="font-size:.9rem;color:var(--mute);margin:6px 0 12px">Everything you\'ve written is saved in this browser. If you want reminders that reach you when your if-then fires, tell us.</p>'+
       '<div id="fakeDoorSave">'+
         '<div class="action-row left" style="margin-top:0">'+
-          '<button class="btn btn-primary btn-small" onclick="fakeDoorTap(\'save\')">Save my tree</button>'+
+          '<button class="btn btn-primary btn-small" onclick="fakeDoorTap(\'save\')">Send me the reminder</button>'+
         '</div>'+
       '</div>'+
     '</div>'+
@@ -1101,7 +1095,6 @@ If you want to be first to try the paid version, leave your email. We'll reach o
         '</div>'+
       '</div>'+
     '</div>';
-
   var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
 
@@ -1689,7 +1682,7 @@ function swapFinish(){
   p.view = "swap-done";
   renderPlay();
 }
-function renderSwapDone(c){
+  function renderSwapDone(c){
   var p = state.play;
   var showAll = p.swapShowAll || false;
   var topHtml = p.swapTop.map(function(item, i){
@@ -1724,7 +1717,8 @@ function renderSwapDone(c){
     }).join("");
     slot.innerHTML = '<div class="closing-prompt" style="margin-top:20px"><h3>Everything you sorted</h3><p>Tap a card to write yourself a note.</p><div class="pile-grid" style="margin-top:16px">'+pilesHtml+'</div><div id="swapNoteSlot"></div></div>';
   }
-}function openSwapNote(name){
+}
+function openSwapNote(name){
   var slot = document.getElementById('swapNoteSlot');
   if(!slot) return;
   var existing = (state.play.swapNotes && state.play.swapNotes[name]) || "";
