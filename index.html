@@ -967,6 +967,7 @@ function saveState(){
         treeNeeds: state.treeNeeds,
         journal: state.journal,
         darkWaitlist: state.darkWaitlist
+        fakeDoors: state.fakeDoors,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
     }catch(e){}
@@ -1214,7 +1215,45 @@ function renderReframesFor(layer){
   });
 }
 
-function renderToday(){
+/* ===== FAKE DOOR TEST ===== */
+function fakeDoorTap(kind){
+  if(!state.fakeDoors) state.fakeDoors = {save:0, dark:0};
+  state.fakeDoors[kind] = (state.fakeDoors[kind] || 0) + 1;
+  saveState();
+  var slot = document.getElementById(kind === "save" ? "fakeDoorSave" : "fakeDoorDark");
+  if(!slot) return;
+  var label = kind === "save" ? "your tree, saved" : "the Dark Needs deck";
+  slot.innerHTML =
+    '<div style="padding:12px 14px;border-radius:10px;background:rgba(91,143,185,.08);font-size:.88rem">'+
+      '<div style="margin-bottom:8px">Thanks. Leave your email and we\u2019ll tell you when ' + label + ' is ready.</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        '<input type="email" id="fakeDoorEmail_' + kind + '" placeholder="Your email" style="flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);font-family:var(--font-body);font-size:.88rem;color:var(--ink)">'+
+        '<button class="btn btn-primary btn-small" onclick="fakeDoorSubmit(\'' + kind + '\')">Send</button>'+
+      '</div>'+
+      '<div id="fakeDoorStatus_' + kind + '" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div>'+
+    '</div>';
+}
+
+function fakeDoorSubmit(kind){
+  var input = document.getElementById('fakeDoorEmail_' + kind);
+  var status = document.getElementById('fakeDoorStatus_' + kind);
+  if(!input || !status) return;
+  var email = input.value.trim();
+  if(!email){ status.style.color = "var(--hot)"; status.textContent = "Please enter an email."; return; }
+  var label = kind === "save" ? "Save my tree" : "Dark Needs deck";
+  status.style.color = "var(--mute)";
+  status.textContent = "Sending\u2026";
+  fetch("https://formsubmit.co/ajax/AGOLDEOP@GMAIL.COM", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({ email: email, _subject: "Fake door: " + label, _template: "table" })
+  })
+  .then(function(){ status.style.color = "var(--moss)"; status.textContent = "Got it. We\u2019ll be in touch."; input.value = ""; })
+  .catch(function(){ status.style.color = "var(--hot)"; status.textContent = "Something went wrong. Try again."; });
+}
+window.fakeDoorTap = fakeDoorTap;
+window.fakeDoorSubmit = fakeDoorSubmit;
+  function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
   var dateEl=document.getElementById('todayDate');
@@ -1260,6 +1299,24 @@ function renderToday(){
 
   body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
     focusHtml+
+    '<div class="results-detail" style="max-width:640px;margin:0 auto 16px;border-color:var(--moss);border-width:2px">'+
+      '<h2 style="font-size:1.1rem">Want to keep this tree?</h2>'+
+      '<p style="font-size:.9rem;color:var(--mute);margin:6px 0 12px">Right now, everything resets when you close the tab. Your tree, your emergencies, your if-then plans. If you want a version that saves it, tell us.</p>'+
+      '<div id="fakeDoorSave">'+
+        '<div class="action-row left" style="margin-top:0">'+
+          '<button class="btn btn-primary btn-small" onclick="fakeDoorTap(\'save\')">Save my tree</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:640px;margin:0 auto 24px;border-color:var(--c-fruits);border-width:2px">'+
+      '<h2 style="font-size:1.1rem">The Dark Needs deck</h2>'+
+      '<p style="font-size:.9rem;color:var(--mute);margin:6px 0 12px">Eleven needs that hide \u2014 control, attention, anger, avoidance. The ones you were taught not to have. If you want the deck, tell us.</p>'+
+      '<div id="fakeDoorDark">'+
+        '<div class="action-row left" style="margin-top:0">'+
+          '<button class="btn btn-outline btn-small" onclick="fakeDoorTap(\'dark\')">Get the Dark Needs deck</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
     '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
     var st=scoreStatus(scores[l]);
     var pct=Math.min(100,(scores[l]/12)*100);
@@ -2286,6 +2343,8 @@ window.addEventListener('beforeunload', function(){
       treeNeeds: state.treeNeeds,
       journal: state.journal,
       darkWaitlist: state.darkWaitlist
+      fakeDoors: state.fakeDoors,
+    
     }));
   }catch(e){}
 });
