@@ -1181,13 +1181,9 @@ function renderToday(){
   }
   var scores=state.diagScores;
 
-  // Sticky notes: only from the two most strained layers
-  var topLayers = LORDER
-    .filter(function(l){return scoreStatus(scores[l])==="strained"})
-    .sort(function(a,b){return scores[b] - scores[a]})
-    .slice(0, 2);
+  // Sticky notes: any need with a completed if-then plan, max 4
   var plans = [];
-  topLayers.forEach(function(layer){
+  LORDER.forEach(function(layer){
     (state.treeNeeds[layer] || []).forEach(function(name){
       var cue = state.ifThenCue[name];
       var action = state.ifThenAction[name];
@@ -1197,7 +1193,6 @@ function renderToday(){
     });
   });
   plans = plans.slice(0, 4);
-
   var focusHtml = "";
   if(plans.length > 0){
     focusHtml =
