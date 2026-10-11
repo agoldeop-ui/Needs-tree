@@ -267,6 +267,17 @@ p{max-width:72ch}
 @media(max-width:600px){.drawer{width:100%}}
 .overview-summary{text-align:center;font-size:.92rem;color:var(--mute);margin-bottom:24px;padding:12px;background:var(--card);border-radius:var(--radius-sm);border:1px solid var(--line)}
 .overview-summary strong{color:var(--ink)}
+  .sticky-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+@media(max-width:520px){.sticky-grid{grid-template-columns:1fr}}
+.sticky-note{position:relative;padding:16px;border-radius:4px;background:#FEF7E0;box-shadow:2px 3px 0 rgba(23,33,26,.08);border:1px solid rgba(23,33,26,.06);transition:all var(--transition);cursor:pointer}
+.sticky-note:nth-child(2n){background:#EDF5E8}
+.sticky-note:nth-child(3n){background:#F9EBEF}
+.sticky-note:nth-child(5n){background:#EAF2F5}
+.sticky-note:hover{transform:translateY(-2px);box-shadow:2px 5px 0 rgba(23,33,26,.1)}
+.sticky-note .sn-tag{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.sticky-note .sn-plan{font-size:.88rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.sticky-note .sn-edit{font-size:.72rem;color:var(--mute);margin-top:10px;font-weight:500}
+.sticky-section-title{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:12px}
 .play-hero{text-align:center;margin-bottom:32px}
 .play-hero h1{font-size:clamp(1.7rem,1.2rem+2vw,2.4rem);margin-bottom:8px}
 .play-hero p{color:var(--mute);font-size:1.02rem;margin:0 auto;max-width:520px}
@@ -1169,9 +1180,45 @@ function renderToday(){
     return;
   }
   var scores=state.diagScores;
+
+  // Sticky notes: only from the two most strained layers
+  var topLayers = LORDER
+    .filter(function(l){return scoreStatus(scores[l])==="strained"})
+    .sort(function(a,b){return scores[b] - scores[a]})
+    .slice(0, 2);
+  var plans = [];
+  topLayers.forEach(function(layer){
+    (state.treeNeeds[layer] || []).forEach(function(name){
+      var cue = state.ifThenCue[name];
+      var action = state.ifThenAction[name];
+      if(cue && action){
+        plans.push({layer: layer, name: name, cue: cue, action: action});
+      }
+    });
+  });
+  plans = plans.slice(0, 4);
+
+  var focusHtml = "";
+  if(plans.length > 0){
+    focusHtml =
+      '<div class="sticky-section-title">Your focus this week</div>'+
+      '<div class="sticky-grid">'+
+        plans.map(function(p){
+          return '<div class="sticky-note" onclick="openDrawer(\''+p.layer+'\',\''+p.name.replace(/'/g,"\\'")+'\')">'+
+            '<div class="sn-tag" style="color:'+Lcolor[p.layer]+'">'+L[p.layer]+'</div>'+
+            '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25;margin-bottom:8px">'+p.name+'</div>'+
+            '<div class="sn-plan">If '+p.cue+', then I will '+p.action+'.</div>'+
+            '<div class="sn-edit">Tap to adjust \u2192</div>'+
+          '</div>';
+        }).join("")+
+      '</div>';
+  }
+
   var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
+
   body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
+    focusHtml+
     '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
     var st=scoreStatus(scores[l]);
     var pct=Math.min(100,(scores[l]/12)*100);
