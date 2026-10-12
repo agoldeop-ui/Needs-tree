@@ -1530,6 +1530,17 @@ function dealCards(){
   renderPlay();
 }
 window.dealCards=dealCards;
+function unsortNeed(pileId, idx){
+  var p = state.play;
+  var arr = p.sorted[pileId];
+  if(!arr || !arr[idx]) return;
+  var name = arr[idx];
+  arr.splice(idx, 1);
+  var cardIdx = p.cards.findIndex(function(c){return c.name === name});
+  if(cardIdx >= 0) p.currentIdx = cardIdx;
+  renderPlay();
+}
+window.unsortNeed=unsortNeed;  
 function renderPlaySort(c){
   var p = state.play;
   if(p.currentIdx >= p.cards.length){ p.view="done"; renderPlay(); return; }
@@ -1544,7 +1555,9 @@ function renderPlaySort(c){
   c.innerHTML = '<div class="play-hero"><h1>Sort it</h1><p>Card '+(p.currentIdx+1)+' of '+p.cards.length+'. Where does this need go right now?</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px"><div class="dc-name" style="font-size:1.2rem">'+current.name+'</div><div class="dc-tag">'+L[current.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+current.desc+'</div></div></div><div class="pile-grid" id="pileGrid">'+piles.map(function(pl){
     var needs = p.sorted[pl.id] || [];
     var disabled = (pl.id==="emergency" && emCount>=3) ? ' style="opacity:.5;pointer-events:none"' : '';
-    return '<div class="pile '+(pl.cls||'')+'" data-pile="'+pl.id+'"'+disabled+'><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+'</div>';
+    return '<div class="pile '+(pl.cls||'')+'" data-pile="'+pl.id+'"'+disabled+'><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n,i){
+  return '<span class="pile-need" style="padding-right:6px">'+n+'<button type="button" onclick="event.stopPropagation();unsortNeed(\''+pl.id+'\','+i+')" style="background:none;border:none;color:var(--mute);font-size:1rem;line-height:1;padding:0 0 0 6px;cursor:pointer;font-family:inherit" aria-label="Remove">×</button></span>';
+}).join("")+'</div>';
   }).join("")+'</div><div class="game-actions"><button class="btn btn-ghost" onclick="abandonSort()">Stop</button></div>';
   document.querySelectorAll('#pileGrid .pile').forEach(function(el){
     el.onclick=function(){
@@ -1627,6 +1640,17 @@ function swapDeal(){
   renderPlay();
 }
 window.swapDeal=swapDeal;
+function unsortSwapNeed(pileId, idx){
+  var p = state.play;
+  var arr = p.swapSorted[pileId];
+  if(!arr || !arr[idx]) return;
+  var name = arr[idx];
+  arr.splice(idx, 1);
+  var cardIdx = p.swapCards.findIndex(function(c){return c.name === name});
+  if(cardIdx >= 0) p.swapIdx = cardIdx;
+  renderPlay();
+}
+window.unsortSwapNeed=unsortSwapNeed;  
 function renderSwapSort(c){
   var p = state.play;
   if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
@@ -1641,7 +1665,9 @@ function renderSwapSort(c){
   c.innerHTML = '<div class="play-hero"><h1>Swap and compare</h1><p>Card '+(p.swapIdx+1)+' of '+p.swapCards.length+'. Sort privately.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px"><div class="dc-name" style="font-size:1.2rem">'+current.name+'</div><div class="dc-tag">'+L[current.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+current.desc+'</div></div></div><div class="pile-grid" id="swapPileGrid">'+piles.map(function(pl){
     var needs = p.swapSorted[pl.id] || [];
     var disabled = (pl.id==="emergency" && emCount>=3) ? ' style="opacity:.5;pointer-events:none"' : '';
-    return '<div class="pile '+(pl.cls||'')+'" data-pile="'+pl.id+'"'+disabled+'><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+'</div>';
+    return '<div class="pile '+(pl.cls||'')+'" data-pile="'+pl.id+'"'+disabled+'><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n,i){
+  return '<span class="pile-need" style="padding-right:6px">'+n+'<button type="button" onclick="event.stopPropagation();unsortSwapNeed(\''+pl.id+'\','+i+')" style="background:none;border:none;color:var(--mute);font-size:1rem;line-height:1;padding:0 0 0 6px;cursor:pointer;font-family:inherit" aria-label="Remove">×</button></span>';
+}).join("")+'</div>';
   }).join("")+'</div><div class="game-actions"><button class="btn btn-ghost" onclick="abandonSwap()">Stop</button></div>';
   document.querySelectorAll('#swapPileGrid .pile').forEach(function(el){
     el.onclick=function(){
