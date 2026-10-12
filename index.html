@@ -404,7 +404,7 @@ p{max-width:72ch}
       <div class="safety-note">Reflection tool, not therapy or diagnosis.</div>
     </div>
     <div class="page" id="page-tree">
-      <div class="tree-map-instructions"><h2>Your Personal Tree</h2><p>Your needs, mapped by layer. Emergencies ringed in red. Tap any need to open strategies.</p></div>
+      <div class="tree-map-instructions"><h2>Your Personal Tree</h2><p>Your needs, mapped by layer. Emergencies ringed in red.</p><p style="font-size:.85rem;color:var(--moss);margin-top:10px;font-weight:500">Tap any need to open its strategies and write your plan →</p></div>
       <div class="tm-legend">
         <div class="tm-legend-item"><span class="dot healthy"></span>Layer healthy</div>
         <div class="tm-legend-item"><span class="dot moderate"></span>Layer under strain</div>
@@ -1170,7 +1170,32 @@ function renderReframesFor(layer){
     });
   });
   plans = plans.slice(0, 4);
+// Build the manifesto: all emergency needs across all layers
+  var manifesto = [];
+  LORDER.forEach(function(layer){
+    (state.emergencyPicks[layer] || []).forEach(function(name){
+      manifesto.push({layer: layer, name: name});
+    });
+  });
 
+  var manifestoHtml = "";
+  if(manifesto.length > 0){
+    manifestoHtml =
+      '<div class="sticky-section-title">Your non-negotiables</div>'+
+      '<div style="max-width:640px;margin:0 auto 24px;background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:20px">'+
+        manifesto.map(function(m, i){
+          var plan = state.ifThenAction[m.name] ? ('If '+ (state.ifThenCue[m.name]||'…') +', then I will '+ state.ifThenAction[m.name] +'.') : null;
+          return '<div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:'+(i<manifesto.length-1?'1px solid var(--line)':'none')+'">'+
+            '<div style="font-family:var(--font-display);font-weight:700;font-size:.85rem;color:var(--mute);flex-shrink:0;min-width:20px;padding-top:2px">'+(i+1)+'</div>'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25">'+m.name+'</div>'+
+              '<div style="font-size:.72rem;color:'+Lcolor[m.layer]+';text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:2px">'+L the[m.layer]+'</div>'+
+              (plan?'<div style="font-size:.85rem;color:var(--mute);font-style:italic;margin-top:6px">'+plan+'</div>':'<div style="font-size:.8rem;color:var(--mute);margin-top:6px"><a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+m.name.replace(/'/g,"\\'")+'\')" style="color:var(--moss);text-decoration:none">Write the plan →</a></div>')+
+            '</div>'+
+          '</div>';
+        }).join("")+
+      '</div>';
+  }
   var focusHtml = "";
   if(plans.length > 0){
     focusHtml =
@@ -1210,6 +1235,7 @@ function renderReframesFor(layer){
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
 
   body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
+    manifestoHtml+
     focusHtml+
     fakeDoorHtml+
     '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
@@ -1429,9 +1455,9 @@ function openDrawer(layer, name){
           var sel = (chosen === a) || (!chosen && i === idx);
           return '<button type="button" class="drawer-action'+(sel?' selected':'')+'" data-idx="'+i+'">'+a+'</button>';
         }).join("")+'</div></div>'+
-      '<div class="drawer-section">'+
-        '<div class="ds-label">If-then plan</div>'+
-        '<p style="font-size:.82rem;color:var(--mute);margin-bottom:8px">The research on behavior change is clear: vague plans fail. Specific plans work. Write both halves in your own words.</p>'+
+      '<div class="drawer-section" style="border:1.5px solid '+(chosen&&!(cueVal&&thenVal)?'var(--moss)':'var(--line)')+';border-radius:var(--radius-sm);padding:14px;background:'+(chosen&&!(cueVal&&thenVal)?'rgba(91,143,185,.04)':'transparent')+'">'+
+        '<div class="ds-label">If-then plan'+(chosen&&!(cueVal&&thenVal)?' · next step':(cueVal&&thenVal?' · set':''))+'</div>'+
+      '<p style="font-size:.82rem;color:var(--mute);margin-bottom:8px">The research on behavior change is clear: vague plans fail. Specific plans work. Write both halves in your own words.</p>'+
         '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.92rem">'+
           '<span style="font-weight:600">If</span>'+
           '<input type="text" id="drawerCue" placeholder="it\u2019s 6pm and I\u2019m still working" value="'+cueVal.replace(/"/g,'&quot;')+'" style="flex:1;min-width:160px;padding:10px 12px;border:1.5px solid var(--line);border-radius:var(--radius-xs);background:var(--card);font-family:var(--font-body);font-size:.88rem;color:var(--ink)">'+
