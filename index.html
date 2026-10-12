@@ -1188,24 +1188,23 @@ function renderToday(){
   var manifestoHtml = "";
   if(manifesto.length > 0){
     manifestoHtml =
-      '<div class="sticky-section-title">Your non-negotiables</div>'+
-      '<div style="max-width:640px;margin:0 auto 24px;background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:20px">'+
+      '<div class="sticky-section-title" style="margin-top:32px">Your non-negotiables</div>'+
+      '<div style="max-width:640px;margin:0 auto 8px;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:6px 14px">'+
       manifesto.map(function(m, i){
           var plan = state.ifThenAction[m.name] ? ('If '+ (state.ifThenCue[m.name]||'…') +', then I will '+ state.ifThenAction[m.name] +'.') : null;
           var safe = m.name.replace(/'/g, "\\'");
-          return '<div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:'+(i<manifesto.length-1?'1px solid var(--line)':'none')+'">'+
-            '<div style="font-family:var(--font-display);font-weight:700;font-size:.85rem;color:var(--mute);flex-shrink:0;min-width:20px;padding-top:2px">'+(i+1)+'</div>'+
-            '<div style="flex:1;min-width:0">'+
-              '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25">'+m.name+'</div>'+
-              '<div style="font-size:.72rem;color:'+Lcolor[m.layer]+';text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:2px">'+L[m.layer]+'</div>'+
-              (plan?'<div style="font-size:.85rem;color:var(--mute);font-style:italic;margin-top:6px">'+plan+'</div>':'<div style="font-size:.8rem;color:var(--mute);margin-top:6px"><a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+safe+'\')" style="color:var(--moss);text-decoration:none">Write the plan →</a></div>')+
-            '</div>'+
-            '<button type="button" onclick="removeFromManifesto(\''+m.layer+'\',\''+safe+'\')" style="background:none;border:none;color:var(--mute);font-size:1.2rem;line-height:1;padding:4px 4px 0;cursor:pointer;font-family:inherit;flex-shrink:0" aria-label="Remove">×</button>'+
+          return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:'+(i<manifesto.length-1?'1px solid var(--line)':'none')+'">'+
+            '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.2;flex:1;min-width:0;color:'+Lcolor[m.layer]+'">'+m.name+'</div>'+
+            (plan?
+              '<div style="font-size:.78rem;color:var(--mute);font-style:italic;flex:1.4;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+plan+'</div>'
+              :
+              '<a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+safe+'\')" style="font-size:.75rem;color:var(--moss);text-decoration:none;flex:0 0 auto">Write plan →</a>'
+            )+
+            '<button type="button" onclick="removeFromManifesto(\''+m.layer+'\',\''+safe+'\')" style="background:none;border:none;color:var(--mute);font-size:1.1rem;line-height:1;padding:0 2px;cursor:pointer;font-family:inherit;flex-shrink:0" aria-label="Remove">×</button>'+
           '</div>';
         }).join("")+
       '</div>';
   }
-
   var focusHtml = "";
   if(plans.length > 0){
     focusHtml =
@@ -1246,7 +1245,6 @@ function renderToday(){
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
 
   body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
-    manifestoHtml+
     focusHtml+
     fakeDoorHtml+
     '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
@@ -1264,6 +1262,7 @@ function renderToday(){
       '<button class="btn btn-ghost btn-small" onclick="navigateTo(\'diagnostic\')">Retake the diagnostic</button>'+
     '</div>'+
   '</div>'+
+    manifestoHtml+
   '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
 }
 
