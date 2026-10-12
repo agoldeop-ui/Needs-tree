@@ -22,7 +22,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{min-height:100dvh;line-height:1.6;font-family:var(--font-body);font-size:16px;color:var(--ink);background:var(--bg)}
-img,svg{display:block;max-width:100%}
 button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
 h1,h2,h3,h4{line-height:1.2;font-family:var(--font-display)}
 p{max-width:72ch}
@@ -41,15 +40,15 @@ p{max-width:72ch}
 .sidebar-footer{padding:16px 24px;font-size:.78rem;color:var(--mute);border-top:1px solid var(--line)}
 .sidebar-footer a{display:block;padding:4px 0;text-decoration:none;color:inherit}
 .main{flex:1;margin-left:240px;padding:32px 40px 80px;max-width:100%}
+.mobile-header{display:none;align-items:center;gap:12px;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);position:sticky;top:0;z-index:50}
+.mobile-header button{padding:8px;border-radius:var(--radius-xs);background:var(--bg);border:1px solid var(--line);display:flex;align-items:center}
+.mobile-header span{font-family:var(--font-display);font-weight:700;font-size:1.2rem}
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%);box-shadow:var(--shadow-lg)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0;padding:20px 16px 60px}
   .mobile-header{display:flex}
 }
-.mobile-header{display:none;align-items:center;gap:12px;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);position:sticky;top:0;z-index:50}
-.mobile-header button{padding:8px;border-radius:var(--radius-xs);background:var(--bg);border:1px solid var(--line);display:flex;align-items:center}
-.mobile-header span{font-family:var(--font-display);font-weight:700;font-size:1.2rem}
 .page{display:none}
 .page.active{display:block}
 .onboarding{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;max-width:520px;margin:0 auto}
@@ -203,14 +202,12 @@ p{max-width:72ch}
 .journal-entry{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:12px}
 .journal-entry .je-date{font-size:.78rem;color:var(--mute);margin-bottom:6px}
 .journal-entry .je-card{font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px}
-.journal-entry .je-reflection{font-size:.9rem;line-height:1.6}
+.journal-entry .je-reflection{font-size:.9rem;line-height:1.6;white-space:pre-wrap}
+.journal-entry .je-delete{font-size:.78rem;color:var(--mute);background:none;border:none;cursor:pointer;padding:4px 0;margin-top:6px}
+.journal-entry .je-delete:hover{color:var(--c-strained)}
 .workshop-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin:24px auto;max-width:640px;text-align:center}
 .workshop-card .wc-badge{display:inline-block;background:var(--moss);color:#fff;padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
 .workshop-card h2{font-size:1.5rem;margin-bottom:8px}
-.workshop-card .wc-price{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--moss);margin:12px 0}
-.workshop-card .wc-includes{text-align:left;max-width:420px;margin:16px auto;list-style:none}
-.workshop-card .wc-includes li{padding:6px 0 6px 24px;position:relative;font-size:.92rem}
-.workshop-card .wc-includes li:before{content:"\2713";position:absolute;left:0;font-weight:700;color:var(--moss)}
 .workshop-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:20px auto 0}
 .workshop-form input{padding:12px 16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg);font-size:.92rem;color:var(--ink)}
 .workshop-form input:focus{outline:none;border-color:var(--moss)}
@@ -267,7 +264,7 @@ p{max-width:72ch}
 @media(max-width:600px){.drawer{width:100%}}
 .overview-summary{text-align:center;font-size:.92rem;color:var(--mute);margin-bottom:24px;padding:12px;background:var(--card);border-radius:var(--radius-sm);border:1px solid var(--line)}
 .overview-summary strong{color:var(--ink)}
-  .tree-state{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);overflow:hidden;margin-bottom:20px}
+.tree-state{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);overflow:hidden;margin-bottom:20px}
 .ts-row{border-bottom:1px solid var(--line);cursor:pointer;transition:background var(--transition)}
 .ts-row:last-child{border-bottom:none}
 .ts-row:hover{background:var(--bg)}
@@ -346,8 +343,7 @@ p{max-width:72ch}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
 </style>
 </head>
-/* ===== PART 1 END ===== */
-  <body>
+<body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
@@ -385,22 +381,7 @@ p{max-width:72ch}
     <div class="page" id="page-play"><div id="playContent"></div></div>
     <div class="page" id="page-learn">
       <div class="today-hero"><h1>Learn</h1><p>Short pieces about needs, why they hide, and how to work with them. Written in plain language.</p></div>
-      <div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)">
-        <div class="rd-context">Featured</div>
-        <h2 style="font-size:1.3rem">Why I built this</h2>
-        <p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it — not a mission statement, just what happened when I realised I'd been treating a need as a problem for years.</p>
-        <div class="action-row left" style="margin-top:14px"><button class="btn btn-outline btn-small" onclick="openArticle('why-i-built-this')">Read →</button></div>
-      </div>
-      <div class="results-detail" style="max-width:720px;margin:0 auto 24px">
-        <h2 style="font-size:1.2rem">Read by topic</h2>
-        <p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">Sorted by your strained layers if you've done the diagnostic.</p>
-        <div id="learnArticleGrid" class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>
-      </div>
-      <div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent">
-        <h2 style="font-size:1.1rem">Partners</h2>
-        <p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coaches, therapists, and creators whose work lines up with this one. Coming soon.</p>
-        <div class="game-grid" style="margin-top:16px" id="learnPartnersGrid"></div>
-      </div>
+      <div id="learnBody"></div>
       <div class="safety-note">Reflection tool, not therapy or diagnosis.</div>
     </div>
     <div class="page" id="page-tree">
@@ -462,7 +443,11 @@ p{max-width:72ch}
 <div class="modal-overlay" id="addNeedModal"><div class="modal"><button class="modal-close" onclick="closeModal()">&times;</button><h3 id="modalTitle">Add a need</h3><p id="modalSubtitle">Tap a need to add it to this layer.</p><div class="modal-grid" id="modalGrid"></div></div></div>
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer"></div>
+
 <script>
+/* ============================================================
+   DATA
+   ============================================================ */
 var L = {roots:"Roots", trunk:"Trunk", branches:"Branches", leaves:"Leaves", fruits:"Fruits"};
 var LORDER = ["roots","trunk","branches","leaves","fruits"];
 var Ldesc = {
@@ -476,7 +461,15 @@ var Lcolor = {
   roots:"var(--c-roots)", trunk:"var(--c-trunk)", branches:"var(--c-branches)",
   leaves:"var(--c-leaves)", fruits:"var(--c-fruits)"
 };
+var LINE = {
+  roots:"Nothing above this works well on an empty tank. Feed the body and the ground under you first.",
+  trunk:"Without a clear sense of what you want, every relationship becomes a negotiation about your worth.",
+  branches:"Loneliness doesn't always need more people. Often it needs more of you shown to the people you have.",
+  leaves:"Output can't hold you up. If your worth rides on producing, one bad season breaks it.",
+  fruits:"Purpose can't be forced. It shows up when the layers below it are fed."
+};
 
+/* Core needs by layer (from big block) */
 var C = [
   ["roots","Clean air and water","What the body takes in"],
   ["roots","Nutritious food","Fuel you can rely on"],
@@ -555,61 +548,24 @@ var C = [
   ["fruits","Transcendence","Awe, meaning, unity beyond self"]
 ];
 
-var D = [
-  ["Control","Need to shape outcomes; masks fear of chaos","Micromanaging, ultimatums, threats","Clear routines and boundaries"],
-  ["Power","Desire for influence, leadership, dominance","Coercion, abuse, exploitation, aggression","Leading with fairness, speaking up, advocating your worth"],
-  ["Specialness","Need to feel exceptional, unique","Arrogance, entitlement, dismissing others","Pursuing mastery, celebrating growth, sharing to inspire"],
-  ["Attention","Need to be seen, admired, validated","Drama, exaggeration, creating crises","Asking to be listened to, sharing your story, seeking feedback"],
-  ["Revenge / Justice","Drive to restore fairness or retaliate","Vindictiveness, grudge-holding, sabotage","Setting boundaries, expressing pain, reclaiming your voice"],
-  ["Freedom from Responsibility","Desire to let go, avoid burdens","Avoiding tasks, expecting others to carry your load","Rest without guilt, delegating, saying no"],
-  ["Dependency","Need to rely on others","Codependency, helplessness, constant reassurance","Asking for support, being emotionally open, receiving help"],
-  ["Aggression / Anger","Need to push back, assert boundaries","Explosiveness, cruelty, passive aggression","Firmly telling others to stop, expressing anger safely"],
-  ["Destruction / Chaos","Need to tear down structures or be free","Sabotage, impulsivity, burning bridges","Letting go of the toxic, creatively breaking rules"],
-  ["Dark Curiosity","Exploration of taboo or morbid topics","Obsession with darkness, glamorizing pain","Reading true crime, shadow psychology, asking forbidden questions"],
-  ["Sexual Dominance","Erotic needs involving power dynamics","Coercion, manipulation, using sex for control","Exploring consensual dynamics safely, owning erotic identity"]
-];
-
-var S = [
-  "I need you to text me back right now.",
-  "I'll just do it myself.",
-  "I'm fine, it's nothing.",
-  "If I work harder, they'll finally notice me.",
-  "I'll go quiet until they figure it out.",
-  "They should just know.",
-  "I can't say no to this.",
-  "I check their phone, just to be sure.",
-  "I'll make myself indispensable so they can't leave.",
-  "I'm not going to ask — if they cared, they'd offer.",
-  "I'll disappear for a few days so they worry.",
-  "I'll prove I'm the best so no one can replace me.",
-  "I'll agree to everything and resent them later.",
-  "I'll fix their problems so they need me.",
-  "I'll create a crisis so someone has to respond.",
-  "I'll compete with everyone to prove I matter.",
-  "I'll stop resting until this is done.",
-  "I'll make sure they feel guilty for not being there.",
-  "I'll take control of every detail so nothing goes wrong.",
-  "I'll stay in this situation even though it hurts, because at least it's familiar."
-];
-
+/* Diagnostic — 15 statements, 3 per layer, context-aware */
 var DIAG_Q_SELF = [
-  {layer:"roots", text:"I often feel physically drained, tired, or unwell — sleep, food, or movement feel like a chore."},
-  {layer:"roots", text:"My living or working environment feels unstable, unsafe, or unpredictable."},
-  {layer:"roots", text:"I struggle to get my basic physical needs met — rest, nutrition, a body that works."},
-  {layer:"trunk", text:"I feel like I've lost touch with who I am outside of my roles."},
-  {layer:"trunk", text:"I struggle to make decisions or set boundaries because I don't know what I truly want."},
-  {layer:"trunk", text:"I often hide my true opinions or self to keep the peace or fit in."},
-  {layer:"branches", text:"I feel lonely or disconnected, even when I'm around other people."},
-  {layer:"branches", text:"I don't feel truly seen, heard, or understood by the people closest to me."},
-  {layer:"branches", text:"I give more to my relationships than I receive, and it leaves me resentful."},
-  {layer:"leaves", text:"I feel burned out. Rest doesn't seem to restore my energy."},
-  {layer:"leaves", text:"I can't remember the last time I did something purely for fun, without a goal."},
-  {layer:"leaves", text:"I feel like I'm constantly doing, but never actually being."},
-  {layer:"fruits", text:"I feel like I'm just going through the motions — nothing feels meaningful."},
-  {layer:"fruits", text:"I don't feel like I'm contributing to anything larger than myself."},
-  {layer:"fruits", text:"I lack a sense of direction or purpose in my life right now."}
+  {layer:"roots", text:"I'm tired in a way sleep doesn't fix."},
+  {layer:"roots", text:"My body gets whatever is left after everything else."},
+  {layer:"roots", text:"Home, money, or health feels shaky right now."},
+  {layer:"trunk", text:"I'm not sure what I actually want."},
+  {layer:"trunk", text:"I say yes when I mean no."},
+  {layer:"trunk", text:"I hide what I really think to keep the peace."},
+  {layer:"branches", text:"I feel lonely even around people."},
+  {layer:"branches", text:"No one close to me really gets what's going on with me."},
+  {layer:"branches", text:"I give more than I get back, and I'm keeping score."},
+  {layer:"leaves", text:"Resting feels like falling behind."},
+  {layer:"leaves", text:"I can't remember the last time I did something just for fun."},
+  {layer:"leaves", text:"I'm always doing, never just being."},
+  {layer:"fruits", text:"I'm going through the motions."},
+  {layer:"fruits", text:"Nothing I do feels like it matters to anyone."},
+  {layer:"fruits", text:"I don't know what I'm building toward."}
 ];
-
 var DIAG_Q_BY_CONTEXT = {
   self: DIAG_Q_SELF,
   professional: [
@@ -682,6 +638,16 @@ var DIAG_Q_BY_CONTEXT = {
   ]
 };
 
+/* Contexts (from big block) */
+var CONTEXTS = [
+  {id:"self", icon:"O", title:"Just me", desc:"A full, personal map"},
+  {id:"professional", icon:"P", title:"Professional", desc:"Work, boundaries, burnout"},
+  {id:"couple", icon:"C", title:"A couple", desc:"Two trees, one shared space"},
+  {id:"parent", icon:"F", title:"Parent & child", desc:"Care, patience, capacity"},
+  {id:"team", icon:"T", title:"Working team", desc:"Shared conditions, shared output"}
+];
+
+/* Context-specific ordering of needs */
 var PRIORITY_BY_CONTEXT = {
   self: null,
   professional: {
@@ -693,14 +659,14 @@ var PRIORITY_BY_CONTEXT = {
   },
   couple: {
     roots:["Rest and sleep","Stability and consistency","Health","Nutritious food","Physical safety"],
-    trunk:["Autonomy","Authenticity","Identity","Self-knowledge","Freedom","Boundaries","Self-expression","Privacy"],
+    trunk:["Autonomy","Authenticity","Identity","Self-knowledge","Freedom","Consent","Self-expression","Privacy"],
     branches:["Intimacy","Connection","Emotional safety","Mutuality","Trust","Compassion","Affection","Companionship","Love"],
     leaves:["Play","Fun","Relaxation","Leisure","Celebration","Beauty"],
     fruits:["Purpose","Growth","Meaning-making","Fulfillment","Transcendence"]
   },
   parent: {
     roots:["Rest and sleep","Nutritious food","Health","Stability and consistency","Physical safety","Movement and exercise"],
-    trunk:["Autonomy","Identity","Boundaries","Self-knowledge","Self-advocacy","Privacy","Freedom","Self-expression"],
+    trunk:["Autonomy","Identity","Consent","Self-knowledge","Self-advocacy","Privacy","Freedom","Self-expression"],
     branches:["Support","Belonging","Peer community","Companionship","Emotional safety","Empathy","Mutuality"],
     leaves:["Relaxation","Play","Leisure","Beauty","Production","Fun"],
     fruits:["Purpose","Meaning-making","Growth","Fulfillment","Contribution"]
@@ -714,6 +680,16 @@ var PRIORITY_BY_CONTEXT = {
   }
 };
 
+/* Layer info (from big block) */
+var LAYER_INFO = {
+  roots:{what:"Roots are the environment-dependent needs that make life livable: safety, rest, food, shelter, health, stability. They are not preferences — they are conditions. Without them the whole tree destabilizes.",solves:"When roots are satisfied, you have energy to show up, a body that doesn't fight you, and a baseline of safety from which you can make choices instead of reacting.",priority:"You cannot fix a starving root by producing more leaves. If roots are strained, no amount of rest, creativity, or accomplishment will hold. Fix the foundation first."},
+  trunk:{what:"The trunk is your internal structure: identity, autonomy, values, boundaries, self-knowledge. It's the backbone that lets you stand up without collapsing into what others want.",solves:"When the trunk is strong, you know what you want, you can say no without guilt, and your decisions come from who you are — not from pressure or fear.",priority:"A strained trunk makes every branch fragile. If you don't know who you are, relationships become negotiations about your worth. Stabilize the trunk before reaching outward."},
+  branches:{what:"Branches are how you reach outward: connection, belonging, trust, intimacy, support, being seen. They are the relational layer — the first point of contact with the world.",solves:"When branches are healthy, you feel met. You can ask for what you need, receive help, and be alone without feeling abandoned.",priority:"Branches can only hold what the trunk and roots support. If you're trying to fix loneliness with more contact, but your roots are exhausted, you'll keep burning out in the same relationships."},
+  leaves:{what:"Leaves are what you produce: work, creativity, caretaking, output, play. They are seasonal — they regenerate when the tree is healthy, and they die back when it isn't.",solves:"When leaves are healthy, you have energy to create, to play, to contribute without resentment. Rest actually restores you.",priority:"Treating leaves as roots causes collapse. If your output is the only thing holding your identity together, you are one bad season away from burnout. The leaves cannot feed the tree."},
+  fruits:{what:"Fruits are contribution, purpose, meaning, legacy. They appear naturally when conditions are right — they cannot be forced, and their absence is not failure.",solves:"When fruits are present, your life feels like it's about something. Your actions connect to something larger than the moment.",priority:"Fruits cannot grow on a starving tree. If you're chasing purpose while your roots and trunk are collapsing, you're asking a dying tree to bear fruit. Feed the lower layers first."}
+};
+
+/* Reframes: excuse / strategy / actions per need (subset here; fallback provided) */
 var REFRAME_BASE = {
   "Rest and sleep":{excuse:"I'll rest when the work is done.",strategy:"Scrolling until 2am to 'unwind', then waking up exhausted.",actions:["Set a hard-stop alarm for work. Create a 20-minute wind-down with no screens.","Move bedtime 30 minutes earlier for one week. Just one week.","Leave your phone outside the bedroom tonight.","Take one nap this week, without apologising.","Block 9 hours in bed for three nights. No exceptions."]},
   "Nutritious food":{excuse:"I don't have time to cook — I'll eat properly when things calm down.",strategy:"Skipping meals, then bingeing on whatever's fastest.",actions:["Batch-cook one thing on Sunday. Keep one no-decision meal ready.","Eat one meal this week without a screen. Sit down.","Buy one fruit you actually like. Put it where you'll see it.","Keep one emergency snack in your bag at all times.","Cook one meal this week where the only goal is that you enjoy it."]},
@@ -722,7 +698,7 @@ var REFRAME_BASE = {
   "Autonomy":{excuse:"I have to do this — there's no other way.",strategy:"Procrastination, passive resistance, or asking permission for things you don't need permission for.",actions:["Make one small decision today without consulting anyone.","Change one thing about your routine that you've been doing 'because'.","Say 'I'll decide this myself' about one low-stakes thing.","Do one thing this week your way, even if it's slower.","Ask: whose voice is this rule in?"]},
   "Authenticity":{excuse:"If I show them the real me, they'll leave.",strategy:"Code-switching until you don't know which version is real.",actions:["Share one true opinion with one safe person.","Wear something that feels like you, not the role.","Write one thing you believe that you never say out loud.","Say 'I actually think...' once this week.","Stop apologising for one thing you're not sorry about."]},
   "Identity":{excuse:"I don't know who I am anymore — I've been everyone's everything.",strategy:"Filling every hour with roles so there's no space to notice the gap.",actions:["Write down three things you liked before you started performing.","Spend 20 minutes alone with no task.","List five things true about you that aren't your roles.","Do one thing no one in your life knows about.","Write 'I am someone who...' and finish it three ways."]},
-  "Boundaries":{excuse:"If I say no, they'll be upset with me.",strategy:"Saying yes, then resenting them silently.",actions:["Practice one small no this week.","Use 'Let me think about it' as your default response.","Say no to one thing today, no explanation.","Block 30 minutes nobody can book.","Write down the last time you said yes and wished you hadn't."]},
+  "Consent":{excuse:"If I say no, they'll be upset with me.",strategy:"Saying yes, then resenting them silently.",actions:["Practice one small no this week.","Use 'Let me think about it' as your default response.","Say no to one thing today, no explanation.","Block 30 minutes nobody can book.","Write down the last time you said yes and wished you hadn't."]},
   "Emotional safety":{excuse:"If I show how I really feel, I'll be too much.",strategy:"Shutting down, people-pleasing, or exploding after months of silence.",actions:["Write the feeling down. Then share one small piece with someone safe.","Name one feeling out loud today.","Tell someone 'I need a minute' before you shut down.","Share one vulnerable thing with someone you trust.","Leave one conversation without pretending to be fine."]},
   "Validation":{excuse:"I shouldn't need validation — that's needy.",strategy:"Achieving more, hoping someone will finally notice.",actions:["Ask one person directly: 'I need to hear that this mattered.'","Tell someone about something you did this week.","Write down three things you're proud of. Read them out loud.","Ask for feedback on one specific thing.","Let a compliment land. Just say thank you."]},
   "Belonging":{excuse:"I don't fit anywhere — I've tried.",strategy:"Staying in groups that don't fit rather than risking the search for ones that do.",actions:["Find one space tied to something you care about. Go once.","Reach out to one person who shares something specific.","Search for one group around a real interest.","Reconnect with one person who knew you before this season.","Go somewhere you'd feel like a regular by the third visit."]},
@@ -781,11 +757,9 @@ var REFRAME_BASE = {
   "Mastery":{excuse:"I'm already good enough at this.",strategy:"Staying at the same level.",actions:["Pick one thing to get better at. 20 minutes.","Ask someone better what they do differently.","Do one thing badly on purpose.","Track one thing you're improving at.","Do one rep of something. Just one."]},
   "Independence":{excuse:"I can't do it alone.",strategy:"Waiting for someone else.",actions:["Do one thing entirely on your own.","Take one small action without asking.","Go somewhere alone. Just once.","Make one decision without consulting anyone.","Do one thing you usually outsource."]},
   "Freedom from Responsibility":{excuse:"I can't take a break — everything falls apart.",strategy:"Pushing through, then burning out.",actions:["Take one afternoon off.","Say 'not today' to one thing.","Let something small go undone.","Hand one task over. Don't take it back.","Tell someone you need a break."]},
-  "Consent":{excuse:"It's not worth the awkwardness to say no.",strategy:"Going along with things.",actions:["Practice 'Let me think about it.'","Say no to one thing without apology.","Notice one moment you went along with something.","Ask for something, notice how they respond.","Say 'I don't want to' instead of 'I can't'."]},
   "Identity affirmation":{excuse:"It doesn't matter if they get it right.",strategy:"Letting it slide, then feeling invisible.",actions:["Correct one person gently this week.","Say your pronouns out loud.","Tell one person how you'd like to be referred to.","Write down the words that feel like you.","Notice when someone gets it right."]},
   "Understanding":{excuse:"I don't really need to understand — I just need to cope.",strategy:"Staying confused.",actions:["Ask one clarifying question.","Write what you understand and what you don't.","Look up one thing you've been guessing about.","Ask someone to explain.","Write the messy version of what you think is happening."]}
 };
-
 function reframeFor(name){
   if(REFRAME_BASE[name]) return REFRAME_BASE[name];
   return {
@@ -795,28 +769,84 @@ function reframeFor(name){
   };
 }
 
-var CONTEXTS = [
-  {id:"self", icon:"O", title:"Just me", desc:"A full, personal map"},
-  {id:"professional", icon:"P", title:"Professional", desc:"Work, boundaries, burnout"},
-  {id:"couple", icon:"C", title:"A couple", desc:"Two trees, one shared space"},
-  {id:"parent", icon:"F", title:"Parent & child", desc:"Care, patience, capacity"},
-  {id:"team", icon:"T", title:"Working team", desc:"Shared conditions, shared output"}
+/* Needs-layer for emergency / tree state */
+function needsForLayer(layer){
+  var priority = PRIORITY_BY_CONTEXT[state.context] && PRIORITY_BY_CONTEXT[state.context][layer];
+  var rows = C.filter(function(n){return n[0]===layer});
+  if(!priority || priority.length===0) return rows;
+  var inPriority = [], rest = [];
+  rows.forEach(function(n){ if(priority.indexOf(n[1])>=0) inPriority.push(n); else rest.push(n); });
+  inPriority.sort(function(a,b){return priority.indexOf(a[1])-priority.indexOf(b[1])});
+  return inPriority.concat(rest);
+}
+function allCoreNeedsOrdered(){
+  if(!state.context || state.context==="self") return C.slice();
+  var out = [];
+  LORDER.forEach(function(layer){needsForLayer(layer).forEach(function(n){out.push(n)})});
+  return out;
+}
+
+/* Strategies for the Guess the Need game */
+var STRAT = [
+  ["I need you to text me back right now.","Validation"],
+  ["I'll just do it myself.","Support"],
+  ["I'm fine, it's nothing.","Authenticity"],
+  ["If I work harder, they'll finally notice.","Recognition"],
+  ["I'll go quiet until they figure it out.","Connection"],
+  ["They should just know.","Empathy"],
+  ["I can't say no to this.","Consent"],
+  ["I'll make myself indispensable so they can't leave.","Belonging"],
+  ["I'll agree to everything and resent them later.","Consent"],
+  ["I'll fix their problems so they need me.","Mutuality"],
+  ["I'll create a crisis so someone has to respond.","Attention"],
+  ["I'll compete with everyone to prove I matter.","Recognition"],
+  ["I'll stop resting until this is done.","Rest and sleep"],
+  ["I'll take control of every detail so nothing goes wrong.","Stability and consistency"],
+  ["I'll stay in this situation even though it hurts, because at least it's familiar.","Stability and consistency"]
 ];
 
+/* Onboarding */
 var ONBOARD = [
   {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><path d="M60 20 C40 20 25 35 25 55 C25 65 30 74 40 79 C32 84 28 94 28 105 L92 105 C92 94 88 84 80 79 C90 74 95 65 95 55 C95 35 80 20 60 20 Z" fill="none" stroke="#5B8FB9" stroke-width="2"/><path d="M60 40 L60 90" stroke="#6B7F94" stroke-width="3"/></svg>', title:"You understand yourself. Nothing changes.", body:"Because you might be feeding the wrong layer. This is not another productivity hack, not therapy, and not motivation. It is a way to find words for what you actually need — before it turns into behavior you regret."},
   {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><path d="M60 105 L60 60" stroke="#6B7F94" stroke-width="4"/><path d="M60 60 C60 40 40 35 35 25" stroke="#5B8FB9" stroke-width="2" fill="none"/><path d="M60 60 C60 40 80 35 85 25" stroke="#5B8FB9" stroke-width="2" fill="none"/><path d="M60 80 C60 70 50 68 45 62" stroke="#4A9DB8" stroke-width="2" fill="none"/><path d="M60 80 C60 70 70 68 75 62" stroke="#4A9DB8" stroke-width="2" fill="none"/><circle cx="35" cy="22" r="6" fill="#7A6B9C"/><circle cx="85" cy="22" r="6" fill="#7A6B9C"/></svg>', title:"Your needs are a tree, not a list.", body:"Roots feed everything. The trunk holds you upright. Branches reach outward. Leaves are seasonal output. Fruits appear when the tree is healthy. When you know which layer is starving, the fix becomes obvious."},
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#5B8FB9">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#5C7186">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layers are under strain, pick up to three emergencies per strained layer, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
+  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#5B8FB9">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#5C7186">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layers are under strain, pick up to three emergencies across the whole tree, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
 ];
 
-var LAYER_INFO = {
-  roots:{what:"Roots are the environment-dependent needs that make life livable: safety, rest, food, shelter, health, stability. They are not preferences — they are conditions. Without them the whole tree destabilizes.",solves:"When roots are satisfied, you have energy to show up, a body that doesn't fight you, and a baseline of safety from which you can make choices instead of reacting.",priority:"You cannot fix a starving root by producing more leaves. If roots are strained, no amount of rest, creativity, or accomplishment will hold. Fix the foundation first."},
-  trunk:{what:"The trunk is your internal structure: identity, autonomy, values, boundaries, self-knowledge. It's the backbone that lets you stand up without collapsing into what others want.",solves:"When the trunk is strong, you know what you want, you can say no without guilt, and your decisions come from who you are — not from pressure or fear.",priority:"A strained trunk makes every branch fragile. If you don't know who you are, relationships become negotiations about your worth. Stabilize the trunk before reaching outward."},
-  branches:{what:"Branches are how you reach outward: connection, belonging, trust, intimacy, support, being seen. They are the relational layer — the first point of contact with the world.",solves:"When branches are healthy, you feel met. You can ask for what you need, receive help, and be alone without feeling abandoned.",priority:"Branches can only hold what the trunk and roots support. If you're trying to fix loneliness with more contact, but your roots are exhausted, you'll keep burning out in the same relationships."},
-  leaves:{what:"Leaves are what you produce: work, creativity, caretaking, output, play. They are seasonal — they regenerate when the tree is healthy, and they die back when it isn't.",solves:"When leaves are healthy, you have energy to create, to play, to contribute without resentment. Rest actually restores you.",priority:"Treating leaves as roots causes collapse. If your output is the only thing holding your identity together, you are one bad season away from burnout. The leaves cannot feed the tree."},
-  fruits:{what:"Fruits are contribution, purpose, meaning, legacy. They appear naturally when conditions are right — they cannot be forced, and their absence is not failure.",solves:"When fruits are present, your life feels like it's about something. Your actions connect to something larger than the moment.",priority:"Fruits cannot grow on a starving tree. If you're chasing purpose while your roots and trunk are collapsing, you're asking a dying tree to bear fruit. Feed the lower layers first."}
-};
+/* Dark needs (from big block) */
+var D = [
+  ["Control","Need to shape outcomes; masks fear of chaos","Micromanaging, ultimatums, threats","Clear routines and boundaries"],
+  ["Power","Desire for influence, leadership, dominance","Coercion, abuse, exploitation, aggression","Leading with fairness, speaking up, advocating your worth"],
+  ["Specialness","Need to feel exceptional, unique","Arrogance, entitlement, dismissing others","Pursuing mastery, celebrating growth, sharing to inspire"],
+  ["Attention","Need to be seen, admired, validated","Drama, exaggeration, creating crises","Asking to be listened to, sharing your story, seeking feedback"],
+  ["Revenge / Justice","Drive to restore fairness or retaliate","Vindictiveness, grudge-holding, sabotage","Setting boundaries, expressing pain, reclaiming your voice"],
+  ["Freedom from Responsibility","Desire to let go, avoid burdens","Avoiding tasks, expecting others to carry your load","Rest without guilt, delegating, saying no"],
+  ["Dependency","Need to rely on others","Codependency, helplessness, constant reassurance","Asking for support, being emotionally open, receiving help"],
+  ["Aggression / Anger","Need to push back, assert boundaries","Explosiveness, cruelty, passive aggression","Firmly telling others to stop, expressing anger safely"],
+  ["Destruction / Chaos","Need to tear down structures or be free","Sabotage, impulsivity, burning bridges","Letting go of the toxic, creatively breaking rules"],
+  ["Dark Curiosity","Exploration of taboo or morbid topics","Obsession with darkness, glamorizing pain","Reading true crime, shadow psychology, asking forbidden questions"],
+  ["Sexual Dominance","Erotic needs involving power dynamics","Coercion, manipulation, using sex for control","Exploring consensual dynamics safely, owning erotic identity"]
+];
 
+/* Learn articles (from big block) */
+var LEARN_ARTICLES = [
+  {id:"why-i-built-this", title:"Why I built this", topic:"Start here", layer:null, summary:"The moment that started it.", body:"[Your article goes here. — to be written]"},
+  {id:"need-vs-strategy", title:"Need vs strategy", topic:"The core idea", layer:null, summary:"The single distinction the whole app is built on.", body:"[Your article goes here. — to be written]"},
+  {id:"three-emergencies", title:"Why only three emergencies", topic:"The cap", layer:null, summary:"The rule that made one user laugh.", body:"[Your article goes here. — to be written]"},
+  {id:"roots-first", title:"Why roots come first", topic:"Roots", layer:"roots", summary:"You cannot fix a starving root with more leaves.", body:"[Your article goes here. — to be written]"},
+  {id:"identity-under-pressure", title:"Identity under pressure", topic:"Trunk", layer:"trunk", summary:"What happens when you've been everyone's everything.", body:"[Your article goes here. — to be written]"},
+  {id:"alone-in-a-crowd", title:"Alone in a crowd", topic:"Branches", layer:"branches", summary:"Why connection doesn't fix loneliness.", body:"[Your article goes here. — to be written]"},
+  {id:"output-is-not-rest", title:"Why output is not rest", topic:"Leaves", layer:"leaves", summary:"Burnout isn't about working too much.", body:"[Your article goes here. — to be written]"},
+  {id:"purpose-cant-be-forced", title:"Purpose can't be forced", topic:"Fruits", layer:"fruits", summary:"Fruits appear when conditions are right.", body:"[Your article goes here. — to be written]"}
+];
+var LEARN_PARTNERS = [
+  {name:"A therapist", for:"Branches", desc:"Slots reserved for licensed therapists.", tag:"Therapy"},
+  {name:"A coach", for:"Trunk", desc:"Slots reserved for coaches.", tag:"Coaching"},
+  {name:"An educator", for:"Leaves", desc:"Slots reserved for teachers and creators.", tag:"EdTech"}
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
 var state = {
   onboardStep:0,
   context:null,
@@ -834,12 +864,13 @@ var state = {
   ifThenAction:{},
   treeNeeds:{roots:[],trunk:[],branches:[],leaves:[],fruits:[]},
   journal:[],
+  hist:[],
   darkWaitlist:[],
   fakeDoors:{save:0, dark:0},
-  play:{ view:"menu", scope:null, subScope:null, cards:[], sorted:{}, currentIdx:0, swapScope:null, swapSubScope:null, swapCards:[], swapSorted:{}, swapIdx:0, swapTop:[], swapShowAll:false, swapNotes:{}, sayItCard:null, sayItRound:1, strategyRound:[], strategyIdx:0 }
+  play:{ view:"menu", scope:null, subScope:null, cards:[], sorted:{}, currentIdx:0, sayItCard:null, sayItRound:1, strategyRound:[], strategyIdx:0 }
 };
 
-var STORAGE_KEY = "needsTree.v1";
+var STORAGE_KEY = "needsTree.v2";
 var saveTimer = null;
 function saveState(){
   if(saveTimer) clearTimeout(saveTimer);
@@ -851,8 +882,9 @@ function saveState(){
         emergencyPicks: state.emergencyPicks, nonNegotiables: state.nonNegotiables,
         chosenActions: state.chosenActions, customActions: state.customActions,
         actionIndex: state.actionIndex, ifThenCue: state.ifThenCue, ifThenAction: state.ifThenAction,
-        treeNeeds: state.treeNeeds, journal: state.journal, darkWaitlist: state.darkWaitlist,
-        fakeDoors: state.fakeDoors
+        treeNeeds: state.treeNeeds, journal: state.journal, hist: state.hist,
+        darkWaitlist: state.darkWaitlist, fakeDoors: state.fakeDoors,
+        onboardStep: state.onboardStep
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
     }catch(e){}
@@ -864,29 +896,31 @@ function loadState(){
     if(!raw) return;
     var s = JSON.parse(raw);
     Object.keys(s).forEach(function(k){ if(k in state) state[k] = s[k]; });
+    // initialize if-then / action maps if missing
+    state.ifThenCue = state.ifThenCue || {};
+    state.ifThenAction = state.ifThenAction || {};
+    state.chosenActions = state.chosenActions || {};
+    state.customActions = state.customActions || {};
+    state.actionIndex = state.actionIndex || {};
+    state.fakeDoors = state.fakeDoors || {save:0, dark:0};
+    state.hist = state.hist || [];
   }catch(e){}
 }
 
-function currentQuestions(){return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF}
-function sortByContextPriority(rows, layer){
-  var priority = PRIORITY_BY_CONTEXT[state.context] && PRIORITY_BY_CONTEXT[state.context][layer];
-  if(!priority || priority.length===0) return rows.slice();
-  var inPriority = [], rest = [];
-  rows.forEach(function(n){ if(priority.indexOf(n[1])>=0) inPriority.push(n); else rest.push(n); });
-  inPriority.sort(function(a,b){return priority.indexOf(a[1])-priority.indexOf(b[1])});
-  return inPriority.concat(rest);
-}
-function needsForLayer(layer){return sortByContextPriority(C.filter(function(n){return n[0]===layer}), layer)}
-function allCoreNeedsOrdered(){
-  if(!state.context || state.context==="self") return C.slice();
-  var out = [];
-  LORDER.forEach(function(layer){needsForLayer(layer).forEach(function(n){out.push(n)})});
-  return out;
-}
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function scoreStatus(s){if(s<=3)return "healthy";if(s<=7)return "moderate";return "strained"}
 function isEmergency(layer, name){return state.emergencyPicks[layer] && state.emergencyPicks[layer].indexOf(name)>=0}
 function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b}
+function today(){return new Date().toISOString().slice(0,10)}
+function currentQuestions(){return DIAG_Q_BY_CONTEXT[state.context] || DIAG_Q_SELF}
 
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
 function navigateTo(page){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   var el=document.getElementById('page-'+page);
@@ -906,18 +940,24 @@ window.navigateTo=navigateTo;
 document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){navigateTo(n.dataset.page)})});
 document.getElementById('menuBtn').addEventListener('click',function(){document.getElementById('sidebar').classList.toggle('open')});
 
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
 function renderOnboarding(){
   var s=ONBOARD[state.onboardStep];
   var c=document.getElementById('onboardingContent');
   c.innerHTML='<div class="step-indicator">'+ONBOARD.map(function(_,i){return '<div class="step-dot'+(i===state.onboardStep?' active':'')+'"></div>'}).join("")+'</div>'+s.icon+'<h1>'+s.title+'</h1><p>'+s.body+'</p><button class="btn btn-primary" id="onboardNext">'+(state.onboardStep<ONBOARD.length-1?'Continue':'Choose who is taking this')+'</button>'+(state.onboardStep>0?'<button class="btn btn-ghost" id="onboardBack">Back</button>':'');
   document.getElementById('onboardNext').onclick=function(){
-    if(state.onboardStep<ONBOARD.length-1){state.onboardStep++;renderOnboarding()}
-    else{state.onboardStep=0;navigateTo('context')}
+    if(state.onboardStep<ONBOARD.length-1){state.onboardStep++;saveState();renderOnboarding()}
+    else{state.onboardStep=0;saveState();navigateTo('context')}
   };
   var back=document.getElementById('onboardBack');
-  if(back)back.onclick=function(){state.onboardStep--;renderOnboarding()};
+  if(back)back.onclick=function(){state.onboardStep--;saveState();renderOnboarding()};
 }
 
+/* ============================================================
+   CONTEXT
+   ============================================================ */
 function renderContext(){
   var g=document.getElementById('contextGrid');
   g.innerHTML=CONTEXTS.map(function(c){return '<div class="context-card" data-id="'+c.id+'"><div class="cc-icon">'+c.icon+'</div><div class="cc-title">'+c.title+'</div><div class="cc-desc">'+c.desc+'</div></div>'}).join("");
@@ -937,6 +977,9 @@ function renderContext(){
   });
 }
 
+/* ============================================================
+   DIAGNOSTIC (check-in) — small file's 15 q's + big block's context logic
+   ============================================================ */
 function renderDiagnostic(){
   if(state.diagScores){renderResults();return}
   renderDiagQuestion();
@@ -947,22 +990,24 @@ function renderDiagQuestion(){
   if(state.diagCurrent>=qs.length){computeDiagResult();renderResults();return}
   var q=qs[state.diagCurrent];
   var pct=(state.diagCurrent/qs.length)*100;
-  c.innerHTML='<div class="today-hero"><h1>Which layer is starving?</h1><p>'+qs.length+' statements. Two minutes.</p></div><div class="diag-progress"><div class="diag-bar" style="width:'+pct+'%"></div></div><div class="diag-q"><div class="q-layer">'+L[q.layer]+'</div><div class="q-num">Statement '+(state.diagCurrent+1)+' of '+qs.length+'</div><div class="q-text">'+q.text+'</div><div class="diag-scale">'+[0,1,2,3,4].map(function(v){var labs=["Not me","","Sometimes","","That's me"];return '<button data-val="'+v+'" class="'+(state.diagAnswers[state.diagCurrent]===v?'sel':'')+'">'+v+'<span class="lab">'+labs[v]+'</span></button>'}).join("")+'</div></div><div class="action-row">'+(state.diagCurrent>0?'<button class="btn btn-ghost" id="diagBack">&larr; Back</button>':'')+(state.diagAnswers[state.diagCurrent]!==null?'<button class="btn btn-primary" id="diagNext">Next &rarr;</button>':'')+'</div>';
+  var labels=["Not me","Rarely","Sometimes","Often","Very me"];
+  c.innerHTML='<div class="today-hero"><h1>Which layer is starving?</h1><p>'+qs.length+' statements. Two minutes.</p></div><div class="diag-progress"><div class="diag-bar" style="width:'+pct+'%"></div></div><div class="diag-q"><div class="q-layer">'+L[q.layer]+'</div><div class="q-num">Statement '+(state.diagCurrent+1)+' of '+qs.length+'</div><div class="q-text">'+esc(q.text)+'</div><div class="diag-scale">'+[0,1,2,3,4].map(function(v){return '<button data-val="'+v+'" class="'+(state.diagAnswers[state.diagCurrent]===v?'sel':'')+'">'+v+'<span class="lab">'+labels[v]+'</span></button>'}).join("")+'</div></div><div class="action-row">'+(state.diagCurrent>0?'<button class="btn btn-ghost" id="diagBack">&larr; Back</button>':'')+'<button class="btn btn-ghost" id="diagCancel">Cancel</button></div>';
   c.querySelectorAll('.diag-scale button').forEach(function(b){
     b.onclick=function(){
       state.diagAnswers[state.diagCurrent]=parseInt(b.dataset.val);
       c.querySelectorAll('.diag-scale button').forEach(function(x){x.classList.remove('sel')});
       b.classList.add('sel');
+      saveState();
       setTimeout(function(){
         if(state.diagCurrent<qs.length-1){state.diagCurrent++;renderDiagQuestion()}
         else{computeDiagResult();renderResults()}
       },250);
     };
   });
-  var nb=document.getElementById('diagNext');
-  if(nb)nb.onclick=function(){if(state.diagCurrent<qs.length-1){state.diagCurrent++;renderDiagQuestion()}else{computeDiagResult();renderResults()}};
   var bb=document.getElementById('diagBack');
   if(bb)bb.onclick=function(){if(state.diagCurrent>0){state.diagCurrent--;renderDiagQuestion()}};
+  var cb=document.getElementById('diagCancel');
+  if(cb)cb.onclick=function(){state.diagCurrent=0;state.diagAnswers=new Array(15).fill(null);saveState();navigateTo('today')};
 }
 function computeDiagResult(){
   var scores={roots:0,trunk:0,branches:0,leaves:0,fruits:0};
@@ -975,8 +1020,17 @@ function computeDiagResult(){
   var strained = LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   strained.sort(function(a,b){return scores[b]-scores[a]});
   state.focusLayer = strained.length > 0 ? strained[0] : win;
+  // Push to history (date-keyed, replaces same-day)
+  var entry = {d:today(), s:scores};
+  if(state.hist.length && state.hist[state.hist.length-1].d === entry.d) state.hist[state.hist.length-1] = entry;
+  else state.hist.push(entry);
+  if(state.hist.length > 20) state.hist = state.hist.slice(-20);
   saveState();
 }
+
+/* ============================================================
+   RESULTS — big block tree-state + small file verdict + emergency picking
+   ============================================================ */
 function renderResults(){
   var c=document.getElementById('diagContent');
   var scores=state.diagScores;
@@ -984,7 +1038,6 @@ function renderResults(){
 
   var strainedLayers = LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   var anyStrained = strainedLayers.length > 0;
-
   var fl = state.focusLayer;
   if(!fl){
     if(anyStrained){
@@ -996,6 +1049,7 @@ function renderResults(){
     state.focusLayer = fl;
   }
 
+  // Total emergencies across the whole tree
   var totalEm = 0;
   LORDER.forEach(function(l){ totalEm += (state.emergencyPicks[l] || []).length; });
 
@@ -1044,6 +1098,7 @@ function renderResults(){
     el.onclick=function(e){
       if(e.target.closest('.ts-panel')) return;
       state.focusLayer=el.dataset.layer;
+      saveState();
       renderResults();
     };
   });
@@ -1064,7 +1119,9 @@ function renderLayerFocus(layer, scores){
   var color=Lcolor[layer];
   var needs = needsForLayer(layer);
   var picks = state.emergencyPicks[layer] || [];
-  var sortable = st === "strained";
+  var totalEm = 0;
+  LORDER.forEach(function(l){ totalEm += (state.emergencyPicks[l] || []).length; });
+  var capReached = totalEm >= 3;
 
   var head =
     '<div style="margin-bottom:14px">'+
@@ -1074,21 +1131,20 @@ function renderLayerFocus(layer, scores){
       '<p style="font-size:.88rem;line-height:1.55"><strong>Why it comes first:</strong> '+info.priority+'</p>'+
     '</div>';
 
-  var sortLabel = sortable
-    ? '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-top:16px;margin-bottom:6px">Pick the emergency needs</div>'+
-      '<p style="font-size:.82rem;color:var(--mute);margin-bottom:10px">Emergency means: <strong>starving right now</strong>. Not what sounds most urgent. The ones you have been apologising for.</p>'
-    : '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-top:16px;margin-bottom:6px">Optional · this layer is '+st+'</div>'+
-      '<p style="font-size:.82rem;color:var(--mute);margin-bottom:10px">This layer is not strained. If you want, you can still pick up to three needs to work on here.</p>';
+  var sortLabel =
+    '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-top:16px;margin-bottom:6px">Pick your emergencies across the whole tree</div>'+
+    '<p style="font-size:.82rem;color:var(--mute);margin-bottom:10px">Emergency means: <strong>starving right now</strong>. You can have three in total, across every layer. The squeeze is the point.</p>'+
+    '<div class="sort-counter" id="sortCounter" style="margin-bottom:8px;font-size:.82rem"><strong>'+totalEm+'</strong> of 3 total selected</div>';
 
   var sortHtml =
     sortLabel+
-    '<div class="sort-counter" id="sortCounter" style="margin-bottom:8px;font-size:.82rem"><strong>'+picks.length+'</strong> of 3 selected</div>'+
     '<div class="sort-grid" id="sortGrid" style="margin-bottom:0">'+needs.map(function(n){
       var sel=picks.indexOf(n[1])>=0;
-      return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
+      var disabled = (!sel && capReached) ? true : false;
+      return '<button class="sort-card'+(sel?' selected':'')+(disabled?' disabled':'')+'" data-need="'+esc(n[1])+'"><div class="sc-name">'+esc(n[1])+'</div><div class="sc-desc">'+esc(n[2])+'</div></button>';
     }).join("")+'</div>'+
     '<div id="reframeSlot"></div>'+
-    (picks.length===3?'<div class="sort-complete" style="margin-top:14px">Three emergencies picked. Tap another layer above, or write your plans below.</div>':'');
+    (capReached?'<div class="sort-complete" style="margin-top:14px">Three emergencies picked. Tap another layer above, or write your plans below.</div>':'');
 
   slot.innerHTML = head + sortHtml;
 
@@ -1099,7 +1155,11 @@ function renderLayerFocus(layer, scores){
       var arr = state.emergencyPicks[layer];
       var i=arr.indexOf(name);
       if(i>=0){arr.splice(i,1)}
-      else{if(arr.length>=3)return;arr.push(name);if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name)}
+      else{
+        if(totalEm>=3){alert("Three emergencies total. Remove one first. The squeeze is the point.");return}
+        arr.push(name);
+        if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
+      }
       saveState();
       renderResults();
     };
@@ -1119,13 +1179,13 @@ function renderReframesFor(layer){
       var idx = state.actionIndex[name] || 0;
       var action = state.chosenActions[name] || r.actions[idx % r.actions.length];
       var note = state.customActions[name] || "";
-      return '<div class="reframe-item" style="margin-top:10px"><div class="ri-need"><span class="ri-dot" style="background:var(--c-strained)"></span>'+name+'</div>'+
-        '<div class="ri-block"><div class="ri-label">Intellectualization</div><div class="ri-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div>'+
-        '<div class="ri-block"><div class="ri-label">Maladaptive strategy</div><div class="ri-text strategy">'+r.strategy+'</div></div>'+
-        '<div class="ri-block"><div class="ri-label">Flip it — suggested action</div><div class="ri-text action">'+action+'</div>'+
-          '<div class="action-row left" style="margin-top:8px"><button class="btn btn-outline btn-small" data-shuffle="'+name+'">Shuffle option</button></div>'+
+      return '<div class="reframe-item" style="margin-top:10px"><div class="ri-need"><span class="ri-dot" style="background:var(--c-strained)"></span>'+esc(name)+'</div>'+
+        '<div class="ri-block"><div class="ri-label">Intellectualization</div><div class="ri-text excuse">&ldquo;'+esc(r.excuse)+'&rdquo;</div></div>'+
+        '<div class="ri-block"><div class="ri-label">Maladaptive strategy</div><div class="ri-text strategy">'+esc(r.strategy)+'</div></div>'+
+        '<div class="ri-block"><div class="ri-label">Flip it — suggested action</div><div class="ri-text action">'+esc(action)+'</div>'+
+          '<div class="action-row left" style="margin-top:8px"><button class="btn btn-outline btn-small" data-shuffle="'+esc(name)+'">Shuffle option</button></div>'+
         '</div>'+
-        '<div class="ri-block"><div class="ri-label">Your version</div><textarea class="ri-input" data-need="'+name+'" placeholder="Write your own action plan for this need...">'+note+'</textarea></div>'+
+        '<div class="ri-block"><div class="ri-label">Your version</div><textarea class="ri-input" data-need="'+esc(name)+'" placeholder="Write your own action plan for this need...">'+esc(note)+'</textarea></div>'+
       '</div>';
     }).join("")+
     '<p style="font-size:.82rem;color:var(--mute);margin-top:16px;text-align:center">Open this need on My Tree to write the if-then plan. It shows up on Today, so you see it again tomorrow.</p>';
@@ -1143,14 +1203,10 @@ function renderReframesFor(layer){
   });
   slot.querySelectorAll('.ri-input').forEach(function(t){t.oninput=function(){state.customActions[t.dataset.need]=t.value;saveState()}});
 }
-function removeFromManifesto(layer, name){
-  if(!state.nonNegotiables[layer]) return;
-  var idx = state.nonNegotiables[layer].indexOf(name);
-  if(idx >= 0) state.nonNegotiables[layer].splice(idx, 1);
-  saveState();
-  renderToday();
-}
-window.removeFromManifesto = removeFromManifesto;
+
+/* ============================================================
+   TODAY — small file's sticky plans + big block's manifesto + history
+   ============================================================ */
 function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1164,24 +1220,22 @@ function renderToday(){
   }
   var scores=state.diagScores;
 
-  // Collect all if-then plans, max 4
+  // If-then plans for sticky notes
   var plans = [];
   LORDER.forEach(function(layer){
     (state.treeNeeds[layer] || []).forEach(function(name){
       var cue = state.ifThenCue[name];
       var action = state.ifThenAction[name];
-      if(cue && action){
-        plans.push({layer: layer, name: name, cue: cue, action: action});
-      }
+      if(cue && action) plans.push({layer:layer, name:name, cue:cue, action:action});
     });
   });
   plans = plans.slice(0, 4);
 
-  // Build the manifesto from NON-NEGOTIABLES ONLY (games output)
+  // Manifesto from nonNegotiables
   var manifesto = [];
   LORDER.forEach(function(layer){
     (state.nonNegotiables[layer] || []).forEach(function(name){
-      manifesto.push({layer: layer, name: name});
+      manifesto.push({layer:layer, name:name});
     });
   });
 
@@ -1191,20 +1245,21 @@ function renderToday(){
       '<div class="sticky-section-title" style="margin-top:32px">Your non-negotiables</div>'+
       '<div style="max-width:640px;margin:0 auto 8px;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:6px 14px">'+
       manifesto.map(function(m, i){
-          var plan = state.ifThenAction[m.name] ? ('If '+ (state.ifThenCue[m.name]||'…') +', then I will '+ state.ifThenAction[m.name] +'.') : null;
-          var safe = m.name.replace(/'/g, "\\'");
-          return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:'+(i<manifesto.length-1?'1px solid var(--line)':'none')+'">'+
-            '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.2;flex:1;min-width:0;color:'+Lcolor[m.layer]+'">'+m.name+'</div>'+
-            (plan?
-              '<div style="font-size:.78rem;color:var(--mute);font-style:italic;flex:1.4;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+plan+'</div>'
-              :
-              '<a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+safe+'\')" style="font-size:.75rem;color:var(--moss);text-decoration:none;flex:0 0 auto">Write plan →</a>'
-            )+
-            '<button type="button" onclick="removeFromManifesto(\''+m.layer+'\',\''+safe+'\')" style="background:none;border:none;color:var(--mute);font-size:1.1rem;line-height:1;padding:0 2px;cursor:pointer;font-family:inherit;flex-shrink:0" aria-label="Remove">×</button>'+
-          '</div>';
-        }).join("")+
+        var plan = state.ifThenAction[m.name] ? ('If '+(state.ifThenCue[m.name]||'…')+', then I will '+state.ifThenAction[m.name]+'.') : null;
+        var safe = m.name.replace(/'/g, "\\'");
+        return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:'+(i<manifesto.length-1?'1px solid var(--line)':'none')+'">'+
+          '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.2;flex:1;min-width:0;color:'+Lcolor[m.layer]+'">'+esc(m.name)+'</div>'+
+          (plan?
+            '<div style="font-size:.78rem;color:var(--mute);font-style:italic;flex:1.4;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(plan)+'</div>'
+            :
+            '<a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+safe+'\')" style="font-size:.75rem;color:var(--moss);text-decoration:none;flex:0 0 auto">Write plan →</a>'
+          )+
+          '<button type="button" onclick="removeFromManifesto(\''+m.layer+'\',\''+safe+'\')" style="background:none;border:none;color:var(--mute);font-size:1.1rem;line-height:1;padding:0 2px;cursor:pointer;font-family:inherit;flex-shrink:0" aria-label="Remove">×</button>'+
+        '</div>';
+      }).join("")+
       '</div>';
   }
+
   var focusHtml = "";
   if(plans.length > 0){
     focusHtml =
@@ -1213,8 +1268,8 @@ function renderToday(){
         plans.map(function(p){
           return '<div class="sticky-note" onclick="openDrawer(\''+p.layer+'\',\''+p.name.replace(/'/g,"\\'")+'\')">'+
             '<div class="sn-tag" style="color:'+Lcolor[p.layer]+'">'+L[p.layer]+'</div>'+
-            '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25;margin-bottom:8px">'+p.name+'</div>'+
-            '<div class="sn-plan">If '+p.cue+', then I will '+p.action+'.</div>'+
+            '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25;margin-bottom:8px">'+esc(p.name)+'</div>'+
+            '<div class="sn-plan">If '+esc(p.cue)+', then I will '+esc(p.action)+'.</div>'+
             '<div class="sn-edit">Tap to adjust →</div>'+
           '</div>';
         }).join("")+
@@ -1244,29 +1299,45 @@ function renderToday(){
   var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
 
+  // History comparison (from small file)
+  var historyHtml = "";
+  if(state.hist.length > 1){
+    var a = state.hist[state.hist.length-2], b = state.hist[state.hist.length-1];
+    historyHtml =
+      '<div class="results-detail" style="max-width:640px;margin:24px auto 24px">'+
+        '<h2 style="font-size:1.05rem">'+esc(a.d)+' vs '+esc(b.d)+'</h2>'+
+        LORDER.slice().reverse().map(function(l){
+          var diff = b.s[l[0]] - a.s[l[0]];
+          return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.88rem"><span>'+L[l]+'</span><span class="m">'+a.s[l[0]]+' → '+b.s[l[0]]+(diff<0?" (easier)":diff>0?" (harder)":" (same)")+'</span></div>';
+        }).join("")+
+      '</div>';
+  }
+
   body.innerHTML='<div class="overview-summary">'+strainedText+'</div>'+
     focusHtml+
     fakeDoorHtml+
     '<div class="layer-bars">'+LORDER.slice().reverse().map(function(l){
-    var st=scoreStatus(scores[l]);
-    var pct=Math.min(100,(scores[l]/12)*100);
-    var emCount=state.emergencyPicks[l]?state.emergencyPicks[l].length:0;
-    return '<div class="layer-bar-item '+st+'" onclick="navigateTo(\'tree\')" style="cursor:pointer"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
-  }).join("")+'</div>'+
-  '<div class="results-detail" style="max-width:640px;margin:0 auto;border:1px dashed var(--line);background:transparent">'+
-    '<h2 style="font-size:1rem">What this shows you</h2>'+
-    '<p style="font-size:.88rem;color:var(--mute);margin-bottom:10px">The bars above are your tree — five layers, from how you rest and feel safe (Roots) to what you contribute (Fruits). The red ones are where your needs are starving. The number on each bar tells you how much.</p>'+
-    '<p style="font-size:.88rem;color:var(--mute);margin-bottom:14px">This is not a score to improve. It\'s a snapshot to check, the way you\'d check weather. Come back next season and see what moved.</p>'+
-    '<div class="action-row left" style="margin-top:0">'+
-      '<button class="btn btn-outline btn-small" onclick="navigateTo(\'tree\')">Open my tree</button>'+
-      '<button class="btn btn-ghost btn-small" onclick="navigateTo(\'diagnostic\')">Retake the diagnostic</button>'+
-    '</div>'+
-  '</div>'+
+      var st=scoreStatus(scores[l]);
+      var pct=Math.min(100,(scores[l]/12)*100);
+      var emCount=state.emergencyPicks[l]?state.emergencyPicks[l].length:0;
+      return '<div class="layer-bar-item '+st+'" onclick="navigateTo(\'tree\')" style="cursor:pointer"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
+    }).join("")+'</div>'+
+    historyHtml+
     manifestoHtml+
-  '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
+    '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
 }
+function removeFromManifesto(layer, name){
+  if(!state.nonNegotiables[layer]) return;
+  var idx = state.nonNegotiables[layer].indexOf(name);
+  if(idx >= 0) state.nonNegotiables[layer].splice(idx, 1);
+  saveState();
+  renderToday();
+}
+window.removeFromManifesto = removeFromManifesto;
 
-/* ===== FAKE DOOR ===== */
+/* ============================================================
+   FAKE DOORS
+   ============================================================ */
 function fakeDoorTap(kind){
   if(!state.fakeDoors) state.fakeDoors = {save:0, dark:0};
   state.fakeDoors[kind] = (state.fakeDoors[kind] || 0) + 1;
@@ -1281,17 +1352,8 @@ function fakeDoorTap(kind){
       '</div>'+
       '<div id="fakeDoorStatus_' + kind + '" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em;text-align:left"></div>'+
     '</div>';
-  var slots = ["fakeDoorSave","fakeDoorDark"];
-  var placed = false;
-  slots.forEach(function(id){
-    if(placed) return;
-    var el = document.getElementById(id);
-    if(el && (id.indexOf(kind) >= 0 || id === "fakeDoor" + (kind==="save"?"Save":"Dark"))){ el.innerHTML = formHtml; placed = true; }
-  });
-  if(!placed){
-    var el = document.getElementById(kind === "save" ? "fakeDoorSave" : "fakeDoorDark");
-    if(el) el.innerHTML = formHtml;
-  }
+  var el = document.getElementById(kind === "save" ? "fakeDoorSave" : "fakeDoorDark");
+  if(el) el.innerHTML = formHtml;
 }
 function fakeDoorSubmit(kind){
   var input = document.getElementById('fakeDoorEmail_' + kind);
@@ -1313,7 +1375,9 @@ function fakeDoorSubmit(kind){
 window.fakeDoorTap = fakeDoorTap;
 window.fakeDoorSubmit = fakeDoorSubmit;
 
-/* ===== DECK ===== */
+/* ============================================================
+   DECK
+   ============================================================ */
 var deckFilter="core";
 function svgFor(layer){
   var colors={roots:"#6B7F94",trunk:"#5B8FB9",branches:"#4A9DB8",leaves:"#7BA8C4",fruits:"#7A6B9C",dark:"#1B2A38"};
@@ -1331,7 +1395,7 @@ function renderDeck(filter){
   if(deckFilter==="core"){
     var ordered = allCoreNeedsOrdered();
     grid.innerHTML = ordered.map(function(c){
-      return '<div class="deck-card '+c[0]+'"><div class="dc-art">'+svgFor(c[0])+'</div><div class="dc-body"><div class="dc-tag">'+L[c[0]]+'</div><div class="dc-name">'+c[1]+'</div><div class="dc-desc">'+c[2]+'</div></div></div>';
+      return '<div class="deck-card '+c[0]+'" style="--ck:'+Lcolor[c[0]]+'" onclick="openDrawer(\''+c[0]+'\',\''+esc(c[1]).replace(/'/g,"\\'")+'\')"><div class="dc-art">'+svgFor(c[0])+'</div><div class="dc-body"><div class="dc-tag">'+L[c[0]]+'</div><div class="dc-name">'+esc(c[1])+'</div><div class="dc-desc">'+esc(c[2])+'</div></div></div>';
     }).join("");
     return;
   }
@@ -1347,9 +1411,9 @@ function renderDeck(filter){
         return '<div class="deck-card dark">'+
           '<div class="dc-art">'+svgFor("dark")+'</div>'+
           '<div class="dc-body"><div class="dc-tag">Dark need</div>'+
-          '<div class="dc-name">'+d[0]+'</div>'+
-          '<div class="dc-desc"><em>Shadow:</em> '+d[2]+'</div>'+
-          '<div class="dc-desc"><em>Integrated:</em> '+d[3]+'</div>'+
+          '<div class="dc-name">'+esc(d[0])+'</div>'+
+          '<div class="dc-desc"><em>Shadow:</em> '+esc(d[2])+'</div>'+
+          '<div class="dc-desc"><em>Integrated:</em> '+esc(d[3])+'</div>'+
         '</div></div>';
       }).join("")+
       '<div class="deck-card" style="border-style:dashed;grid-column:span 2;background:var(--card)">'+
@@ -1377,7 +1441,9 @@ function renderDeck(filter){
 }
 document.getElementById('deckTabs').addEventListener('click',function(e){if(e.target.dataset.filter)renderDeck(e.target.dataset.filter)});
 
-/* ===== TREE ===== */
+/* ============================================================
+   TREE
+   ============================================================ */
 function renderTreeMap(){
   var container=document.getElementById('treeMapContainer');
   var scores = state.diagScores || null;
@@ -1390,7 +1456,7 @@ function renderTreeMap(){
     var needsHtml=needs.length>0?needs.map(function(n,i){
       var em=isEmergency(l,n)?' emergency':'';
       var safeName = n.replace(/'/g, "\\'");
-      return '<span class="tm-need'+em+'" style="background:'+Lcolor[l]+'" onclick="openDrawer(\''+l+'\',\''+safeName+'\')">'+n+' <span class="remove" onclick="event.stopPropagation();removeNeed(\''+l+'\','+i+')">&times;</span></span>';
+      return '<span class="tm-need'+em+'" style="background:'+Lcolor[l]+'" onclick="openDrawer(\''+l+'\',\''+safeName+'\')">'+esc(n)+' <span class="remove" onclick="event.stopPropagation();removeNeed(\''+l+'\','+i+')">&times;</span></span>';
     }).join(""):'<span class="tm-empty">No needs here yet. Add one, or take the diagnostic and pick emergencies.</span>';
     return '<div class="tm-layer'+layerClass+'" style="--lk:'+Lcolor[l]+'"><div class="tm-layer-head"><div class="tm-name-wrap"><span class="tm-status-dot '+st+'"></span><div><div class="tm-name">'+L[l]+'</div><div class="tm-desc">'+Ldesc[l]+'</div></div></div><div class="tm-count">'+needs.length+'</div></div><div class="tm-needs">'+needsHtml+'</div><div class="tm-actions"><button class="btn btn-outline btn-small" onclick="openAddNeedModal(\''+l+'\')">+ Add need</button></div></div>';
   }).join("");
@@ -1423,7 +1489,7 @@ function openAddNeedModal(layer){
   grid.innerHTML=layerNeeds.map(function(c){
     var added=existing.indexOf(c[1])>=0;
     var safeName=c[1].replace(/'/g, "\\'");
-    return '<div class="modal-need'+(added?' added':'')+'" data-need="'+safeName+'"><div style="font-weight:700">'+c[1]+'</div><div style="font-size:.72rem;color:var(--mute);margin-top:2px">'+c[2]+'</div></div>';
+    return '<div class="modal-need'+(added?' added':'')+'" data-need="'+esc(safeName)+'"><div style="font-weight:700">'+esc(c[1])+'</div><div style="font-size:.72rem;color:var(--mute);margin-top:2px">'+esc(c[2])+'</div></div>';
   }).join("");
   grid.querySelectorAll('.modal-need:not(.added)').forEach(function(el){el.onclick=function(){addNeedToTree(layer,el.dataset.need)}});
   modal.classList.add('show');
@@ -1437,7 +1503,9 @@ function closeModal(){document.getElementById('addNeedModal').classList.remove('
 window.closeModal=closeModal;
 document.getElementById('addNeedModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 
-/* ===== DRAWER ===== */
+/* ============================================================
+   DRAWER
+   ============================================================ */
 function openDrawer(layer, name){
   var d=document.getElementById('drawer');
   var ov=document.getElementById('drawerOverlay');
@@ -1456,14 +1524,14 @@ function openDrawer(layer, name){
     var thenVal = state.ifThenAction[name] || "";
 
     d.innerHTML=
-      '<div class="drawer-head"><div><div class="drawer-tag" style="color:'+Lcolor[layer]+'">'+L[layer]+'</div><div class="drawer-title">'+name+'</div></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>'+
-      (desc?'<div class="drawer-desc">'+desc+'</div>':'')+
+      '<div class="drawer-head"><div><div class="drawer-tag" style="color:'+Lcolor[layer]+'">'+L[layer]+'</div><div class="drawer-title">'+esc(name)+'</div></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>'+
+      (desc?'<div class="drawer-desc">'+esc(desc)+'</div>':'')+
       '<div class="drawer-section"><div class="ds-label">Emergency need</div><div class="em-toggle'+(em?' on':'')+'" id="emToggle"><div class="toggle-dot"></div><div><div class="toggle-label">'+(em?'Marked as emergency':'Mark this as an emergency')+'</div><div class="toggle-hint">'+(em?'Tap to remove from your emergencies.':'Emergencies get a red ring on your tree.')+'</div></div></div></div>'+
-      '<div class="drawer-section"><div class="ds-label">Intellectualization</div><div class="ds-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div>'+
-      '<div class="drawer-section"><div class="ds-label">Maladaptive strategy</div><div class="ds-text strategy">'+r.strategy+'</div></div>'+
+      '<div class="drawer-section"><div class="ds-label">Intellectualization</div><div class="ds-text excuse">&ldquo;'+esc(r.excuse)+'&rdquo;</div></div>'+
+      '<div class="drawer-section"><div class="ds-label">Maladaptive strategy</div><div class="ds-text strategy">'+esc(r.strategy)+'</div></div>'+
       '<div class="drawer-section"><div class="drawer-shuffle"><div class="ds-label" style="margin:0">Pick an action</div><button class="btn btn-outline btn-small" id="drawerShuffle">Shuffle</button></div><div class="drawer-actions" id="drawerActions">'+r.actions.map(function(a,i){
           var sel = (chosen === a) || (!chosen && i === idx);
-          return '<button type="button" class="drawer-action'+(sel?' selected':'')+'" data-idx="'+i+'">'+a+'</button>';
+          return '<button type="button" class="drawer-action'+(sel?' selected':'')+'" data-idx="'+i+'">'+esc(a)+'</button>';
         }).join("")+'</div></div>'+
       '<div class="drawer-section" style="border:1.5px solid '+(chosen&&!(cueVal&&thenVal)?'var(--moss)':'var(--line)')+';border-radius:var(--radius-sm);padding:14px;background:'+(chosen&&!(cueVal&&thenVal)?'rgba(91,143,185,.04)':'transparent')+'">'+
         '<div class="ds-label">If-then plan'+(chosen&&!(cueVal&&thenVal)?' · next step':(cueVal&&thenVal?' · set':''))+'</div>'+
@@ -1477,10 +1545,10 @@ function openDrawer(layer, name){
           '<input type="text" id="drawerThen" placeholder="close my laptop and walk for 10 minutes" value="'+thenVal.replace(/"/g,'&quot;')+'" style="flex:1;min-width:160px;padding:10px 12px;border:1.5px solid var(--line);border-radius:var(--radius-xs);background:var(--card);font-family:var(--font-body);font-size:.88rem;color:var(--ink)">'+
         '</div>'+
         '<div style="margin-top:10px;padding:10px 12px;border-radius:var(--radius-xs);background:var(--bg);border:1px dashed var(--line);font-size:.9rem;font-style:italic;color:var(--mute)" id="ifThenPreview">'+
-          ((cueVal && thenVal) ? 'If ' + cueVal + ', then I will ' + thenVal + '.' : 'Fill both fields and your plan will appear here.')+
+          ((cueVal && thenVal) ? 'If ' + esc(cueVal) + ', then I will ' + esc(thenVal) + '.' : 'Fill both fields and your plan will appear here.')+
         '</div>'+
       '</div>'+
-      '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+custom.replace(/</g,'&lt;')+'</textarea><div class="drawer-save-status" id="drawerSaveStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div></div>'+
+      '<div class="drawer-section"><div class="ds-label">Your version</div><textarea class="drawer-custom" id="drawerCustom" placeholder="Write your own action for this need...">'+esc(custom)+'</textarea><div class="drawer-save-status" id="drawerSaveStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div></div>'+
       '<div class="drawer-actions-row"><button class="btn btn-outline" onclick="closeDrawer()">Close</button></div>';
 
     d.querySelectorAll('#drawerActions .drawer-action').forEach(function(b){
@@ -1512,8 +1580,14 @@ function openDrawer(layer, name){
     if(emT)emT.onclick=function(){
       var arr=state.emergencyPicks[layer];
       var i=arr.indexOf(name);
+      var totalEm = 0;
+      LORDER.forEach(function(l){ totalEm += (state.emergencyPicks[l] || []).length; });
       if(i>=0){arr.splice(i,1)}
-      else{if(arr.length>=3){alert("You can have up to 3 emergencies in "+L[layer]+". Remove one first.");return}arr.push(name);if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name)}
+      else{
+        if(totalEm>=3){alert("Three emergencies total. Remove one first. The squeeze is the point.");return}
+        arr.push(name);
+        if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
+      }
       em = isEmergency(layer,name);
       saveState();
       renderTreeMap();
@@ -1533,13 +1607,21 @@ function closeDrawer(){
 }
 window.closeDrawer=closeDrawer;
 
-/* ===== JOURNAL ===== */
+/* ============================================================
+   JOURNAL
+   ============================================================ */
 function renderJournal(){
   var jc=document.getElementById('journalContent');
   if(!jc)return;
-  var todaysCard=state.diagStrained?L[state.diagStrained]:null;
-  var newEntry='<div class="journal-new"><h3>Today\'s reflection</h3><p style="font-size:.88rem;color:var(--mute);margin-bottom:12px">'+(todaysCard?'Most strained layer: <strong>'+todaysCard+'</strong>':'Take the diagnostic to focus your journal.')+'</p><textarea id="journalText" placeholder="What does this stir? Where does it live in your body?"></textarea><div class="action-row left" style="margin-top:12px"><button class="btn btn-primary" id="saveJournalBtn">Save reflection</button></div></div>';
-  var entriesHtml=state.journal.length>0?state.journal.map(function(e){return '<div class="journal-entry"><div class="je-date">'+e.date+'</div><div class="je-card">'+e.cardName+'</div><div class="je-reflection">'+e.text+'</div></div>'}).join(""):'<div class="empty-state"><div class="es-icon">O</div><h3>Your journal is quiet</h3><p>Write one reflection.</p></div>';
+  var prompt = "";
+  if(state.emergencyPicks){
+    var firstEm = null;
+    LORDER.forEach(function(l){ if(!firstEm && state.emergencyPicks[l] && state.emergencyPicks[l].length) firstEm = state.emergencyPicks[l][0]; });
+    if(firstEm) prompt = 'What did it cost you this week to treat '+firstEm+' as optional?';
+  }
+  if(!prompt) prompt = "What are you carrying today?";
+  var newEntry='<div class="journal-new"><h3>Today\'s reflection</h3><p style="font-size:.88rem;color:var(--mute);margin-bottom:12px"><em>'+esc(prompt)+'</em></p><textarea id="journalText" placeholder="One sentence is enough."></textarea><div class="action-row left" style="margin-top:12px"><button class="btn btn-primary" id="saveJournalBtn">Save reflection</button></div></div>';
+  var entriesHtml=state.journal.length>0?state.journal.map(function(e,i){return '<div class="journal-entry"><div class="je-date">'+esc(e.date)+'</div><div class="je-card">'+esc(e.cardName)+'</div><div class="je-reflection">'+esc(e.text)+'</div><button class="je-delete" onclick="deleteJournalEntry('+i+')">Delete</button></div>'}).join(""):'<div class="empty-state"><div class="es-icon">O</div><h3>Your journal is quiet</h3><p>Write one reflection.</p></div>';
   jc.innerHTML=newEntry+entriesHtml;
   document.getElementById('saveJournalBtn').onclick=saveJournalEntry;
 }
@@ -1552,26 +1634,19 @@ function saveJournalEntry(){
   saveState();
   renderJournal();
 }
+function deleteJournalEntry(i){
+  state.journal.splice(i,1);
+  saveState();
+  renderJournal();
+}
+window.deleteJournalEntry = deleteJournalEntry;
 
-/* ===== LEARN ===== */
-var LEARN_ARTICLES = [
-  {id:"why-i-built-this", title:"Why I built this", topic:"Start here", layer:null, summary:"The moment that started it.", body:"[Your article goes here. — to be written]"},
-  {id:"need-vs-strategy", title:"Need vs strategy", topic:"The core idea", layer:null, summary:"The single distinction the whole app is built on.", body:"[Your article goes here. — to be written]"},
-  {id:"three-emergencies", title:"Why only three emergencies", topic:"The cap", layer:null, summary:"The rule that made one user laugh.", body:"[Your article goes here. — to be written]"},
-  {id:"roots-first", title:"Why roots come first", topic:"Roots", layer:"roots", summary:"You cannot fix a starving root with more leaves.", body:"[Your article goes here. — to be written]"},
-  {id:"identity-under-pressure", title:"Identity under pressure", topic:"Trunk", layer:"trunk", summary:"What happens when you've been everyone's everything.", body:"[Your article goes here. — to be written]"},
-  {id:"alone-in-a-crowd", title:"Alone in a crowd", topic:"Branches", layer:"branches", summary:"Why connection doesn't fix loneliness.", body:"[Your article goes here. — to be written]"},
-  {id:"output-is-not-rest", title:"Why output is not rest", topic:"Leaves", layer:"leaves", summary:"Burnout isn't about working too much.", body:"[Your article goes here. — to be written]"},
-  {id:"purpose-cant-be-forced", title:"Purpose can't be forced", topic:"Fruits", layer:"fruits", summary:"Fruits appear when conditions are right.", body:"[Your article goes here. — to be written]"}
-];
-var LEARN_PARTNERS = [
-  {name:"A therapist", for:"Branches", desc:"Slots reserved for licensed therapists.", tag:"Therapy"},
-  {name:"A coach", for:"Trunk", desc:"Slots reserved for coaches.", tag:"Coaching"},
-  {name:"An educator", for:"Leaves", desc:"Slots reserved for teachers and creators.", tag:"EdTech"}
-];
+/* ============================================================
+   LEARN
+   ============================================================ */
 function renderLearn(){
-  var grid = document.getElementById('learnArticleGrid');
-  if(!grid) return;
+  var c = document.getElementById('learnBody');
+  if(!c) return;
   var ordered = LEARN_ARTICLES.slice();
   if(state.diagScores){
     var strained = LORDER.filter(function(l){return scoreStatus(state.diagScores[l])==="strained"});
@@ -1581,40 +1656,48 @@ function renderLearn(){
       return bMatch - aMatch;
     });
   }
-  grid.innerHTML = ordered.map(function(a){
-    var tag = a.layer ? L[a.layer] : a.topic;
-    var tagColor = a.layer ? Lcolor[a.layer] : "var(--moss)";
-    return '<div class="deck-card" style="border-color:'+tagColor+'"><div class="dc-body" style="padding:16px"><div class="dc-tag" style="color:'+tagColor+'">'+tag+'</div><div class="dc-name" style="font-size:1.05rem">'+a.title+'</div><div class="dc-desc" style="font-size:.85rem;margin-top:6px">'+a.summary+'</div><div style="margin-top:12px"><button class="btn btn-outline btn-small" onclick="openArticle(\''+a.id+'\')">Read →</button></div></div></div>';
-  }).join("");
-  var pg = document.getElementById('learnPartnersGrid');
-  if(pg){
-    pg.innerHTML = LEARN_PARTNERS.map(function(p){
-      return '<div class="game-card locked"><span class="gc-badge">'+p.tag+'</span><div class="gc-title" style="font-size:1.05rem">'+p.name+'</div><div class="gc-for">For the '+p.for+' layer</div><div class="gc-pitch">'+p.desc+'</div></div>';
-    }).join("");
-  }
+  c.innerHTML =
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)">'+
+      '<div class="rd-context">Featured</div>'+
+      '<h2 style="font-size:1.3rem">Why I built this</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it — not a mission statement, just what happened when I realised I\'d been treating a need as a problem for years.</p>'+
+      '<div class="action-row left" style="margin-top:14px"><button class="btn btn-outline btn-small" onclick="openArticle(\'why-i-built-this\')">Read →</button></div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px">'+
+      '<h2 style="font-size:1.2rem">Read by topic</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">Sorted by your strained layers if you\'ve done the diagnostic.</p>'+
+      '<div class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">'+ordered.map(function(a){
+        var tag = a.layer ? L[a.layer] : a.topic;
+        var tagColor = a.layer ? Lcolor[a.layer] : "var(--moss)";
+        return '<div class="deck-card" style="border-color:'+tagColor+'"><div class="dc-body" style="padding:16px"><div class="dc-tag" style="color:'+tagColor+'">'+tag+'</div><div class="dc-name" style="font-size:1.05rem">'+esc(a.title)+'</div><div class="dc-desc" style="font-size:.85rem;margin-top:6px">'+esc(a.summary)+'</div><div style="margin-top:12px"><button class="btn btn-outline btn-small" onclick="openArticle(\''+a.id+'\')">Read →</button></div></div></div>';
+      }).join("")+'</div>'+
+    '</div>'+
+    '<div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent">'+
+      '<h2 style="font-size:1.1rem">Partners</h2>'+
+      '<p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coming soon.</p>'+
+      '<div class="game-grid" style="margin-top:16px">'+LEARN_PARTNERS.map(function(p){
+        return '<div class="game-card locked"><span class="gc-badge">'+p.tag+'</span><div class="gc-title" style="font-size:1.05rem">'+p.name+'</div><div class="gc-for">For the '+p.for+' layer</div><div class="gc-pitch">'+p.desc+'</div></div>';
+      }).join("")+'</div>'+
+    '</div>';
 }
 window.renderLearn = renderLearn;
 function openArticle(id){
   var a = LEARN_ARTICLES.find(function(x){return x.id === id});
   if(!a) return;
-  var c = document.getElementById('page-learn');
-  c.innerHTML = '<div style="max-width:680px;margin:0 auto"><button class="btn btn-ghost btn-small" onclick="renderLearnReset()">← Back to Learn</button><div class="today-hero" style="margin-top:24px;text-align:left"><div style="font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">'+a.topic+'</div><h1 style="font-size:2rem">'+a.title+'</h1><p style="font-size:1.02rem;color:var(--mute)">'+a.summary+'</p></div><div class="results-detail" style="border:none;padding:0;background:transparent"><p style="font-size:1.05rem;line-height:1.75;white-space:pre-wrap">'+a.body+'</p></div><div class="safety-note" style="margin-top:40px">Reflection tool, not therapy or diagnosis.</div><div class="action-row" style="margin-top:16px"><button class="btn btn-outline" onclick="renderLearnReset()">← Back to Learn</button></div></div>';
+  var c = document.getElementById('learnBody');
+  c.innerHTML = '<div style="max-width:680px;margin:0 auto"><button class="btn btn-ghost btn-small" onclick="renderLearn()">← Back to Learn</button><div class="today-hero" style="margin-top:24px;text-align:left"><div style="font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">'+a.topic+'</div><h1 style="font-size:2rem">'+esc(a.title)+'</h1><p style="font-size:1.02rem;color:var(--mute)">'+esc(a.summary)+'</p></div><div class="results-detail" style="border:none;padding:0;background:transparent"><p style="font-size:1.05rem;line-height:1.75;white-space:pre-wrap">'+esc(a.body)+'</p></div><div class="action-row" style="margin-top:16px"><button class="btn btn-outline" onclick="renderLearn()">← Back to Learn</button></div></div>';
 }
 window.openArticle = openArticle;
-function renderLearnReset(){
-  var c = document.getElementById('page-learn');
-  c.innerHTML = '<div class="today-hero"><h1>Learn</h1><p>Short pieces about needs.</p></div><div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-color:var(--moss)"><div class="rd-context">Featured</div><h2 style="font-size:1.3rem">Why I built this</h2><p style="font-size:.92rem;color:var(--mute);margin-top:8px">The moment that started it.</p><div class="action-row left" style="margin-top:14px"><button class="btn btn-outline btn-small" onclick="openArticle(\'why-i-built-this\')">Read →</button></div></div><div class="results-detail" style="max-width:720px;margin:0 auto 24px"><h2 style="font-size:1.2rem">Read by topic</h2><p style="font-size:.92rem;color:var(--mute);margin-bottom:16px">Sorted by your strained layers.</p><div id="learnArticleGrid" class="deck-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div></div><div class="results-detail" style="max-width:720px;margin:0 auto 24px;border-style:dashed;background:transparent"><h2 style="font-size:1.1rem">Partners</h2><p style="font-size:.9rem;color:var(--mute)">Curated, not paid. Coming soon.</p><div class="game-grid" style="margin-top:16px" id="learnPartnersGrid"></div></div><div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
-  renderLearn();
-}
-window.renderLearnReset = renderLearnReset;
 
-/* ===== PLAY ===== */
+/* ============================================================
+   PLAY — four games
+   ============================================================ */
 var SCOPES = [
-  {id:"all", title:"All layers", sub:"The full deck — 80 core needs. Random 15."},
+  {id:"all", title:"All layers", sub:"The full deck — random 15."},
   {id:"one", title:"One layer", sub:"Choose Roots, Trunk, Branches, Leaves, or Fruits."},
   {id:"rootstrunk", title:"Roots + Trunk", sub:"The foundation."},
   {id:"branchleaves", title:"Branches + Leaves", sub:"What you give outward."},
-  {id:"mix", title:"A mix, top to bottom", sub:"3 from each layer, randomly selected."}
+  {id:"mix", title:"A mix, top to bottom", sub:"3 from each layer."}
 ];
 function renderPlay(){
   var c = document.getElementById('playContent');
@@ -1623,9 +1706,6 @@ function renderPlay(){
   if(view==="scope") return renderPlayScope(c);
   if(view==="sort") return renderPlaySort(c);
   if(view==="done") return renderPlayDone(c);
-  if(view==="swap-setup") return renderSwapSetup(c);
-  if(view==="swap") return renderSwapSort(c);
-  if(view==="swap-done") return renderSwapDone(c);
   if(view==="sayit") return renderSayIt(c);
   if(view==="sayit-done") return renderSayItDone(c);
   if(view==="strategy") return renderStrategyGame(c);
@@ -1635,7 +1715,6 @@ function renderPlay(){
 function renderPlayMenu(c){
   var games = [
     {id:"sortit", title:"Sort it", for:"Solo · 15 min", pitch:"Deal 15 cards at random. Sort them into Nice to have, Painful if unmet, Non-negotiable, Emergency. Only three may be emergencies.", live:true, fn:"startSortIt()"},
-    {id:"swap", title:"Swap and compare", for:"Two people · two phones · 30 min", pitch:"You each sort 15 cards on your own phone. Then you sit together and talk through three differences.", live:true, fn:"startSwap()"},
     {id:"sayit", title:"Say it out loud", for:"Two people · 10 min", pitch:"Draw one card. Say to them: I need ___, and what I usually do instead is ___. They reply only: Thank you for telling me.", live:true, fn:"startSayIt()"},
     {id:"strategy", title:"Guess the need", for:"Solo · 10 min", pitch:"You're dealt three strategies — real sentences people say when a need is hiding. For each one, guess which core need it's masking.", live:true, fn:"startStrategyGame()"}
   ];
@@ -1707,11 +1786,11 @@ function renderPlaySort(c){
     {id:"nonneg", title:"Non-negotiable"},
     {id:"emergency", title:"Emergency (max 3)", cls:"pile-emergency"+(emCount>=3?" full":"")}
   ];
-  c.innerHTML = '<div class="play-hero"><h1>Sort it</h1><p>Card '+(p.currentIdx+1)+' of '+p.cards.length+'. Where does this need go right now?</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px"><div class="dc-name" style="font-size:1.2rem">'+current.name+'</div><div class="dc-tag">'+L[current.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+current.desc+'</div></div></div><div class="pile-grid" id="pileGrid">'+piles.map(function(pl){
+  c.innerHTML = '<div class="play-hero"><h1>Sort it</h1><p>Card '+(p.currentIdx+1)+' of '+p.cards.length+'. Where does this need go right now?</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px"><div class="dc-name" style="font-size:1.2rem">'+esc(current.name)+'</div><div class="dc-tag">'+L[current.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+esc(current.desc)+'</div></div></div><div class="pile-grid" id="pileGrid">'+piles.map(function(pl){
     var needs = p.sorted[pl.id] || [];
     var disabled = (pl.id==="emergency" && emCount>=3) ? ' style="opacity:.5;pointer-events:none"' : '';
     return '<div class="pile '+(pl.cls||'')+'" data-pile="'+pl.id+'"'+disabled+'><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n,i){
-  return '<span class="pile-need" style="padding-right:6px">'+n+'<button type="button" onclick="event.stopPropagation();unsortNeed(\''+pl.id+'\','+i+')" style="background:none;border:none;color:var(--mute);font-size:1rem;line-height:1;padding:0 0 0 6px;cursor:pointer;font-family:inherit" aria-label="Remove">×</button></span>';
+  return '<span class="pile-need" style="padding-right:6px">'+esc(n)+'<button type="button" onclick="event.stopPropagation();unsortNeed(\''+pl.id+'\','+i+')" style="background:none;border:none;color:var(--mute);font-size:1rem;line-height:1;padding:0 0 0 6px;cursor:pointer;font-family:inherit" aria-label="Remove">×</button></span>';
 }).join("")+'</div>';
   }).join("")+'</div><div class="game-actions"><button class="btn btn-ghost" onclick="abandonSort()">Stop</button></div>';
   document.querySelectorAll('#pileGrid .pile').forEach(function(el){
@@ -1763,10 +1842,10 @@ function renderPlayDone(c){
       '<p style="font-size:.88rem;color:var(--mute);margin:0">These appear on <strong>Today</strong>, as the portrait of your character.</p>'+
     '</div>'+
     '<div class="pile-grid">'+
-      '<div class="pile pile-emergency"><div class="pile-title">Emergency ('+em.length+')</div>'+em.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+'</div>'+
-      '<div class="pile"><div class="pile-title">Non-negotiable ('+nn.length+')</div>'+nn.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+'</div>'+
-      '<div class="pile"><div class="pile-title">Painful if unmet ('+painful.length+')</div>'+painful.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+'</div>'+
-      '<div class="pile"><div class="pile-title">Nice to have ('+nice.length+')</div>'+nice.map(function(n){return '<span class="pile-need">'+n+'</span>'}).join("")+'</div>'+
+      '<div class="pile pile-emergency"><div class="pile-title">Emergency ('+em.length+')</div>'+em.map(function(n){return '<span class="pile-need">'+esc(n)+'</span>'}).join("")+'</div>'+
+      '<div class="pile"><div class="pile-title">Non-negotiable ('+nn.length+')</div>'+nn.map(function(n){return '<span class="pile-need">'+esc(n)+'</span>'}).join("")+'</div>'+
+      '<div class="pile"><div class="pile-title">Painful if unmet ('+painful.length+')</div>'+painful.map(function(n){return '<span class="pile-need">'+esc(n)+'</span>'}).join("")+'</div>'+
+      '<div class="pile"><div class="pile-title">Nice to have ('+nice.length+')</div>'+nice.map(function(n){return '<span class="pile-need">'+esc(n)+'</span>'}).join("")+'</div>'+
     '</div>'+
     '<div class="closing-prompt">'+
       '<h3>One question before you go</h3>'+
@@ -1794,197 +1873,6 @@ window.savePlayReflection=savePlayReflection;
 function playAnother(){ state.play.view="menu"; state.play.cards=[]; state.play.sorted={}; state.play.scope=null; state.play.subScope=null; state.play.currentIdx=0; renderPlay(); }
 window.playAnother=playAnother;
 
-/* Swap and compare */
-function startSwap(){ state.play.view="swap-setup"; state.play.swapScope="branchleaves"; state.play.swapSubScope=null; renderPlay(); }
-window.startSwap=startSwap;
-function renderSwapSetup(c){
-  c.innerHTML='<div class="play-hero"><h1>Swap and compare</h1><p>You each sort the same 15 cards on your own phone. Then you sit together and walk through three differences.</p></div><div class="scope-grid" id="swapScopeGrid">'+[{id:"branchleaves",title:"Branches + Leaves",sub:"The relational layers."},{id:"all",title:"All layers",sub:"The full deck."},{id:"one",title:"One layer",sub:"Choose one."}].map(function(s){
-    return '<div class="scope-card'+(state.play.swapScope===s.id?' selected':'')+'" data-id="'+s.id+'"><div class="sc-title">'+s.title+'</div><div class="sc-sub">'+s.sub+'</div></div>';
-  }).join("")+'</div><div id="swapSubScopeSlot"></div><div class="game-actions"><button class="btn btn-ghost" onclick="state.play.view=\'menu\';renderPlay()">← Back</button>'+(state.play.swapScope && !(state.play.swapScope==="one" && !state.play.swapSubScope) ? '<button class="btn btn-primary" onclick="swapDeal()">Deal 15 cards</button>' : '')+'</div>';
-  document.querySelectorAll('#swapScopeGrid .scope-card').forEach(function(el){
-    el.onclick=function(){ state.play.swapScope=el.dataset.id; if(el.dataset.id==="one") state.play.swapSubScope=state.play.swapSubScope||"branches"; else state.play.swapSubScope=null; renderPlay(); };
-  });
-  if(state.play.swapScope==="one"){
-    var slot = document.getElementById('swapSubScopeSlot');
-    slot.innerHTML = '<div style="margin-top:16px"><div style="font-size:.82rem;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Which layer?</div><div class="scope-grid">'+LORDER.map(function(l){
-      var sel = state.play.swapSubScope === l;
-      return '<div class="scope-card'+(sel?' selected':'')+'" data-sub="'+l+'"><div class="sc-title">'+L[l]+'</div><div class="sc-sub">'+Ldesc[l]+'</div></div>';
-    }).join("")+'</div></div>';
-    slot.querySelectorAll('[data-sub]').forEach(function(el){ el.onclick=function(){ state.play.swapSubScope=el.dataset.sub; renderPlay(); }; });
-  }
-}
-function swapPool(){
-  var s = state.play.swapScope;
-  if(s==="all") return C.slice();
-  if(s==="one") return C.filter(function(n){return n[0]===state.play.swapSubScope});
-  if(s==="branchleaves") return C.filter(function(n){return n[0]==="branches"||n[0]==="leaves"});
-  return C.slice();
-}
-function swapDeal(){
-  var pool = swapPool();
-  var dealt = shuffle(pool).slice(0, Math.min(15, pool.length));
-  state.play.swapCards = dealt.map(function(c){return {layer:c[0], name:c[1], desc:c[2]}});
-  state.play.swapSorted = {nice:[], painful:[], nonneg:[], emergency:[]};
-  state.play.swapIdx = 0; state.play.swapShowAll = false; state.play.swapNotes = {};
-  state.play.view = "swap";
-  renderPlay();
-}
-window.swapDeal=swapDeal;
-function unsortSwapNeed(pileId, idx){
-  var p = state.play;
-  var arr = p.swapSorted[pileId];
-  if(!arr || !arr[idx]) return;
-  var name = arr[idx];
-  arr.splice(idx, 1);
-  var cardIdx = p.swapCards.findIndex(function(c){return c.name === name});
-  if(cardIdx >= 0) p.swapIdx = cardIdx;
-  renderPlay();
-}
-window.unsortSwapNeed=unsortSwapNeed;
-function renderSwapSort(c){
-  var p = state.play;
-  if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
-  var current = p.swapCards[p.swapIdx];
-  var emCount = p.swapSorted.emergency.length;
-  var piles = [
-    {id:"nice", title:"Nice to have"},
-    {id:"painful", title:"Painful if unmet"},
-    {id:"nonneg", title:"Non-negotiable"},
-    {id:"emergency", title:"Emergency (max 3)", cls:"pile-emergency"+(emCount>=3?" full":"")}
-  ];
-  c.innerHTML = '<div class="play-hero"><h1>Swap and compare</h1><p>Card '+(p.swapIdx+1)+' of '+p.swapCards.length+'. Sort privately.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:20px 28px;min-width:220px"><div class="dc-name" style="font-size:1.2rem">'+current.name+'</div><div class="dc-tag">'+L[current.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+current.desc+'</div></div></div><div class="pile-grid" id="swapPileGrid">'+piles.map(function(pl){
-    var needs = p.swapSorted[pl.id] || [];
-    var disabled = (pl.id==="emergency" && emCount>=3) ? ' style="opacity:.5;pointer-events:none"' : '';
-    return '<div class="pile '+(pl.cls||'')+'" data-pile="'+pl.id+'"'+disabled+'><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needs.map(function(n,i){
-  return '<span class="pile-need" style="padding-right:6px">'+n+'<button type="button" onclick="event.stopPropagation();unsortSwapNeed(\''+pl.id+'\','+i+')" style="background:none;border:none;color:var(--mute);font-size:1rem;line-height:1;padding:0 0 0 6px;cursor:pointer;font-family:inherit" aria-label="Remove">×</button></span>';
-}).join("")+'</div>';
-  }).join("")+'</div><div class="game-actions"><button class="btn btn-ghost" onclick="abandonSwap()">Stop</button></div>';
-  document.querySelectorAll('#swapPileGrid .pile').forEach(function(el){
-    el.onclick=function(){
-      var id = el.dataset.pile;
-      if(id==="emergency" && p.swapSorted.emergency.length>=3) return;
-      p.swapSorted[id].push(current.name);
-      p.swapIdx++;
-      if(p.swapIdx >= p.swapCards.length){ swapFinish(); return; }
-      renderPlay();
-    };
-  });
-}
-function abandonSwap(){ state.play.view="menu"; state.play.swapCards=[]; state.play.swapSorted={}; state.play.swapIdx=0; renderPlay(); }
-window.abandonSwap=abandonSwap;
-function swapFinish(){
-  var p = state.play;
-  (p.swapSorted.emergency || []).forEach(function(name){
-    var found = p.swapCards.find(function(c){return c.name===name});
-    if(!found) return;
-    var layer = found.layer;
-    if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
-    if(state.emergencyPicks[layer].indexOf(name)<0 && state.emergencyPicks[layer].length<3) state.emergencyPicks[layer].push(name);
-  });
-  (p.swapSorted.nonneg || []).forEach(function(name){
-    var found = p.swapCards.find(function(c){return c.name===name});
-    if(!found) return;
-    var layer = found.layer;
-    if(!state.nonNegotiables[layer]) state.nonNegotiables[layer]=[];
-    if(state.nonNegotiables[layer].indexOf(name)<0) state.nonNegotiables[layer].push(name);
-  });
-  var candidates = [];
-  (p.swapSorted.emergency||[]).forEach(function(n){candidates.push({name:n, pile:"Emergency", rank:3})});
-  (p.swapSorted.nonneg||[]).forEach(function(n){candidates.push({name:n, pile:"Non-negotiable", rank:2})});
-  (p.swapSorted.painful||[]).forEach(function(n){candidates.push({name:n, pile:"Painful if unmet", rank:1})});
-  candidates.sort(function(a,b){return b.rank - a.rank});
-  var top = candidates.slice(0,3);
-  if(top.length<3){
-    p.swapCards.forEach(function(cd){
-      if(top.length>=3) return;
-      if(!top.find(function(x){return x.name===cd.name})) top.push({name:cd.name, pile:"Nice to have", rank:0});
-    });
-  }
-  p.swapTop = top;
-  saveState();
-  p.view = "swap-done";
-  renderPlay();
-}
-function renderSwapDone(c){
-  var p = state.play;
-  var showAll = p.swapShowAll || false;
-
-  var topHtml = p.swapTop.map(function(item, i){
-    return '<div class="results-detail"><div class="rd-context">Number '+(i+1)+'</div><h2>'+item.name+'</h2><div class="rd-section"><h3>You sorted this as</h3><p><strong>'+item.pile+'</strong></p></div><div class="rd-question">"For me, '+item.name+' is '+item.pile.toLowerCase()+'. What is it for you?"</div></div>';
-  }).join("");
-
-  var noteHtml =
-    '<div style="max-width:560px;margin:0 auto 20px;background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px">'+
-      '<p style="font-size:.82rem;color:var(--mute);margin:0">Your non-negotiables will appear on <strong>Today</strong>, as the portrait of your character.</p>'+
-    '</div>';
-
-  var sitHtml = '<div class="results-detail" style="border-color:var(--moss)"><h2>The question to sit with</h2><div class="rd-section"><p>Where you agreed, there is nothing to do. Where you differed, ask: what does this need mean to them that it does not mean to me?</p></div></div>';
-  var toggleHtml = '<div class="action-row" style="margin-top:8px"><button class="btn btn-outline" id="toggleShowAll">'+(showAll?'Hide the full sort':'Show everything I sorted')+'</button></div><div id="swapAllSlot"></div>';
-  var closingHtml = '<div class="closing-prompt"><h3>One thing you learned about them</h3><textarea id="swapReflection" placeholder="One sentence is enough."></textarea><div class="game-actions" style="margin-top:14px;justify-content:flex-start"><button class="btn btn-primary" onclick="saveSwapReflection()">Save to journal</button><button class="btn btn-outline" onclick="playAnother()">Play another</button><button class="btn btn-ghost" onclick="navigateTo(\'tree\')">Open my tree →</button></div><div id="swapSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div></div>';
-
-  c.innerHTML =
-    '<div class="play-hero"><h1>Your three to compare</h1><p>Your partner did the same thing. Now sit side by side.</p></div>'+
-    noteHtml+
-    '<div class="results-container">'+topHtml+sitHtml+toggleHtml+closingHtml+'</div>';
-
-  document.getElementById('toggleShowAll').onclick=function(){
-    state.play.swapShowAll = !state.play.swapShowAll;
-    renderSwapDone(c);
-  };
-
-  if(showAll){
-    var slot = document.getElementById('swapAllSlot');
-    var piles = [
-      {id:"emergency", title:"Emergency", cls:"pile-emergency"},
-      {id:"nonneg", title:"Non-negotiable"},
-      {id:"painful", title:"Painful if unmet"},
-      {id:"nice", title:"Nice to have"}
-    ];
-    var pilesHtml = piles.map(function(pl){
-      var needs = (p.swapSorted[pl.id] || []);
-      var needsHtml = needs.map(function(n){
-        var safe = n.replace(/'/g, "\\'");
-        return '<span class="pile-need" style="cursor:pointer" onclick="openSwapNote(\''+safe+'\')">'+n+'</span>';
-      }).join("");
-      return '<div class="pile '+(pl.cls||'')+'"><div class="pile-title">'+pl.title+' ('+needs.length+')</div>'+needsHtml+'</div>';
-    }).join("");
-    slot.innerHTML = '<div class="closing-prompt" style="margin-top:20px"><h3>Everything you sorted</h3><p>Tap a card to write yourself a note.</p><div class="pile-grid" style="margin-top:16px">'+pilesHtml+'</div><div id="swapNoteSlot"></div></div>';
-  }
-}
-function openSwapNote(name){
-  var slot = document.getElementById('swapNoteSlot');
-  if(!slot) return;
-  var existing = (state.play.swapNotes && state.play.swapNotes[name]) || "";
-  slot.innerHTML = '<div style="margin-top:18px;padding:16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--bg)"><div style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:6px">'+name+'</div><div style="font-size:.85rem;color:var(--mute);margin-bottom:10px">What do you want to remember about this one?</div><textarea class="ri-input" id="swapNoteInput" placeholder="One sentence is enough.">'+existing+'</textarea><div class="game-actions" style="margin-top:10px;justify-content:flex-start"><button class="btn btn-primary btn-small" onclick="saveSwapNote(\''+name.replace(/'/g,"\\'")+'\')">Save note</button><button class="btn btn-ghost btn-small" onclick="closeSwapNote()">Close</button></div><div id="swapNoteStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div></div>';
-}
-function closeSwapNote(){ var slot = document.getElementById('swapNoteSlot'); if(slot) slot.innerHTML = ""; }
-function saveSwapNote(name){
-  var t = document.getElementById('swapNoteInput').value.trim();
-  if(!t){alert("Write something first, even one sentence.");return}
-  if(!state.play.swapNotes) state.play.swapNotes = {};
-  state.play.swapNotes[name] = t;
-  var d = new Date();
-  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap note — "+name,text:t});
-  saveState();
-  var s = document.getElementById('swapNoteStatus');
-  if(s) s.textContent = "Saved ✓";
-}
-window.openSwapNote=openSwapNote;
-window.closeSwapNote=closeSwapNote;
-window.saveSwapNote=saveSwapNote;
-function saveSwapReflection(){
-  var t = document.getElementById('swapReflection').value.trim();
-  if(!t){alert("Write something first, even one sentence.");return}
-  var d = new Date();
-  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  state.journal.unshift({date:months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),cardName:"Swap and compare — reflection",text:t});
-  saveState();
-  var s = document.getElementById('swapSaveStatus');
-  if(s) s.textContent = "Saved to your journal ✓";
-}
-window.saveSwapReflection=saveSwapReflection;
-
 /* Say it out loud */
 function startSayIt(){ state.play.view="sayit"; state.play.sayItCard=null; state.play.sayItRound=1; renderPlay(); }
 window.startSayIt=startSayIt;
@@ -1997,7 +1885,7 @@ function renderSayIt(c){
     p.sayItRound = 1;
   }
   var card = p.sayItCard;
-  c.innerHTML = '<div class="play-hero"><h1>Say it out loud</h1><p>Ten minutes. One card. One sentence. No advice.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 32px;min-width:240px;max-width:320px"><div class="dc-name" style="font-size:1.25rem">'+card.name+'</div><div class="dc-tag">'+L[card.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+card.desc+'</div></div></div><div class="closing-prompt" style="max-width:520px;margin:24px auto 0"><h3>Say this to them</h3><p style="font-style:italic;font-size:1rem;color:var(--ink);background:var(--bg);padding:14px;border-left:3px solid var(--moss);border-radius:8px;margin:12px 0">"I need '+card.name.toLowerCase()+', and what I usually do instead is …"</p><p style="font-size:.86rem;color:var(--mute)">Finish the sentence out loud. Then stop.</p><p style="font-size:.86rem;color:var(--mute);margin-top:14px"><strong>Their only line:</strong> "Thank you for telling me."</p></div><div class="game-actions"><button class="btn btn-outline" onclick="sayAnotherRound()">Swap — next person</button><button class="btn btn-ghost" onclick="sayItDone()">Finish</button></div><div class="play-hero" style="margin-top:28px"><p style="font-size:.82rem;color:var(--mute)">Round '+p.sayItRound+'</p></div>';
+  c.innerHTML = '<div class="play-hero"><h1>Say it out loud</h1><p>Ten minutes. One card. One sentence. No advice.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 32px;min-width:240px;max-width:320px"><div class="dc-name" style="font-size:1.25rem">'+esc(card.name)+'</div><div class="dc-tag">'+L[card.layer]+'</div><div style="font-size:.82rem;color:var(--mute);margin-top:6px">'+esc(card.desc)+'</div></div></div><div class="closing-prompt" style="max-width:520px;margin:24px auto 0"><h3>Say this to them</h3><p style="font-style:italic;font-size:1rem;color:var(--ink);background:var(--bg);padding:14px;border-left:3px solid var(--moss);border-radius:8px;margin:12px 0">"I need '+esc(card.name.toLowerCase())+', and what I usually do instead is …"</p><p style="font-size:.86rem;color:var(--mute)">Finish the sentence out loud. Then stop.</p><p style="font-size:.86rem;color:var(--mute);margin-top:14px"><strong>Their only line:</strong> "Thank you for telling me."</p></div><div class="game-actions"><button class="btn btn-outline" onclick="sayAnotherRound()">Swap — next person</button><button class="btn btn-ghost" onclick="sayItDone()">Finish</button></div><div class="play-hero" style="margin-top:28px"><p style="font-size:.82rem;color:var(--mute)">Round '+p.sayItRound+'</p></div>';
 }
 function sayAnotherRound(){
   var p = state.play;
@@ -2008,32 +1896,32 @@ function sayAnotherRound(){
   renderPlay();
 }
 window.sayAnotherRound=sayAnotherRound;
+function sayItDone(){ state.play.view = "sayit-done"; renderPlay(); }
+window.sayItDone=sayItDone;
 function sayItAddToManifesto(layer, name){
   if(!state.nonNegotiables[layer]) state.nonNegotiables[layer]=[];
   if(state.nonNegotiables[layer].indexOf(name)<0) state.nonNegotiables[layer].push(name);
   saveState();
   var s = document.getElementById('sayItAddStatus');
   if(s) s.textContent = "Added ✓";
-  renderPlay();
+  renderSayItDone(document.getElementById('playContent'));
 }
 window.sayItAddToManifesto = sayItAddToManifesto;
 function renderSayItDone(c){
   var p = state.play;
   var card = p.sayItCard;
   var alreadyAdded = false;
-
   if(card){
     var found = C.find(function(x){return x[1]===card.name});
     if(found && state.nonNegotiables[found[0]] && state.nonNegotiables[found[0]].indexOf(card.name)>=0){
       alreadyAdded = true;
     }
   }
-
   var addCardHtml = '';
   if(card && !alreadyAdded){
     addCardHtml =
       '<div class="closing-prompt" style="max-width:520px;margin:0 auto 16px;border-color:var(--moss)">'+
-        '<h3 style="font-size:1.05rem">Add "'+card.name+'" to your non-negotiables?</h3>'+
+        '<h3 style="font-size:1.05rem">Add "'+esc(card.name)+'" to your non-negotiables?</h3>'+
         '<p style="font-size:.88rem;color:var(--mute)">This puts it on your <strong>Today</strong> page, as the portrait of your character — the list of needs you\'ve said matter.</p>'+
         '<div class="game-actions" style="margin-top:10px;justify-content:flex-start">'+
           '<button class="btn btn-primary btn-small" onclick="sayItAddToManifesto(\''+card.layer+'\',\''+card.name.replace(/'/g,"\\'")+'\')">Add to my non-negotiables</button>'+
@@ -2046,7 +1934,6 @@ function renderSayItDone(c){
         '<p style="font-size:.88rem;color:var(--moss);text-align:center;margin:0">This one is already on your portrait.</p>'+
       '</div>';
   }
-
   c.innerHTML =
     '<div class="play-hero"><h1>Done.</h1><p>The cards are not saved. What you said tonight is not recorded — unless you want to keep the one that mattered.</p></div>'+
     addCardHtml+
@@ -2073,52 +1960,29 @@ function saveSayItReflection(){
 }
 window.saveSayItReflection=saveSayItReflection;
 
-/* Strategy game */
-var STRATEGY_HINTS = {
-  "I need you to text me back right now.": ["Connection", "Validation", "Trust"],
-  "I'll just do it myself.": ["Autonomy", "Control", "Independence"],
-  "I'm fine, it's nothing.": ["Emotional safety", "Compassion", "Acceptance"],
-  "If I work harder, they'll finally notice me.": ["Recognition", "Validation", "Impact"],
-  "I'll go quiet until they figure it out.": ["Empathy", "Attention", "Validation"],
-  "They should just know.": ["Empathy", "Intimacy", "Connection"],
-  "I can't say no to this.": ["Boundaries", "Autonomy", "Consent"],
-  "I check their phone, just to be sure.": ["Trust", "Reassurance", "Control"],
-  "I'll make myself indispensable so they can't leave.": ["Belonging", "Security", "Worth"],
-  "I'm not going to ask — if they cared, they'd offer.": ["Validation", "Empathy", "Recognition"],
-  "I'll disappear for a few days so they worry.": ["Attention", "Connection", "Recognition"],
-  "I'll prove I'm the best so no one can replace me.": ["Specialness", "Recognition", "Security"],
-  "I'll agree to everything and resent them later.": ["Peace", "Belonging", "Boundaries"],
-  "I'll fix their problems so they need me.": ["Worth", "Belonging", "Control"],
-  "I'll create a crisis so someone has to respond.": ["Attention", "Connection", "Care"],
-  "I'll compete with everyone to prove I matter.": ["Recognition", "Impact", "Worth"],
-  "I'll stop resting until this is done.": ["Mastery", "Security", "Worth"],
-  "I'll make sure they feel guilty for not being there.": ["Revenge", "Validation", "Recognition"],
-  "I'll take control of every detail so nothing goes wrong.": ["Control", "Safety", "Certainty"],
-  "I'll stay in this situation even though it hurts, because at least it's familiar.": ["Stability", "Belonging", "Safety"]
-};
-var ALL_NEEDS_FOR_GAME = ["Autonomy","Independence","Authenticity","Integrity","Freedom","Self-expression","Self-knowledge","Privacy","Identity","Consent","Recognition","Validation","Acceptance","Affection","Support","Companionship","Empathy","Trust","Belonging","Mutuality","Connection","Intimacy","Love","Compassion","Emotional safety","Play","Humor","Leisure","Relaxation","Fun","Beauty","Adventure","Celebration","Purpose","Contribution","Impact","Growth","Fulfillment","Service","Spirituality","Gratitude","Transcendence","Rest and sleep","Stability and consistency","Physical safety","Sensory comfort","Movement and exercise","Sunlight","Health"];
+/* Guess the need */
 function startStrategyGame(){
   state.play.view = "strategy";
-  var shuffled = shuffle(S).slice(0,3);
-  state.play.strategyRound = shuffled.map(function(s){ return { text: s, guess: null, revealed: false }; });
+  var shuffled = shuffle(STRAT).slice(0,3);
+  state.play.strategyRound = shuffled.map(function(s){ return { text: s[0], need: s[1], guess: null, revealed: false }; });
   state.play.strategyIdx = 0;
   renderPlay();
 }
 window.startStrategyGame=startStrategyGame;
 function renderStrategyGame(c){
   var p = state.play;
+  if(!p.strategyRound || p.strategyRound.length === 0){ p.view="menu"; renderPlay(); return; }
   var round = p.strategyRound[p.strategyIdx];
   var step = p.strategyIdx + 1;
+  var allNeeds = C.map(function(x){return x[1]});
+  var opts = [round.need].concat(shuffle(allNeeds.filter(function(n){return n !== round.need})).slice(0,5));
+  opts = shuffle(opts);
   if(round.revealed){
-    var hints = STRATEGY_HINTS[round.text] || ["Connection","Validation","Autonomy"];
-    c.innerHTML = '<div class="play-hero"><h1>Guess the need</h1><p>Card '+step+' of '+p.strategyRound.length+'.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 28px;min-width:260px;max-width:420px"><div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">Strategy</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;line-height:1.4">&ldquo;'+round.text+'&rdquo;</div></div></div><div class="closing-prompt" style="max-width:520px;margin:20px auto 0"><h3>You guessed: '+round.guess+'</h3><p style="font-size:.9rem;color:var(--mute);margin-top:6px">A single strategy can hide more than one need. This one often hides:</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+hints.map(function(h){
-      var isGuess = (h === round.guess);
-      return '<span style="padding:6px 14px;border-radius:20px;font-size:.88rem;font-weight:600;'+(isGuess?'background:var(--moss);color:#fff;':'background:var(--card);border:1.5px solid var(--line);color:var(--ink);')+'">'+h+(isGuess?' ✓':'')+'</span>';
-    }).join("")+'</div><div class="game-actions" style="margin-top:20px;justify-content:flex-start"><button class="btn btn-primary" onclick="strategyNext()">'+(step < p.strategyRound.length ? 'Next strategy →' : 'Finish')+'</button></div></div>';
+    c.innerHTML = '<div class="play-hero"><h1>Guess the need</h1><p>Card '+step+' of '+p.strategyRound.length+'.</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 28px;min-width:260px;max-width:420px"><div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">Strategy</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;line-height:1.4">&ldquo;'+esc(round.text)+'&rdquo;</div></div></div><div class="closing-prompt" style="max-width:520px;margin:20px auto 0"><h3>You guessed: '+esc(round.guess||"—")+'</h3><p style="font-size:.9rem;color:var(--mute);margin-top:6px">This strategy often hides:</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><span style="padding:6px 14px;border-radius:20px;font-size:.88rem;font-weight:600;background:var(--moss);color:#fff">'+esc(round.need)+'</span></div><div class="game-actions" style="margin-top:20px;justify-content:flex-start"><button class="btn btn-primary" onclick="strategyNext()">'+(step < p.strategyRound.length ? 'Next strategy →' : 'Finish')+'</button></div></div>';
     return;
   }
-  c.innerHTML = '<div class="play-hero"><h1>Guess the need</h1><p>Card '+step+' of '+p.strategyRound.length+'. What need is hiding underneath this sentence?</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 28px;min-width:260px;max-width:420px"><div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">Strategy</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;line-height:1.4">&ldquo;'+round.text+'&rdquo;</div></div></div><div class="closing-prompt" style="max-width:520px;margin:20px auto 0"><h3>Pick the need you think is hiding</h3><p style="font-size:.85rem;color:var(--mute);margin-bottom:12px">There is no correct answer.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'+shuffle(ALL_NEEDS_FOR_GAME).slice(0,6).map(function(n){
-    return '<button class="btn btn-outline btn-small" onclick="strategyGuess(\''+n.replace(/'/g,"\\'")+'\')">'+n+'</button>';
+  c.innerHTML = '<div class="play-hero"><h1>Guess the need</h1><p>Card '+step+' of '+p.strategyRound.length+'. What need is hiding underneath this sentence?</p></div><div class="deal-area"><div class="dealt-card flipped" style="display:inline-block;padding:24px 28px;min-width:260px;max-width:420px"><div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px">Strategy</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;line-height:1.4">&ldquo;'+esc(round.text)+'&rdquo;</div></div></div><div class="closing-prompt" style="max-width:520px;margin:20px auto 0"><h3>Pick the need you think is hiding</h3><p style="font-size:.85rem;color:var(--mute);margin-bottom:12px">There is no correct answer.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'+opts.map(function(n){
+    return '<button class="btn btn-outline btn-small" onclick="strategyGuess(\''+n.replace(/'/g,"\\'")+'\')">'+esc(n)+'</button>';
   }).join("")+'</div><div class="game-actions" style="margin-top:16px;justify-content:flex-start"><button class="btn btn-ghost" onclick="abandonStrategy()">Stop</button></div></div>';
 }
 function strategyGuess(name){
@@ -2152,10 +2016,13 @@ function saveStrategyReflection(){
 }
 window.saveStrategyReflection=saveStrategyReflection;
 
-/* ===== INIT ===== */
+/* ============================================================
+   INIT
+   ============================================================ */
 loadState();
 renderOnboarding();
 renderContext();
+if(state.diagScores && state.view !== 'context'){ /* stay on onboarding unless user has already completed */ }
 
 document.addEventListener('click', function(){ setTimeout(saveState, 50); }, true);
 document.addEventListener('input', function(){ saveState(); }, true);
@@ -2168,12 +2035,11 @@ window.addEventListener('beforeunload', function(){
       emergencyPicks: state.emergencyPicks, nonNegotiables: state.nonNegotiables,
       chosenActions: state.chosenActions, customActions: state.customActions,
       actionIndex: state.actionIndex, ifThenCue: state.ifThenCue, ifThenAction: state.ifThenAction,
-      treeNeeds: state.treeNeeds, journal: state.journal, darkWaitlist: state.darkWaitlist,
-      fakeDoors: state.fakeDoors
+      treeNeeds: state.treeNeeds, journal: state.journal, hist: state.hist,
+      darkWaitlist: state.darkWaitlist, fakeDoors: state.fakeDoors, onboardStep: state.onboardStep
     }));
   }catch(e){}
 });
 </script>
-  </body>
+</body>
 </html>
-  
