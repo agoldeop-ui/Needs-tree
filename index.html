@@ -1189,7 +1189,7 @@ function renderReframesFor(layer){
             '<div style="font-family:var(--font-display);font-weight:700;font-size:.85rem;color:var(--mute);flex-shrink:0;min-width:20px;padding-top:2px">'+(i+1)+'</div>'+
             '<div style="flex:1;min-width:0">'+
               '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25">'+m.name+'</div>'+
-              '<div style="font-size:.72rem;color:'+Lcolor[m.layer]+';text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:2px">'+L the[m.layer]+'</div>'+
+              '<div style="font-size:.72rem;color:'+Lcolor[m.layer]+';text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:2px">'+L[m.layer]+'</div>'+
               (plan?'<div style="font-size:.85rem;color:var(--mute);font-style:italic;margin-top:6px">'+plan+'</div>':'<div style="font-size:.8rem;color:var(--mute);margin-top:6px"><a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+m.name.replace(/'/g,"\\'")+'\')" style="color:var(--moss);text-decoration:none">Write the plan →</a></div>')+
             '</div>'+
           '</div>';
