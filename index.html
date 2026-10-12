@@ -957,13 +957,65 @@ function renderResults(){
   var c=document.getElementById('diagContent');
   var scores=state.diagScores;
   var ctxLabel = state.context && state.context!=="self" ? CONTEXTS.filter(function(x){return x.id===state.context})[0].title : null;
-  c.innerHTML='<div class="results-container"><div class="results-header"><h1>Your Needs Tree, this season.</h1><p>Tap any layer to see what it is, why it matters, and pick your emergencies there.'+(ctxLabel?' <span style="font-size:.85rem;color:var(--mute)">Context: '+ctxLabel+'</span>':'')+'</p></div><div class="layer-bars" id="layerBars">'+LORDER.slice().reverse().map(function(l){
+
+  var strainedLayers = LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
+  var anyStrained = strainedLayers.length > 0;
+
+  var fl = state.focusLayer;
+  if(!fl){
+    if(anyStrained){
+      strainedLayers.sort(function(a,b){return scores[b]-scores[a]});
+      fl = strainedLayers[0];
+    } else {
+      var best = LORDER.slice().sort(function(a,b){return scores[b]-scores[a]})[0];
+      fl = best;
+    }
+    state.focusLayer = fl;
+  }
+
+  var totalEm = 0;
+  LORDER.forEach(function(l){ totalEm += (state.emergencyPicks[l] || []).length; });
+
+  var headerCopy = anyStrained
+    ? 'Tap any layer to see what it is and what it solves. When a layer is strained, you can pick emergencies there.'
+    : 'Nothing is in the red right now. Your <strong>'+L[fl]+'</strong> layer is the closest, so start there — you can still pick needs to work on.';
+
+  c.innerHTML='<div class="results-container">'+
+    '<div class="results-header"><h1>Your Needs Tree, this season.</h1><p>'+headerCopy+(ctxLabel?' <span style="font-size:.85rem;color:var(--mute)">Context: '+ctxLabel+'</span>':'')+'</p></div>'+
+    '<div style="max-width:520px;margin:0 auto 24px;font-size:.8rem;color:var(--mute);text-align:center">'+
+      '<span style="color:var(--c-healthy);font-weight:600">0–3 healthy</span> · '+
+      '<span style="color:var(--c-moderate);font-weight:600">4–7 under strain</span> · '+
+      '<span style="color:var(--c-strained);font-weight:600">8–12 strained</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;font-size:.78rem;color:var(--mute);flex-wrap:wrap">'+
+      '<span style="padding:4px 12px;border-radius:20px;background:var(--card);border:1.5px solid var(--moss);color:var(--moss);font-weight:600">1 · Read the map</span>'+
+      '<span style="padding:4px 12px;border-radius:20px;background:var(--card);border:1.5px solid var(--line)">2 · Pick your emergencies</span>'+
+      '<span style="padding:4px 12px;border-radius:20px;background:var(--card);border:1.5px solid var(--line)">3 · See your focus</span>'+
+    '</div>'+
+    '<div class="layer-bars" id="layerBars">'+LORDER.slice().reverse().map(function(l){
       var st=scoreStatus(scores[l]);
       var pct=Math.min(100,(scores[l]/12)*100);
       var emCount=state.emergencyPicks[l]?state.emergencyPicks[l].length:0;
-      return '<div class="layer-bar-item '+st+'" data-layer="'+l+'"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
-    }).join("")+'</div><div id="layerFocus"></div><div class="action-row"><button class="btn btn-outline" id="retakeBtn">Retake diagnostic</button><button class="btn btn-primary" id="goTreeBtn">Go to my tree</button></div><div class="safety-note">Reflection tool, not therapy or diagnosis.</div></div>';
-  document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){ el.onclick=function(){state.focusLayer=el.dataset.layer;renderResults()} });
+      return '<div class="layer-bar-item '+st+'" data-layer="'+l+'"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 · '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
+    }).join("")+'</div>'+
+    '<div id="layerFocus"></div>'+
+    (totalEm > 0 ?
+      '<div class="results-detail" style="border-color:var(--moss);border-width:2px;margin-top:8px">'+
+        '<h2 style="font-size:1.15rem">Step 3 · Your focus is set</h2>'+
+        '<p style="font-size:.92rem;color:var(--mute)">You picked <strong>'+totalEm+'</strong> emergency need'+(totalEm>1?'s':'')+'. To make them stick, write one if-then plan for each — the app will show them on Today and bring them back to you.</p>'+
+        '<div class="action-row left" style="margin-top:12px">'+
+          '<button class="btn btn-primary" onclick="navigateTo(\'today\')">Go to Today →</button>'+
+          '<button class="btn btn-outline" onclick="navigateTo(\'tree\')">See my tree</button>'+
+        '</div>'+
+      '</div>'
+      : '')+
+    '<div class="action-row" style="margin-top:20px"><button class="btn btn-outline" id="retakeBtn">Retake diagnostic</button>'+(totalEm>0?'<button class="btn btn-primary" onclick="navigateTo(\'tree\')">Go to my tree</button>':'')+'</div>'+
+    '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>'+
+  '</div>';
+
+  document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){
+    el.onclick=function(){state.focusLayer=el.dataset.layer;renderResults()};
+  });
   document.getElementById('retakeBtn').onclick=function(){
     state.diagAnswers=new Array(15).fill(null);state.diagCurrent=0;state.diagScores=null;state.diagStrained=null;state.focusLayer=null;
     state.emergencyPicks={roots:[],trunk:[],branches:[],leaves:[],fruits:[]};
@@ -971,13 +1023,12 @@ function renderResults(){
     saveState();
     renderDiagnostic();
   };
-  document.getElementById('goTreeBtn').onclick=function(){navigateTo('tree')};
-  var fl = state.focusLayer || state.diagStrained;
-  document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){ el.classList.toggle('focused', el.dataset.layer === fl) });
+  document.querySelectorAll('#layerBars .layer-bar-item').forEach(function(el){
+    el.classList.toggle('focused', el.dataset.layer === fl);
+  });
   renderLayerFocus(fl, scores);
 }
-
-function renderLayerFocus(layer, scores){
+  function renderLayerFocus(layer, scores){
   var slot=document.getElementById('layerFocus');
   var info=LAYER_INFO[layer];
   var st=scoreStatus(scores[layer]);
@@ -986,41 +1037,98 @@ function renderLayerFocus(layer, scores){
   var needs = needsForLayer(layer);
   var picks = state.emergencyPicks[layer] || [];
   var sortable = st === "strained";
-  var sortHtml = sortable
-    ? '<div class="sort-section"><h2>Pick up to three emergencies in '+L[layer]+'</h2><p>From this layer, pick the needs that feel like emergencies right now'+(ctxLabel?' for a '+ctxLabel:'')+'.</p><div class="sort-counter" id="sortCounter"><strong>'+picks.length+'</strong> of 3 selected</div><div class="sort-grid" id="sortGrid">'+needs.map(function(n){
-        var sel=picks.indexOf(n[1])>=0;
-        return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
-      }).join("")+'</div><div id="reframeSlot"></div>'+(picks.length===3?'<div class="sort-complete" style="margin-top:16px">Three emergencies picked.</div>':'')+'</div>'
-    : '<div class="sort-section"><h2>'+L[layer]+' is '+st+' right now</h2><p>'+(st==="healthy"?'This layer is doing okay.':'This layer is under strain but not in the red.')+'</p></div>';
-  slot.innerHTML='<div class="results-detail" style="border-color:'+color+'"><div class="rd-context">'+L[layer]+' &middot; '+st+' &middot; '+scores[layer]+'/12</div><h2>What this layer is, and what it solves</h2><div class="rd-section"><h3>What it is</h3><p>'+info.what+'</p></div><div class="rd-section"><h3>What it solves when satisfied</h3><p>'+info.solves+'</p></div><div class="rd-section"><h3>Why this layer comes first</h3><p>'+info.priority+'</p></div><div class="rd-question">What is one condition in this layer you have been calling a preference, that is actually a necessity?</div></div>'+sortHtml;
-  if(sortable){
-    document.querySelectorAll('#sortGrid .sort-card').forEach(function(el){
-      el.onclick=function(){
-        var name=el.dataset.need;
-        var arr = state.emergencyPicks[layer];
-        var i=arr.indexOf(name);
-        if(i>=0){arr.splice(i,1)}
-        else{if(arr.length>=3)return;arr.push(name);if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name)}
-        saveState();
-        renderLayerFocus(layer, scores);
-      };
-    });
-    renderReframesFor(layer);
-  }
-}
 
+  var explanationHtml =
+    '<div class="results-detail" style="border-color:'+color+'">'+
+      '<div class="rd-context">'+L[layer]+' · '+scores[layer]+'/12 · '+st+'</div>'+
+      '<h2>What this layer is, and what it solves</h2>'+
+      '<div class="rd-section"><h3>What it is</h3><p>'+info.what+'</p></div>'+
+      '<div class="rd-section"><h3>What it solves when satisfied</h3><p>'+info.solves+'</p></div>'+
+      '<div class="rd-section"><h3>Why this layer comes first</h3><p>'+info.priority+'</p></div>'+
+      '<div class="rd-question">What is one condition in this layer you have been calling a preference, that is actually a necessity?</div>'+
+    '</div>';
+
+  var sortHtml;
+  if(sortable){
+    sortHtml =
+      '<div class="sort-section">'+
+        '<div class="rd-context" style="margin-bottom:6px">Step 2 · Pick your emergencies</div>'+
+        '<h2>Which needs in '+L[layer]+' are starving right now?</h2>'+
+        '<p><strong>Emergency means: starving right now.</strong> Not what sounds most urgent. Not what you think should matter. The ones you have been apologising for.</p>'+
+        '<div class="sort-counter" id="sortCounter"><strong>'+picks.length+'</strong> of 3 selected</div>'+
+        '<div class="sort-grid" id="sortGrid">'+needs.map(function(n){
+          var sel=picks.indexOf(n[1])>=0;
+          return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
+        }).join("")+'</div>'+
+        '<div id="reframeSlot"></div>'+
+        (picks.length===3?
+          '<div class="sort-complete" style="margin-top:16px">Three emergencies picked. Tap another layer above, or write your if-then plans below.</div>'
+          : '')+
+      '</div>';
+  } else {
+    sortHtml =
+      '<div class="sort-section">'+
+        '<div class="rd-context" style="margin-bottom:6px">Step 2 · Optional</div>'+
+        '<h2>'+L[layer]+' is '+st+'</h2>'+
+        '<p>This layer is not strained, but it is the closest to being strained. If you want, you can still pick up to three needs to work on here.</p>'+
+        '<div class="sort-counter" id="sortCounter"><strong>'+picks.length+'</strong> of 3 selected</div>'+
+        '<div class="sort-grid" id="sortGrid">'+needs.map(function(n){
+          var sel=picks.indexOf(n[1])>=0;
+          return '<button class="sort-card'+(sel?' selected':'')+'" data-need="'+n[1]+'"><div class="sc-name">'+n[1]+'</div><div class="sc-desc">'+n[2]+'</div></button>';
+        }).join("")+'</div>'+
+        '<div id="reframeSlot"></div>'+
+      '</div>';
+  }
+
+  slot.innerHTML = explanationHtml + sortHtml;
+
+  document.querySelectorAll('#sortGrid .sort-card').forEach(function(el){
+    el.onclick=function(){
+      var name=el.dataset.need;
+      var arr = state.emergencyPicks[layer];
+      var i=arr.indexOf(name);
+      if(i>=0){arr.splice(i,1)}
+      else{if(arr.length>=3)return;arr.push(name);if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name)}
+      saveState();
+      renderLayerFocus(layer, scores);
+    };
+  });
+  renderReframesFor(layer);
+}
 function renderReframesFor(layer){
   var slot=document.getElementById('reframeSlot');
   if(!slot)return;
   var picks = state.emergencyPicks[layer] || [];
   if(picks.length===0){slot.innerHTML="";return}
-  slot.innerHTML='<div class="reframe-section" style="margin-top:24px"><h2>Flip the strategy</h2><p>For each emergency, here is the intellectualization you may be using, the strategy that follows, and a starting action plan.</p>'+picks.map(function(name){
-    var r=reframeFor(name);
-    var idx = state.actionIndex[name] || 0;
-    var action = state.chosenActions[name] || r.actions[idx % r.actions.length];
-    var note = state.customActions[name] || "";
-    return '<div class="reframe-item"><div class="ri-need"><span class="ri-dot" style="background:var(--c-strained)"></span>'+name+'</div><div class="ri-block"><div class="ri-label">Intellectualization</div><div class="ri-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div><div class="ri-block"><div class="ri-label">Maladaptive strategy</div><div class="ri-text strategy">'+r.strategy+'</div></div><div class="ri-block"><div class="ri-label">Flip it — suggested action</div><div class="ri-text action">'+action+'</div><div class="action-row left" style="margin-top:8px"><button class="btn btn-outline btn-small" data-shuffle="'+name+'">Shuffle option</button></div></div><div class="ri-block"><div class="ri-label">Your version</div><textarea class="ri-input" data-need="'+name+'" placeholder="Write your own action plan for this need...">'+note+'</textarea></div></div>';
-  }).join("")+'</div>';
+
+  slot.innerHTML =
+    '<div class="reframe-section" style="margin-top:24px">'+
+      '<h2>Flip the strategy</h2>'+
+      '<p>For each emergency, here is the intellectualization you may be using, the strategy that follows, and a starting action plan.</p>'+
+      picks.map(function(name){
+        var r=reframeFor(name);
+        var idx = state.actionIndex[name] || 0;
+        var action = state.chosenActions[name] || r.actions[idx % r.actions.length];
+        var note = state.customActions[name] || "";
+        return '<div class="reframe-item"><div class="ri-need"><span class="ri-dot" style="background:var(--c-strained)"></span>'+name+'</div>'+
+          '<div class="ri-block"><div class="ri-label">Intellectualization</div><div class="ri-text excuse">&ldquo;'+r.excuse+'&rdquo;</div></div>'+
+          '<div class="ri-block"><div class="ri-label">Maladaptive strategy</div><div class="ri-text strategy">'+r.strategy+'</div></div>'+
+          '<div class="ri-block"><div class="ri-label">Flip it — suggested action</div><div class="ri-text action">'+action+'</div>'+
+            '<div class="action-row left" style="margin-top:8px"><button class="btn btn-outline btn-small" data-shuffle="'+name+'">Shuffle option</button></div>'+
+          '</div>'+
+          '<div class="ri-block"><div class="ri-label">Your version</div><textarea class="ri-input" data-need="'+name+'" placeholder="Write your own action plan for this need...">'+note+'</textarea></div>'+
+        '</div>';
+      }).join("")+
+    '</div>'+
+    '<div class="results-detail" style="border-color:var(--moss);margin-top:16px">'+
+      '<h2 style="font-size:1.05rem">Where your plans live</h2>'+
+      '<p style="font-size:.92rem;color:var(--mute)">Open a need on My Tree to write the if-then plan — the exact moment this need is supposed to be met. Whatever you write there shows up on Today, so you see it again tomorrow.</p>'+
+      '<div class="action-row left" style="margin-top:10px">'+
+        '<button class="btn btn-outline btn-small" onclick="navigateTo(\'tree\')">Open My Tree</button>'+
+        '<button class="btn btn-ghost btn-small" onclick="navigateTo(\'today\')">Preview Today</button>'+
+      '</div>'+
+    '</div>';
+
   slot.querySelectorAll('[data-shuffle]').forEach(function(b){
     b.onclick=function(){
       var name=b.dataset.shuffle;
@@ -1033,7 +1141,6 @@ function renderReframesFor(layer){
   });
   slot.querySelectorAll('.ri-input').forEach(function(t){t.oninput=function(){state.customActions[t.dataset.need]=t.value;saveState()}});
 }
-
 function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
