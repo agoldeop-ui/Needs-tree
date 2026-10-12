@@ -1025,16 +1025,18 @@ function renderResults(){
       }).join("")+
     '</div>'+
 
-    (totalEm > 0 ?
-      '<div class="results-detail" style="border-color:var(--moss);border-width:2px;margin-top:20px;text-align:center">'+
-        '<h2 style="font-size:1.1rem">See your focus on the Today page</h2>'+
-        '<p style="font-size:.9rem;color:var(--mute)">You picked <strong>'+totalEm+'</strong> emergency need'+(totalEm>1?'s':'')+'. Today shows the plans for each one, and brings them back to you.</p>'+
-        '<div class="action-row" style="justify-content:center;margin-top:12px">'+
-          '<button class="btn btn-primary" onclick="navigateTo(\'today\')">Go to Today →</button>'+
-        '</div>'+
-      '</div>'
-      : '')+
-
+    '<div class="results-detail" style="border-color:var(--moss);border-width:2px;margin-top:20px;text-align:center">'+
+      '<h2 style="font-size:1.1rem">'+(totalEm>0?'See your focus on the Today page':'Your tree is ready')+'</h2>'+
+      '<p style="font-size:.9rem;color:var(--mute)">'+
+        (totalEm>0
+          ? 'You picked <strong>'+totalEm+'</strong> emergency need'+(totalEm>1?'s':'')+'. Today shows the if-then plan for each one. Open My Tree to write the plans — they show up on Today, so you see them again tomorrow.'
+          : 'Your tree is built. Open My Tree to see the layers, add what\'s missing, and mark the needs that matter right now.')+
+      '</p>'+
+      '<div class="action-row" style="justify-content:center;margin-top:12px">'+
+        (totalEm>0?'<button class="btn btn-primary" onclick="navigateTo(\'today\')">Go to Today →</button>':'')+
+        '<button class="btn btn-outline" onclick="navigateTo(\'tree\')">See my tree</button>'+
+      '</div>'+
+    '</div>'+
     '<div class="action-row" style="margin-top:20px"><button class="btn btn-outline" id="retakeBtn">Retake diagnostic</button></div>'+
     '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>'+
   '</div>';
@@ -1216,7 +1218,15 @@ function renderReframesFor(layer){
     var emCount=state.emergencyPicks[l]?state.emergencyPicks[l].length:0;
     return '<div class="layer-bar-item '+st+'" onclick="navigateTo(\'tree\')" style="cursor:pointer"><div class="lbi-info"><div class="lbi-name">'+L[l]+(emCount>0?' <span class="layer-emergency-count">'+emCount+' emergency'+(emCount>1?'s':'')+'</span>':'')+'</div><div class="lbi-score">'+scores[l]+' / 12 &middot; '+st+'</div></div><div class="lbi-track"><div class="lbi-fill" style="width:'+pct+'%"></div></div></div>';
   }).join("")+'</div>'+
-  '<div class="action-row"><button class="btn btn-outline" onclick="navigateTo(\'diagnostic\')">See results</button><button class="btn btn-primary" onclick="navigateTo(\'tree\')">View my tree</button></div>'+
+  '<div class="results-detail" style="max-width:640px;margin:0 auto;border:1px dashed var(--line);background:transparent">'+
+    '<h2 style="font-size:1rem">What this shows you</h2>'+
+    '<p style="font-size:.88rem;color:var(--mute);margin-bottom:10px">The bars above are your tree — five layers, from how you rest and feel safe (Roots) to what you contribute (Fruits). The red ones are where your needs are starving. The number on each bar tells you how much.</p>'+
+    '<p style="font-size:.88rem;color:var(--mute);margin-bottom:14px">This is not a score to improve. It\'s a snapshot to check, the way you\'d check weather. Come back next season and see what moved.</p>'+
+    '<div class="action-row left" style="margin-top:0">'+
+      '<button class="btn btn-outline btn-small" onclick="navigateTo(\'tree\')">Open my tree</button>'+
+      '<button class="btn btn-ghost btn-small" onclick="navigateTo(\'diagnostic\')">Retake the diagnostic</button>'+
+    '</div>'+
+  '</div>'+
   '<div class="safety-note">Reflection tool, not therapy or diagnosis.</div>';
 }
 
