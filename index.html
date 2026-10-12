@@ -1145,6 +1145,14 @@ function renderReframesFor(layer){
   });
   slot.querySelectorAll('.ri-input').forEach(function(t){t.oninput=function(){state.customActions[t.dataset.need]=t.value;saveState()}});
 }
+  function removeFromManifesto(layer, name){
+  if(!state.nonNegotiables[layer]) return;
+  var idx = state.nonNegotiables[layer].indexOf(name);
+  if(idx >= 0) state.nonNegotiables[layer].splice(idx, 1);
+  saveState();
+  renderToday();
+}
+window.removeFromManifesto = removeFromManifesto;
   function renderToday(){
   var d=new Date();
   var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -1183,17 +1191,19 @@ function renderReframesFor(layer){
     manifestoHtml =
       '<div class="sticky-section-title">Your non-negotiables</div>'+
       '<div style="max-width:640px;margin:0 auto 24px;background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:20px">'+
-        manifesto.map(function(m, i){
+      manifesto.map(function(m, i){
           var plan = state.ifThenAction[m.name] ? ('If '+ (state.ifThenCue[m.name]||'…') +', then I will '+ state.ifThenAction[m.name] +'.') : null;
+          var safe = m.name.replace(/'/g, "\\'");
           return '<div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:'+(i<manifesto.length-1?'1px solid var(--line)':'none')+'">'+
             '<div style="font-family:var(--font-display);font-weight:700;font-size:.85rem;color:var(--mute);flex-shrink:0;min-width:20px;padding-top:2px">'+(i+1)+'</div>'+
             '<div style="flex:1;min-width:0">'+
               '<div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;line-height:1.25">'+m.name+'</div>'+
               '<div style="font-size:.72rem;color:'+Lcolor[m.layer]+';text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:2px">'+L[m.layer]+'</div>'+
-              (plan?'<div style="font-size:.85rem;color:var(--mute);font-style:italic;margin-top:6px">'+plan+'</div>':'<div style="font-size:.8rem;color:var(--mute);margin-top:6px"><a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+m.name.replace(/'/g,"\\'")+'\')" style="color:var(--moss);text-decoration:none">Write the plan →</a></div>')+
+              (plan?'<div style="font-size:.85rem;color:var(--mute);font-style:italic;margin-top:6px">'+plan+'</div>':'<div style="font-size:.8rem;color:var(--mute);margin-top:6px"><a href="#" onclick="event.preventDefault();openDrawer(\''+m.layer+'\',\''+safe+'\')" style="color:var(--moss);text-decoration:none">Write the plan →</a></div>')+
             '</div>'+
+            '<button type="button" onclick="removeFromManifesto(\''+m.layer+'\',\''+safe+'\')" style="background:none;border:none;color:var(--mute);font-size:1.2rem;line-height:1;padding:4px 4px 0;cursor:pointer;font-family:inherit;flex-shrink:0" aria-label="Remove">×</button>'+
           '</div>';
-        }).join("")+
+        }).join("")+  
       '</div>';
   }
   var focusHtml = "";
@@ -1726,6 +1736,13 @@ function finishSort(){
     if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
     if(state.emergencyPicks[layer].indexOf(name)<0 && state.emergencyPicks[layer].length < 3) state.emergencyPicks[layer].push(name);
   });
+  var nn = state.play.sorted.nonneg || [];
+  nn.forEach(function(name){
+    var found = state.play.cards.find(function(c){return c.name===name});
+    if(!found) return;
+    var layer = found.layer;
+    if(state.nonNegotiables[layer].indexOf(name)<0) state.nonNegotiables[layer].push(name);
+  });
   saveState();
   state.play.view = "done";
   renderPlay();
@@ -1835,6 +1852,12 @@ function swapFinish(){
     var layer = found.layer;
     if(state.treeNeeds[layer].indexOf(name)<0) state.treeNeeds[layer].push(name);
     if(state.emergencyPicks[layer].indexOf(name)<0 && state.emergencyPicks[layer].length<3) state.emergencyPicks[layer].push(name);
+  });
+  (p.swapSorted.nonneg || []).forEach(function(name){
+    var found = p.swapCards.find(function(c){return c.name===name});
+    if(!found) return;
+    var layer = found.layer;
+    if(state.nonNegotiables[layer].indexOf(name)<0) state.nonNegotiables[layer].push(name);
   });
   var candidates = [];
   (p.swapSorted.emergency||[]).forEach(function(n){candidates.push({name:n, pile:"Emergency", rank:3})});
@@ -1946,14 +1969,52 @@ function renderSayIt(c){
   renderPlay();
 }
 window.sayAnotherRound=sayAnotherRound;
-function sayItDone(){ state.play.view="sayit-done"; renderPlay(); }
-window.sayItDone=sayItDone;
+  function sayItAddToManifesto(layer, name){
+  if(!state.nonNegotiables[layer]) state.nonNegotiables[layer]=[];
+  if(state.nonNegotiables[layer].indexOf(name)<0) state.nonNegotiables[layer].push(name);
+  saveState();
+  var s = document.getElementById('sayItAddStatus');
+  if(s) s.textContent = "Added ✓";
+  renderPlay();
+}
+window.sayItAddToManifesto = sayItAddToManifesto;
 function renderSayItDone(c){
   var p = state.play;
   var card = p.sayItCard;
-  c.innerHTML = '<div class="play-hero"><h1>Done.</h1><p>The cards are not saved. What you said tonight is not recorded.</p></div><div class="closing-prompt" style="max-width:520px;margin:0 auto"><h3>One optional question</h3><p>What was it like to say that out loud without being fixed?</p><textarea id="sayItReflection" placeholder="Write something, or skip this."></textarea><div class="game-actions" style="margin-top:14px;justify-content:flex-start"><button class="btn btn-primary" onclick="saveSayItReflection()">Save to journal</button><button class="btn btn-outline" onclick="playAnother()">Play another</button></div><div id="sayItSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div></div>';
+  var alreadyAdded = false;
+  if(card){
+    var found = C.find(function(x){return x[1]===card.name});
+    if(found && state.nonNegotiables[found[0]] && state.nonNegotiables[found[0]].indexOf(card.name)>=0) alreadyAdded = true;
+  }
+
+  c.innerHTML = '<div class="play-hero"><h1>Done.</h1><p>The cards are not saved. What you said tonight is not recorded — unless you want to keep the one that mattered.</p></div>'+
+    (card && !alreadyAdded ?
+      '<div class="closing-prompt" style="max-width:520px;margin:0 auto 16px;border-color:var(--moss)">'+
+        '<h3 style="font-size:1.05rem">Add "'+card.name+'" to your non-negotiables?</h3>'+
+        '<p style="font-size:.88rem;color:var(--mute)">This puts it in your manifesto on Today — the list of needs you\'ve said matter.</p>'+
+        '<div class="game-actions" style="margin-top:10px;justify-content:flex-start">'+
+          '<button class="btn btn-primary btn-small" onclick="sayItAddToManifesto(\''+card.layer+'\',\''+card.name.replace(/'/g,"\\'")+'\')">Add to my non-negotiables</button>'+
+        '</div>'+
+        '<div id="sayItAddStatus" style="font-size:.78rem;color:var(--moss);margin-top:6px;min-height:1em"></div>'+
+      '</div>'
+      : '')+
+    (card && alreadyAdded ?
+      '<div class="closing-prompt" style="max-width:520px;margin:0 auto 16px;border-color:var(--moss)">'+
+        '<p style="font-size:.88rem;color:var(--moss);text-align:center">This one is already on your manifesto.</p>'+
+      '</div>'
+      : '')+
+    '<div class="closing-prompt" style="max-width:520px;margin:0 auto">'+
+      '<h3>One optional question</h3>'+
+      '<p>What was it like to say that out loud without being fixed?</p>'+
+      '<textarea id="sayItReflection" placeholder="Write something, or skip this."></textarea>'+
+      '<div class="game-actions" style="margin-top:14px;justify-content:flex-start">'+
+        '<button class="btn btn-primary" onclick="saveSayItReflection()">Save to journal</button>'+
+        '<button class="btn btn-outline" onclick="playAnother()">Play another</button>'+
+      '</div>'+
+      '<div id="sayItSaveStatus" style="font-size:.82rem;color:var(--moss);margin-top:8px;min-height:1em"></div>'+
+    '</div>';
 }
-function saveSayItReflection(){
+  function saveSayItReflection(){
   var t = document.getElementById('sayItReflection').value.trim();
   if(!t){alert("Write something first, even one sentence.");return}
   var d = new Date();
