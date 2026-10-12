@@ -53,7 +53,7 @@ p{max-width:72ch}
 .page.active{display:block}
 .onboarding{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;max-width:520px;margin:0 auto}
 .onboarding h1{font-size:2.1rem;margin-bottom:16px}
-.onboarding p{font-size:1.08rem;color:var(--mute);margin-bottom:24px;line-height:1.7}
+.onboarding p{font-size:1.08rem;color:var(--mute);margin-bottom:24px;line-height:1.7;max-width:46ch}
 .onboarding .step-indicator{display:flex;gap:8px;margin-bottom:32px}
 .onboarding .step-dot{width:10px;height:10px;border-radius:50%;background:var(--line);transition:all var(--transition)}
 .onboarding .step-dot.active{background:var(--moss);transform:scale(1.2)}
@@ -807,11 +807,27 @@ var STRAT = [
 
 /* Onboarding */
 var ONBOARD = [
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><path d="M60 20 C40 20 25 35 25 55 C25 65 30 74 40 79 C32 84 28 94 28 105 L92 105 C92 94 88 84 80 79 C90 74 95 65 95 55 C95 35 80 20 60 20 Z" fill="none" stroke="#5B8FB9" stroke-width="2"/><path d="M60 40 L60 90" stroke="#6B7F94" stroke-width="3"/></svg>', title:"You understand yourself. Nothing changes.", body:"Because you might be feeding the wrong layer. This is not another productivity hack, not therapy, and not motivation. It is a way to find words for what you actually need — before it turns into behavior you regret."},
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><path d="M60 105 L60 60" stroke="#6B7F94" stroke-width="4"/><path d="M60 60 C60 40 40 35 35 25" stroke="#5B8FB9" stroke-width="2" fill="none"/><path d="M60 60 C60 40 80 35 85 25" stroke="#5B8FB9" stroke-width="2" fill="none"/><path d="M60 80 C60 70 50 68 45 62" stroke="#4A9DB8" stroke-width="2" fill="none"/><path d="M60 80 C60 70 70 68 75 62" stroke="#4A9DB8" stroke-width="2" fill="none"/><circle cx="35" cy="22" r="6" fill="#7A6B9C"/><circle cx="85" cy="22" r="6" fill="#7A6B9C"/></svg>', title:"Your needs are a tree, not a list.", body:"Roots feed everything. The trunk holds you upright. Branches reach outward. Leaves are seasonal output. Fruits appear when the tree is healthy. When you know which layer is starving, the fix becomes obvious."},
-  {icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#5B8FB9">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#5C7186">15 statements</text></svg>', title:"Two minutes. A map of what's starving.", body:"You'll answer 15 statements, see which layers are under strain, pick up to three emergencies across the whole tree, and leave with a reframed action plan — not a diagnosis, a vocabulary."}
+  {
+    icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><path d="M30 45 Q60 25 90 45" stroke="#5B8FB9" stroke-width="2" fill="none" opacity=".6"/><path d="M30 60 Q60 40 90 60" stroke="#5B8FB9" stroke-width="2" fill="none" opacity=".75"/><path d="M30 75 Q60 55 90 75" stroke="#5B8FB9" stroke-width="2" fill="none" opacity=".9"/><path d="M60 20 L60 100" stroke="#1B2A38" stroke-width="2" stroke-dasharray="4 4" opacity=".5"/><circle cx="60" cy="100" r="4" fill="#B85C6B"/></svg>',
+    title:"Being a human is overwhelming.",
+    body:'Too many layers to hold at once. You feel lost, or lonely, or like work isn\u2019t quite right. You can\u2019t explain any of it to your partner. You don\u2019t know what to do next.<br><br>This is a map of what\u2019s actually starving \u2014 and what to feed first.<br><br><span style="font-size:.85rem;color:var(--mute);font-style:italic">A tool that works when you use it. Not therapy, not diagnosis.</span>'
+  },
+  {
+    icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><path d="M60 105 L60 60" stroke="#6B7F94" stroke-width="4"/><path d="M60 60 C60 40 40 35 35 25" stroke="#5B8FB9" stroke-width="2" fill="none"/><path d="M60 60 C60 40 80 35 85 25" stroke="#5B8FB9" stroke-width="2" fill="none"/><path d="M60 80 C60 70 50 68 45 62" stroke="#4A9DB8" stroke-width="2" fill="none"/><path d="M60 80 C60 70 70 68 75 62" stroke="#4A9DB8" stroke-width="2" fill="none"/><circle cx="35" cy="22" r="6" fill="#7A6B9C"/><circle cx="85" cy="22" r="6" fill="#7A6B9C"/></svg>',
+    title:"Your needs are a tree, not a list.",
+    body:"Roots feed everything. The trunk holds you upright. Branches reach outward. Leaves are seasonal output. Fruits appear when the tree is healthy. When you know which layer is starving, the fix becomes obvious."
+  },
+  {
+    icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="52" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><circle cx="60" cy="60" r="30" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".6"/><circle cx="60" cy="60" r="10" fill="#B85C6B"/><path d="M60 8 L60 20" stroke="#1B2A38" stroke-width="2"/><path d="M60 100 L60 112" stroke="#1B2A38" stroke-width="2"/><path d="M8 60 L20 60" stroke="#1B2A38" stroke-width="2"/><path d="M100 60 L112 60" stroke="#1B2A38" stroke-width="2"/></svg>',
+    title:"You don\u2019t have to decide what to focus on.",
+    body:"That\u2019s the part this app takes off your plate. Not by telling you what your needs are \u2014 you name those. But by ranking them, capping them at three, and refusing to let you hold all eighty at once.<br><br>Starving isn\u2019t just a state. It\u2019s an instruction: <em>feed this first.</em>"
+  },
+  {
+    icon:'<svg viewBox="0 0 120 120" class="onboard-icon"><circle cx="60" cy="60" r="50" fill="none" stroke="#5B8FB9" stroke-width="1.5" opacity=".3"/><text x="60" y="55" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#5B8FB9">2 min</text><text x="60" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#5C7186">15 statements</text></svg>',
+    title:"Two minutes. A map of what\u2019s starving.",
+    body:"You\u2019ll answer 15 statements, see which layers are under strain, pick up to three emergencies across the whole tree, and leave with a reframed action plan \u2014 not a diagnosis, a vocabulary."
+  }
 ];
-
 /* Dark needs (from big block) */
 var D = [
   ["Control","Need to shape outcomes; masks fear of chaos","Micromanaging, ultimatums, threats","Clear routines and boundaries"],
