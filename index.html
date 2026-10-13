@@ -888,7 +888,7 @@ function darkCard(c){
 function renderDark(){
   var c = document.getElementById('darkBody');
   if(!c) return;
-  var L = function(arr){return '<ul style="padding-left:20px;margin-bottom:10px">'+arr.map(function(x){return '<li style="margin-bottom:10px;max-width:60ch">'+x+'</li>'}).join("")+'</ul>'};
+  var UL = function(arr){return '<ul style="padding-left:20px;margin-bottom:10px">'+arr.map(function(x){return '<li style="margin-bottom:10px;max-width:60ch">'+x+'</li>'}).join("")+'</ul>'};
   c.innerHTML =
     '<div class="results-detail dk" style="background:#1B2A38;color:#E6EEF5;border-color:#1B2A38">'+
       '<h1 style="font-size:1.8rem">The needs you were taught to hide.</h1>'+
@@ -902,7 +902,7 @@ function renderDark(){
     '</div>'+
     '<div class="results-detail">'+
       '<h2>Why people buy it</h2>'+
-      L([
+      UL([
         "<b>Relief from shame.</b> Nobody teaches you that wanting control, attention, or revenge is a need. You're told to stop. The deck says: the need is fine, the behavior is the problem.",
         "<b>It names what you can't explain.</b> &ldquo;Why do I check their phone?&rdquo; becomes &ldquo;I need certainty, and I'm getting it the wrong way.&rdquo;",
         "<b>It works in a bad moment.</b> One card, one question, one alternative. No 40-page book.",
@@ -923,7 +923,7 @@ function renderDark(){
     '<div id="darkSample">'+darkCard(CTRL)+darkCard(ATTN)+'</div>'+
     '<div class="results-detail">'+
       '<h2>How people use it</h2>'+
-      L([
+      UL([
         "<b>Alone.</b> Pick the card that stings after a rough day. Read it, then write your answers to its questions.",
         "<b>With a partner.</b> Hand over a card instead of explaining. &ldquo;This one's me tonight.&rdquo;",
         "<b>With a coach or therapist.</b> A fast way into topics clients circle for weeks.",
@@ -932,7 +932,7 @@ function renderDark(){
     '</div>'+
     '<div class="results-detail">'+
       '<h2>Why it\'s different</h2>'+
-      L([
+      UL([
         "It's not a personality test. It doesn't put you in a type.",
         "It doesn't tell you to think positive.",
         "It doesn't call you broken.",
@@ -1026,6 +1026,9 @@ function loadState(){
     state.actionIndex = state.actionIndex || {};
     state.fakeDoors = state.fakeDoors || {save:0, dark:0};
     state.hist = state.hist || [];
+    if(typeof state.onboardStep !== "number" || state.onboardStep < 0 || state.onboardStep >= ONBOARD.length){
+      state.onboardStep = 0;
+    }
   }catch(e){}
 }
 
