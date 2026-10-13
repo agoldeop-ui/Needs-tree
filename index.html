@@ -448,7 +448,6 @@ p{max-width:72ch}
 <div class="drawer" id="drawer"></div>
 
 <script>
-  window.onerror=function(m,s,l,c,e){document.body.innerHTML='<pre style="padding:20px;font:14px monospace;background:#fff;color:#000;white-space:pre-wrap">ERROR: '+m+'\nLINE: '+l+'\n\n'+(e&&e.stack?e.stack:'')+'</pre>';};
 /* ============================================================
    DATA
    ============================================================ */
@@ -1070,8 +1069,12 @@ document.getElementById('menuBtn').addEventListener('click',function(){document.
    ONBOARDING
    ============================================================ */
 function renderOnboarding(){
-  var s=ONBOARD[state.onboardStep];
-  var c=document.getElementById('onboardingContent');
+  if(typeof state.onboardStep !== "number" || state.onboardStep < 0 || state.onboardStep >= ONBOARD.length){
+    state.onboardStep = 0;
+  }
+  var s = ONBOARD[state.onboardStep];
+  var c = document.getElementById('onboardingContent');
+  if(!c || !s){ return; }
   c.innerHTML='<div class="step-indicator">'+ONBOARD.map(function(_,i){return '<div class="step-dot'+(i===state.onboardStep?' active':'')+'"></div>'}).join("")+'</div>'+s.icon+'<h1>'+s.title+'</h1><p>'+s.body+'</p><button class="btn btn-primary" id="onboardNext">'+(state.onboardStep<ONBOARD.length-1?'Continue':'Choose who is taking this')+'</button>'+(state.onboardStep>0?'<button class="btn btn-ghost" id="onboardBack">Back</button>':'');
   document.getElementById('onboardNext').onclick=function(){
     if(state.onboardStep<ONBOARD.length-1){state.onboardStep++;saveState();renderOnboarding()}
@@ -1080,7 +1083,6 @@ function renderOnboarding(){
   var back=document.getElementById('onboardBack');
   if(back)back.onclick=function(){state.onboardStep--;saveState();renderOnboarding()};
 }
-
 /* ============================================================
    CONTEXT
    ============================================================ */
