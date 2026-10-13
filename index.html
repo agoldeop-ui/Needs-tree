@@ -363,6 +363,7 @@ p{max-width:72ch}
       <button class="nav-item" data-page="workshops"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Continue</button>
     </nav>
     <div class="sidebar-footer">
+      <a href="#" onclick="event.preventDefault();navigateTo('landing')">← Home</a>
       <a href="#" onclick="return false">About</a>
       <a href="#" onclick="return false">Privacy</a>
       <p style="margin-top:8px">Reflection tool, not therapy or diagnosis.</p>
@@ -373,7 +374,8 @@ p{max-width:72ch}
       <button id="menuBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
       <span>Needs Tree</span>
     </div>
-    <div class="page active" id="page-onboarding"><div class="onboarding" id="onboardingContent"></div></div>
+    <div class="page active" id="page-landing"><div id="landingContent"></div></div>
+<div class="page" id="page-onboarding"><div class="onboarding" id="onboardingContent"></div></div>
     <div class="page" id="page-context"><div class="today-hero"><h1>Who is taking this today?</h1><p>This tailors the language and the needs we surface. Nothing is stored anywhere.</p></div><div class="context-grid" id="contextGrid"></div></div>
     <div class="page" id="page-today"><div class="today-date" id="todayDate"></div><div class="today-hero"><h1>What layer needs feeding today?</h1><p>Your Needs Tree is a map of what sustains you, shapes you, and flows through you. Name the need before it becomes behavior.</p></div><div id="todayBody"></div></div>
     <div class="page" id="page-diagnostic"><div id="diagContent"></div></div>
@@ -1060,11 +1062,188 @@ function navigateTo(page){
   if(page==='learn')renderLearn();
   if(page==='tree')renderTreeMap();
   if(page==='journal')renderJournal();
+  if(page==='landing')renderLanding();
 }
 window.navigateTo=navigateTo;
 document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){navigateTo(n.dataset.page)})});
 document.getElementById('menuBtn').addEventListener('click',function(){document.getElementById('sidebar').classList.toggle('open')});
 
+/* ============================================================
+   LANDING
+   ============================================================ */
+function renderLanding(){
+  var c = document.getElementById('landingContent');
+  if(!c) return;
+  var bars = [
+    {name:"Fruits",   score:"5/12", state:"strain",  color:"#7A6B9C", pct:42},
+    {name:"Leaves",   score:"6/12", state:"strain",  color:"#7BA8C4", pct:50},
+    {name:"Branches", score:"7/12", state:"strain",  color:"#4A9DB8", pct:58},
+    {name:"Trunk",    score:"3/12", state:"healthy", color:"#5B8FB9", pct:25},
+    {name:"Roots",    score:"10/12", state:"strained", color:"#B85C6B", pct:83}
+  ];
+  var barsHtml = bars.map(function(b){
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">'+
+      '<div style="font-family:var(--font-display);font-weight:700;font-size:.92rem;flex:0 0 80px;color:'+b.color+'">'+b.name+'</div>'+
+      '<div style="flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden"><div style="width:'+b.pct+'%;height:100%;background:'+b.color+';border-radius:4px"></div></div>'+
+      '<div style="font-size:.78rem;color:var(--mute);flex:0 0 auto;min-width:90px;text-align:right">'+b.score+' · '+b.state+'</div>'+
+    '</div>';
+  }).join("");
+
+  var whoCards = [
+    {tag:"JUST ME", title:"Everything looks fine. So why don't you feel fine?", quotes:['"I\'m tired in a way sleep doesn\'t fix."','"I\'m not sure what I actually want."','"I feel lonely even around people."'], body:"You can't point to a problem, so you can't ask for help, and you can't explain it to the person next to you."},
+    {tag:"WORK", title:"You're good at your job. It's costing more than it pays.", quotes:['"I\'ve become my job title."','"I say yes to everything because saying no feels dangerous here."','"My contributions go unnoticed, and it\'s starting to make me bitter."'], body:"Burnout isn't only too much work. It's recovery, recognition, a voice and a reason — and one of them stopped being met."},
+    {tag:"COUPLE", title:"You love them. You still can't say what's missing.", quotes:['"I feel lonely inside this relationship."','"We talk about logistics, never about us."','"I give more than I receive here, and I\'m keeping score."'], body:"A need with no name comes out as distance, irritation or silence. With the words, \"you never listen\" becomes \"I need to be understood.\""}
+  ];
+  var whoHtml = whoCards.map(function(w){
+    return '<div class="results-detail" style="margin-bottom:16px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--moss);margin-bottom:6px">'+w.tag+'</div>'+
+      '<h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:10px">'+esc(w.title)+'</h3>'+
+      w.quotes.map(function(q){return '<p style="font-style:italic;font-size:.9rem;color:var(--mute);margin-bottom:6px;padding-left:12px;border-left:2px solid var(--line)">'+esc(q)+'</p>'}).join("")+
+      '<p style="font-size:.9rem;color:var(--mute);margin-top:10px;margin-bottom:0">'+esc(w.body)+'</p>'+
+    '</div>';
+  }).join("");
+
+  var steps = [
+    {n:"1", title:"Answer 15 statements", body:"Three per layer, like \u201cI'm tired in a way sleep doesn't fix.\u201d Rate each from Not me to Very me."},
+    {n:"2", title:"See which layer is starving", body:"Your tree is read from the roots up, so you see what to feed first and what can wait."},
+    {n:"3", title:"Pick up to three, plan the moment", body:"One small action for each, tied to a cue in your day. It shows up on Today so you see it again tomorrow."}
+  ];
+  var stepsHtml = steps.map(function(s){
+    return '<div style="display:flex;gap:16px;margin-bottom:22px">'+
+      '<div style="flex:0 0 40px;height:40px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--font-display);font-weight:700;font-size:1.05rem;display:flex;align-items:center;justify-content:center">'+s.n+'</div>'+
+      '<div><div style="font-family:var(--font-display);font-weight:700;font-size:1.02rem;margin-bottom:4px">'+esc(s.title)+'</div>'+
+      '<div style="font-size:.9rem;color:var(--mute);line-height:1.55">'+esc(s.body)+'</div></div>'+
+    '</div>';
+  }).join("");
+
+  var six = [
+    ["A map of five layers","Roots, trunk, branches, leaves and fruits, each scored 0–12 and marked healthy, under strain or strained."],
+    ["Your three emergencies","Pick what is starving right now from 75 named needs. The cap is three, across the whole tree. The squeeze is the point."],
+    ["The pattern behind each one","The excuse you tell yourself, what you do instead, and a small action that flips it. Five suggestions per need, or write your own."],
+    ["An if-then plan","\u201cIf it's 6pm and I'm still working, then I'll close my laptop and walk for 10 minutes.\u201d A specific moment beats a vague intention."],
+    ["A Today page","Your strained layers, your plans and your non-negotiables in one place, plus how your tree changed since the last time you checked."],
+    ["Words for it","Names for what you need, so \u201csomething's off\u201d becomes a sentence you can say to the person lying next to you."]
+  ];
+  var sixHtml = six.map(function(s, i){
+    return '<div style="display:flex;gap:14px;margin-bottom:20px">'+
+      '<div style="flex:0 0 32px;height:32px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);color:var(--moss);font-family:var(--font-display);font-weight:700;font-size:.95rem;display:flex;align-items:center;justify-content:center">'+(i+1)+'</div>'+
+      '<div><div style="font-family:var(--font-display);font-weight:700;font-size:1rem;margin-bottom:4px">'+esc(s[0])+'</div>'+
+      '<div style="font-size:.9rem;color:var(--mute);line-height:1.55">'+esc(s[1])+'</div></div>'+
+    '</div>';
+  }).join("");
+
+  var layers = [
+    {name:"Fruits", sub:"meaning, contribution", line:"Purpose can't be forced. It shows up when the layers below are fed.", color:"#7A6B9C"},
+    {name:"Leaves", sub:"play, rest, output", line:"Output can't hold you up. If worth rides on producing, one bad season breaks it.", color:"#7BA8C4"},
+    {name:"Branches", sub:"being seen, held, connected", line:"Loneliness often needs more of you shown to the people you have.", color:"#4A9DB8"},
+    {name:"Trunk", sub:"who you are, what you choose", line:"Without a clear sense of what you want, every relationship becomes a negotiation about your worth.", color:"#5B8FB9"},
+    {name:"Roots", sub:"rest, safety, your body", line:"Nothing above works well on an empty tank.", color:"#6B7F94"}
+  ];
+  var layersHtml = layers.map(function(l){
+    return '<div style="padding:14px 16px;border-left:4px solid '+l.color+';background:var(--card);border-radius:var(--radius-sm);margin-bottom:10px">'+
+      '<div style="font-family:var(--font-display);font-weight:700;font-size:1rem;color:'+l.color+';margin-bottom:2px">'+l.name+' <span style="font-weight:400;font-size:.85rem;color:var(--mute)">· '+l.sub+'</span></div>'+
+      '<div style="font-size:.9rem;color:var(--mute);line-height:1.55">'+esc(l.line)+'</div>'+
+    '</div>';
+  }).reverse().join("");
+
+  c.innerHTML =
+    // HERO
+    '<div style="max-width:720px;margin:0 auto;padding:32px 0 40px;text-align:center">'+
+      '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--moss);margin-bottom:14px">5/12 · strain</div>'+
+      '<h1 style="font-size:clamp(2rem,1.4rem+2.4vw,2.9rem);line-height:1.15;margin-bottom:18px;max-width:14ch;margin-left:auto;margin-right:auto">Find out which part of your life is starving.</h1>'+
+      '<p style="font-size:1.08rem;color:var(--mute);line-height:1.65;max-width:44ch;margin:0 auto 28px">Answer 15 statements. Get a map of your needs, one small action for each thing that\'s starving, and the moment in your day you\'ll actually do it.</p>'+
+      '<button class="btn btn-primary" style="padding:16px 28px;font-size:1rem" onclick="startFromLanding()">Start the 15 statements</button>'+
+      '<p style="font-size:.82rem;color:var(--mute);margin-top:14px">No account. Your answers stay on your device.</p>'+
+    '</div>'+
+
+    // SAMPLE TREE
+    '<div class="results-detail" style="max-width:640px;margin:0 auto 40px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin-bottom:14px">Sample result · your tree, this season</div>'+
+      barsHtml+
+      '<p style="font-size:.88rem;color:var(--mute);margin-top:14px;margin-bottom:0"><strong style="color:var(--ink)">Start here:</strong> your roots. Rest, safety and your body come before everything above them.</p>'+
+    '</div>'+
+
+    // WHAT YOU GET
+    '<div style="max-width:640px;margin:0 auto 40px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--moss);margin-bottom:10px">What you get</div>'+
+      '<h2 style="font-size:1.5rem;line-height:1.25;margin-bottom:24px">Not advice. A clear answer to \u201cwhat do I pay attention to first?\u201d</h2>'+
+      '<p style="font-size:.95rem;color:var(--mute);margin-bottom:24px">In about two minutes you leave with six concrete things.</p>'+
+      sixHtml+
+    '</div>'+
+
+    // WHAT A NEED LOOKS LIKE
+    '<div class="results-detail" style="max-width:640px;margin:0 auto 40px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--c-strained);margin-bottom:8px">Emergency · Roots</div>'+
+      '<h2 style="font-size:1.4rem;margin-bottom:20px">Rest and sleep</h2>'+
+      '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px">The excuse</div>'+
+      '<div style="font-style:italic;font-size:1rem;padding:12px 14px;border-left:3px solid var(--hot);background:var(--bg);border-radius:var(--radius-xs);margin-bottom:18px">\u201cI\'ll rest when the work is done.\u201d</div>'+
+      '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px">What you do instead</div>'+
+      '<div style="font-size:.95rem;padding:12px 14px;border-left:3px solid var(--c-moderate);background:var(--bg);border-radius:var(--radius-xs);margin-bottom:18px">Scrolling until 2am to \u201cunwind\u201d, then waking up exhausted.</div>'+
+      '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px">Flip it</div>'+
+      '<div style="font-size:.95rem;padding:12px 14px;border-left:3px solid var(--c-healthy);background:var(--bg);border-radius:var(--radius-xs);margin-bottom:18px">Leave your phone outside the bedroom tonight.</div>'+
+      '<div style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px">Your if-then plan</div>'+
+      '<div style="font-size:.95rem;font-style:italic;padding:12px 14px;background:rgba(91,143,185,.08);border-radius:var(--radius-xs)">If I brush my teeth, then I will put my phone on the hallway shelf.</div>'+
+    '</div>'+
+
+    // HOW IT WORKS
+    '<div style="max-width:640px;margin:0 auto 40px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--moss);margin-bottom:10px">How it works</div>'+
+      '<h2 style="font-size:1.5rem;line-height:1.25;margin-bottom:24px">Three steps. That\'s the whole thing.</h2>'+
+      stepsHtml+
+    '</div>'+
+
+    // WHO IT'S FOR
+    '<div style="max-width:640px;margin:0 auto 40px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--moss);margin-bottom:10px">When it helps</div>'+
+      '<h2 style="font-size:1.5rem;line-height:1.25;margin-bottom:24px">You\'re not imagining it. You just don\'t have the words yet.</h2>'+
+      '<p style="font-size:.95rem;color:var(--mute);margin-bottom:24px">Something is unmet, and nobody taught you to read it. Pick who\'s taking it, and the 15 statements are rewritten in that voice.</p>'+
+      whoHtml+
+      '<p style="font-size:.88rem;color:var(--mute);margin-top:12px"><strong style="color:var(--ink)">Parent or team lead?</strong> There are versions for you too. For parents: \u201cI\'ve stopped meeting my own needs.\u201d For teams: \u201cpeople don\'t feel seen or appreciated for their work.\u201d</p>'+
+      '<p style="font-size:.88rem;color:var(--mute);margin-top:12px"><strong style="color:var(--ink)">Not a fit if</strong> you\'re in crisis or want a diagnosis. This is a reflection tool, not therapy. If you need support now, please reach out to a professional.</p>'+
+    '</div>'+
+
+    // THE TREE
+    '<div style="max-width:640px;margin:0 auto 40px">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--moss);margin-bottom:10px">Why it works</div>'+
+      '<h2 style="font-size:1.5rem;line-height:1.25;margin-bottom:18px">Needs aren\'t a flat list. They\'re layered, like a tree.</h2>'+
+      '<p style="font-size:.95rem;color:var(--mute);line-height:1.65;margin-bottom:14px">Most self-help says pick whichever need sounds good: rest, connection, purpose. But the layers depend on each other. Roots feed everything, and fruit comes last, if it comes at all.</p>'+
+      '<p style="font-size:.95rem;color:var(--mute);line-height:1.65;margin-bottom:24px">Once you know which layer is starving, the order gets clearer. You stop trying to fix loneliness with more contact when you need sleep. You stop chasing purpose while your body is struggling. The question changes from <em>what\'s wrong with me?</em> to <em>what do I feed first?</em></p>'+
+      layersHtml+
+    '</div>'+
+
+    // ALSO INSIDE
+    '<div class="results-detail" style="max-width:640px;margin:0 auto 40px">'+
+      '<h2 style="font-size:1.3rem;margin-bottom:16px">Also inside</h2>'+
+      '<p style="font-size:.95rem;color:var(--mute);margin-bottom:6px"><strong style="color:var(--ink)">Free, and it stays free.</strong> The diagnostic, your tree, the games, your if-then plans and your journal. That\'s not a demo. It\'s the product.</p>'+
+      '<p style="font-size:.95rem;color:var(--mute);margin-bottom:6px"><strong style="color:var(--ink)">Three games.</strong> Sort it (solo), Say it out loud (with someone), and Guess the need. Short ways to learn your own patterns.</p>'+
+      '<p style="font-size:.95rem;color:var(--mute);margin-bottom:6px"><strong style="color:var(--ink)">A journal.</strong> One prompt, built from your own emergency. One sentence is enough.</p>'+
+      '<p style="font-size:.95rem;color:var(--mute);margin-bottom:0"><strong style="color:var(--ink)">My Tree.</strong> Add what\'s missing, mark emergencies, and open any need to see its strategies.</p>'+
+    '</div>'+
+
+    // DARK NEEDS TEASER
+    '<div class="results-detail dk" style="max-width:640px;margin:0 auto 40px;background:#1B2A38;color:#E6EEF5;border-color:#1B2A38">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#E7B3C9;margin-bottom:8px">Coming soon · Dark Needs deck</div>'+
+      '<h2 style="font-size:1.3rem;margin-bottom:12px;color:#E6EEF5">The needs you were taught to hide.</h2>'+
+      '<p style="font-size:.95rem;opacity:.9;line-height:1.6;margin-bottom:18px">Control, anger, attention, revenge. They\'re not flaws. They\'re needs that went underground and came out sideways. Eleven cards that name each one, show how it behaves when ignored, and give you a version you can live with.</p>'+
+      '<button class="btn btn-outline btn-small" style="border-color:#E7B3C9;color:#E7B3C9" onclick="startFromLanding();navigateTo(\'dark\')">See the Dark Needs deck \u2192</button>'+
+    '</div>'+
+
+    // CLOSING CTA
+    '<div style="max-width:640px;margin:0 auto 24px;padding:36px 24px;text-align:center;background:var(--card);border:2px solid var(--moss);border-radius:var(--radius)">'+
+      '<h2 style="font-size:1.6rem;line-height:1.25;margin-bottom:10px">Stop collecting advice. Find out what to feed first.</h2>'+
+      '<p style="font-size:1rem;color:var(--mute);margin-bottom:22px">15 statements. Two minutes. Free.</p>'+
+      '<button class="btn btn-primary" style="padding:16px 28px;font-size:1rem" onclick="startFromLanding()">Start the 15 statements</button>'+
+      '<p style="font-size:.78rem;color:var(--mute);margin-top:16px;margin-bottom:0">A reflection tool, not therapy or diagnosis.</p>'+
+    '</div>';
+}
+
+function startFromLanding(){
+  navigateTo('onboarding');
+}
+
+window.renderLanding = renderLanding;
+window.startFromLanding = startFromLanding;
+  
 /* ============================================================
    ONBOARDING
    ============================================================ */
@@ -2147,9 +2326,13 @@ window.saveStrategyReflection=saveStrategyReflection;
    INIT
    ============================================================ */
 loadState();
-renderOnboarding();
 renderContext();
-if(state.diagScores && state.view !== 'context'){ /* stay on onboarding unless user has already completed */ }
+if(state.diagScores){
+  navigateTo('today');
+}else{
+  renderLanding();
+}
+  if(state.diagScores && state.view !== 'context'){ /* stay on onboarding unless user has already completed */ }
 
 document.addEventListener('click', function(){ setTimeout(saveState, 50); }, true);
 document.addEventListener('input', function(){ saveState(); }, true);
