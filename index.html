@@ -355,7 +355,7 @@ p{max-width:72ch}
     <nav class="nav">
       <button class="nav-item" data-page="today"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Today</button>
       <button class="nav-item" data-page="diagnostic"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>Diagnostic</button>
-      <button class="nav-item" data-page="deck"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20M6 12h8M6 16h6"/></svg>Deck</button>
+      <button class="nav-item" data-page="dark"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 2 1 4 3 5-2 1-3 3-3 5v3h14v-3c0-2-1-4-3-5 2-1 3-3 3-5 0-4-3-7-7-7z"/></svg>Dark needs</button>
       <button class="nav-item" data-page="play"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play</button>
       <button class="nav-item" data-page="learn"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Learn</button>
       <button class="nav-item" data-page="tree"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 2 1 4 3 5-2 1-3 3-3 5v3h14v-3c0-2-1-4-3-5 2-1 3-3 3-5 0-4-3-7-7-7z"/></svg>My Tree</button>
@@ -377,7 +377,10 @@ p{max-width:72ch}
     <div class="page" id="page-context"><div class="today-hero"><h1>Who is taking this today?</h1><p>This tailors the language and the needs we surface. Nothing is stored anywhere.</p></div><div class="context-grid" id="contextGrid"></div></div>
     <div class="page" id="page-today"><div class="today-date" id="todayDate"></div><div class="today-hero"><h1>What layer needs feeding today?</h1><p>Your Needs Tree is a map of what sustains you, shapes you, and flows through you. Name the need before it becomes behavior.</p></div><div id="todayBody"></div></div>
     <div class="page" id="page-diagnostic"><div id="diagContent"></div></div>
-    <div class="page" id="page-deck"><div class="today-hero"><h1>The Deck</h1><p>Core needs, dark needs, and the strategies that hide them.</p></div><div class="deck-tabs" id="deckTabs"><button class="deck-tab active" data-filter="core">Core needs</button><button class="deck-tab" data-filter="dark">Dark needs</button></div><div class="deck-grid" id="deckGrid"></div></div>
+    <div class="page" id="page-dark">
+  <div class="today-hero"><h1>The needs you were taught to hide.</h1><p>Eleven cards for control, anger, attention, revenge, and the rest. They're not flaws. They're needs that went underground and came out sideways.</p></div>
+  <div id="darkBody"></div>
+</div>
     <div class="page" id="page-play"><div id="playContent"></div></div>
     <div class="page" id="page-learn">
       <div class="today-hero"><h1>Learn</h1><p>Short pieces about needs, why they hide, and how to work with them. Written in plain language.</p></div>
@@ -859,7 +862,110 @@ var LEARN_PARTNERS = [
   {name:"A coach", for:"Trunk", desc:"Slots reserved for coaches.", tag:"Coaching"},
   {name:"An educator", for:"Leaves", desc:"Slots reserved for teachers and creators.", tag:"EdTech"}
 ];
+/* ============================================================
+   DARK NEEDS — full page
+   ============================================================ */
+var CTRL=["Need 01","Control","The need to know what happens next.","The need to feel the ground won't shift under you. Predictability is what lets most people relax.",["You rewrite your team's work at night, then tell your partner you're exhausted because nobody else does it properly.","A friend suggests changing the restaurant and your stomach knots up. You sulk through the whole meal.","You check your partner's location or read their messages. It calms you for an hour, then you do it again.","You can't delegate, so you're the bottleneck at work and burned out at home.","Underneath sits a fear of being blamed or left with a mess."],["Make two columns: what I can change today, and what I can't. Act only on the first.","Give away one task with a clear brief and a deadline, then don't check until the deadline.","Build a weekly routine for structure, and keep one day with no plan on purpose.","When plans change, tell yourself &ldquo;I'm uncomfortable and I'll be okay&rdquo; and take three slow breaths before replying."],["What do you keep checking or redoing, and what do you think would happen if you stopped?","Which outcome are you actually afraid of right now?","What is one thing you could hand over this week without reviewing it afterwards?"]];
+var ATTN=["Need 04","Attention","The need to be seen.","The need for another person to register that you exist and care how you are. Most people were never taught to ask for it directly.",["You post something provocative and check the reactions every few minutes.","You tell a story with more drama than it deserves, because the flat version gets no response.","You go silent in a relationship, hoping your partner will notice and ask. When they don't, you feel abandoned.","At gatherings you either dominate the conversation or leave early feeling invisible."],["Say it plainly: &ldquo;I've had a rough week and I'd like twenty minutes of your attention.&rdquo;","Join something where being seen is the point: an improv class, a speaking group, an open mic.","Set a weekly call with a friend who asks real questions.","Ask for specific feedback at work instead of waiting for someone to mention it."],["When did you last want someone to notice you and say nothing?","What do you do when you feel ignored? Be specific.","Who could you ask for twenty minutes of full attention this week?"]];
 
+function darkCard(c){
+  var u = function(tag, arr){
+    var tagName = tag === "ol" ? "ol" : "ul";
+    return '<'+tagName+' style="padding-left:20px;margin-bottom:14px">'+arr.map(function(x){return '<li style="margin-bottom:8px;max-width:60ch">'+x+'</li>'}).join("")+'</'+tagName+'>';
+  };
+  return '<div class="results-detail" style="border:2px solid var(--moss)">'+
+    '<div class="k" style="color:var(--moss)">Free sample &middot; '+esc(c[0])+'</div>'+
+    '<h2>'+esc(c[1])+'</h2>'+
+    '<p class="m">'+esc(c[2])+'</p>'+
+    '<div class="k" style="margin-top:16px">What it is</div>'+
+    '<p>'+esc(c[3])+'</p>'+
+    '<div class="k">The shadow side</div>'+u('ul',c[4])+
+    '<div class="k">The integrated side</div>'+u('ul',c[5])+
+    '<div class="k">Ask yourself</div>'+u('ol',c[6])+
+  '</div>';
+}
+
+function renderDark(){
+  var c = document.getElementById('darkBody');
+  if(!c) return;
+  var L = function(arr){return '<ul style="padding-left:20px;margin-bottom:10px">'+arr.map(function(x){return '<li style="margin-bottom:10px;max-width:60ch">'+x+'</li>'}).join("")+'</ul>'};
+  c.innerHTML =
+    '<div class="results-detail dk" style="background:#1B2A38;color:#E6EEF5;border-color:#1B2A38">'+
+      '<h1 style="font-size:1.8rem">The needs you were taught to hide.</h1>'+
+      '<p style="opacity:.9">Eleven cards for control, anger, attention, revenge, and the rest. They\'re not flaws. They\'re needs that went underground and came out sideways.</p>'+
+      '<div class="action-row left" style="margin-top:16px">'+
+        '<button class="btn btn-primary" style="background:#E7B3C9;color:#1B2A38" onclick="fakeDoorTap(\'dark\')">Get the Dark Needs PDF, $5</button>'+
+        '<button class="btn btn-outline" style="border-color:#E7B3C9;color:#E7B3C9" onclick="darkSampleScroll()">Try two cards free</button>'+
+      '</div>'+
+      '<p style="font-size:.78rem;opacity:.85;margin-top:14px">A reflection tool, not therapy. It won\'t diagnose you or replace professional help.</p>'+
+      '<div id="fakeDoorDark" style="max-width:400px;margin-top:14px"></div>'+
+    '</div>'+
+    '<div class="results-detail">'+
+      '<h2>Why people buy it</h2>'+
+      L([
+        "<b>Relief from shame.</b> Nobody teaches you that wanting control, attention, or revenge is a need. You're told to stop. The deck says: the need is fine, the behavior is the problem.",
+        "<b>It names what you can't explain.</b> &ldquo;Why do I check their phone?&rdquo; becomes &ldquo;I need certainty, and I'm getting it the wrong way.&rdquo;",
+        "<b>It works in a bad moment.</b> One card, one question, one alternative. No 40-page book.",
+        "<b>It starts conversations.</b> Couples, coaches, and teams can hand over a card instead of starting a fight.",
+        "<b>Almost nobody touches these.</b> Everyone sells the positive needs. The uncomfortable ones are the ones people most want help with."
+      ])+
+    '</div>'+
+    '<div class="results-detail">'+
+      '<h2>The problem</h2>'+
+      '<p>You were told to stop being controlling. Nobody told you that control is a need, and that it\'s asking for something real.</p>'+
+      '<p>So it didn\'t go away. It turned into the silent treatment, the ultimatum, the phone check at midnight, the &ldquo;I\'m fine.&rdquo; Shame doesn\'t kill a need. It only changes how it shows up.</p>'+
+    '</div>'+
+    '<div class="results-detail">'+
+      '<h2>What it is</h2>'+
+      '<p>A deck of 11 cards. Each one names a need most people are embarrassed to admit, shows how it behaves when it\'s ignored, and gives you a version you can live with.</p>'+
+      '<p class="m">Control, Power, Specialness, Attention, Revenge and Justice, Freedom from Responsibility, Dependency, Anger, Chaos, Dark Curiosity, and Sexual Dominance. Every card has four parts: what the need is, how it shows up when ignored, what you can do about it, and questions to answer in writing.</p>'+
+    '</div>'+
+    '<div id="darkSample">'+darkCard(CTRL)+darkCard(ATTN)+'</div>'+
+    '<div class="results-detail">'+
+      '<h2>How people use it</h2>'+
+      L([
+        "<b>Alone.</b> Pick the card that stings after a rough day. Read it, then write your answers to its questions.",
+        "<b>With a partner.</b> Hand over a card instead of explaining. &ldquo;This one's me tonight.&rdquo;",
+        "<b>With a coach or therapist.</b> A fast way into topics clients circle for weeks.",
+        "<b>With a team.</b> Name what's driving the behavior before it becomes a conflict."
+      ])+
+    '</div>'+
+    '<div class="results-detail">'+
+      '<h2>Why it\'s different</h2>'+
+      L([
+        "It's not a personality test. It doesn't put you in a type.",
+        "It doesn't tell you to think positive.",
+        "It doesn't call you broken.",
+        "It works on its own, and it plugs into your Needs Tree if you use it."
+      ])+
+    '</div>'+
+    '<div class="results-detail">'+
+      '<h2>Questions</h2>'+
+      '<p><b>Is this therapy?</b><br>No. It\'s a reflection tool. It won\'t diagnose you or replace professional help.</p>'+
+      '<p><b>Is it edgy?</b><br>It\'s honest. Nothing here is shocking, but some of it is uncomfortable.</p>'+
+      '<p><b>Is every card for everyone?</b><br>The Sexual Dominance card is for adults only, and you can skip it.</p>'+
+      '<p><b>What format is it?</b><br>A PDF, for now. A printed deck is coming next year.</p>'+
+      '<p><b>Can I try it first?</b><br>Yes. Two full cards are free to read above.</p>'+
+    '</div>'+
+    '<div class="results-detail dk" style="background:#1B2A38;color:#E6EEF5;border-color:#1B2A38">'+
+      '<h2>You\'ve been ashamed of these needs for years. You really don\'t have to.</h2>'+
+      '<div class="action-row left" style="margin-top:12px">'+
+        '<button class="btn btn-primary" style="background:#E7B3C9;color:#1B2A38" onclick="fakeDoorTap(\'dark\')">Get the Dark Needs PDF, $5</button>'+
+        '<button class="btn btn-outline" style="border-color:#E7B3C9;color:#E7B3C9" onclick="darkPrintWaitlist()">I want a printed deck</button>'+
+      '</div>'+
+      '<p style="font-size:.78rem;opacity:.85;margin-top:14px">A reflection tool, not therapy. It won\'t diagnose you or replace professional help.</p>'+
+    '</div>';
+}
+function darkSampleScroll(){
+  var el = document.getElementById('darkSample');
+  if(el) el.scrollIntoView({behavior:"smooth"});
+}
+function darkPrintWaitlist(){
+  alert("Printed deck signups open soon. We'll let you know.");
+}
+window.renderDark = renderDark;
+window.darkSampleScroll = darkSampleScroll;
+window.darkPrintWaitlist = darkPrintWaitlist;
 /* ============================================================
    STATE
    ============================================================ */
@@ -946,7 +1052,7 @@ function navigateTo(page){
   window.scrollTo(0,0);
   if(page==='today')renderToday();
   if(page==='diagnostic')renderDiagnostic();
-  if(page==='deck')renderDeck('core');
+  if(page==='dark')renderDark();
   if(page==='play')renderPlay();
   if(page==='learn')renderLearn();
   if(page==='tree')renderTreeMap();
@@ -1293,25 +1399,25 @@ function renderToday(){
   }
 
   var fakeDoorHtml =
-    '<div class="results-detail" style="max-width:640px;margin:0 auto 16px;border-color:var(--moss);border-width:2px">'+
-      '<h2 style="font-size:1.1rem">Want to keep this tree?</h2>'+
-      '<p style="font-size:.9rem;color:var(--mute);margin:6px 0 12px">Everything you\'ve written is saved in this browser. If you want reminders that reach you when your if-then fires, tell us.</p>'+
+  '<div class="sticky-grid" style="margin-bottom:28px;gap:10px">'+
+    '<div style="padding:12px 14px;border:1.5px solid var(--moss);border-radius:var(--radius-sm);background:rgba(91,143,185,.05)">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--moss);margin-bottom:4px">Coming</div>'+
+      '<div style="font-family:var(--font-display);font-weight:700;font-size:.92rem;line-height:1.25;margin-bottom:4px">Reminders</div>'+
+      '<p style="font-size:.78rem;color:var(--mute);margin:0 0 10px;line-height:1.4">Ping when your if-then fires.</p>'+
       '<div id="fakeDoorSave">'+
-        '<div class="action-row left" style="margin-top:0">'+
-          '<button class="btn btn-primary btn-small" onclick="fakeDoorTap(\'save\')">Send me the reminder</button>'+
-        '</div>'+
+        '<button class="btn btn-primary btn-small" style="width:100%;justify-content:center" onclick="fakeDoorTap(\'save\')">Notify me</button>'+
       '</div>'+
     '</div>'+
-    '<div class="results-detail" style="max-width:640px;margin:0 auto 24px;border-color:var(--c-fruits);border-width:2px">'+
-      '<h2 style="font-size:1.1rem">The Dark Needs deck</h2>'+
-      '<p style="font-size:.9rem;color:var(--mute);margin:6px 0 12px">Eleven needs that hide — control, attention, anger, avoidance. The ones you were taught not to have.</p>'+
+    '<div style="padding:12px 14px;border:1.5px solid var(--c-fruits);border-radius:var(--radius-sm);background:rgba(122,107,156,.05)">'+
+      '<div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--c-fruits);margin-bottom:4px">Coming</div>'+
+      '<div style="font-family:var(--font-display);font-weight:700;font-size:.92rem;line-height:1.25;margin-bottom:4px">Dark Needs deck</div>'+
+      '<p style="font-size:.78rem;color:var(--mute);margin:0 0 10px;line-height:1.4">The needs that hide.</p>'+
       '<div id="fakeDoorDark">'+
-        '<div class="action-row left" style="margin-top:0">'+
-          '<button class="btn btn-outline btn-small" onclick="fakeDoorTap(\'dark\')">Get the Dark Needs deck</button>'+
-        '</div>'+
+        '<button class="btn btn-outline btn-small" style="width:100%;justify-content:center" onclick="fakeDoorTap(\'dark\')">Get it</button>'+
       '</div>'+
-    '</div>';
-
+    '</div>'+
+  '</div>';
+  
   var strained=LORDER.filter(function(l){return scoreStatus(scores[l])==="strained"});
   var strainedText = strained.length === 0 ? "No layer is in the red right now." : strained.length === 1 ? L[strained[0]]+" is strained." : strained.map(function(l){return L[l]}).join(" and ")+" are both strained.";
 
