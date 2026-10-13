@@ -1026,7 +1026,7 @@ function loadState(){
     state.actionIndex = state.actionIndex || {};
     state.fakeDoors = state.fakeDoors || {save:0, dark:0};
     state.hist = state.hist || [];
-    if(typeof state.onboardStep !== "number" || state.onboardStep < 0 || state.onboardStep >= ONBOARD.length){
+    if(typeof state.onboardStep !== "number" || state.onboardStep < 0 || state.onboardStep > 10){
       state.onboardStep = 0;
     }
   }catch(e){}
